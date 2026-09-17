@@ -1,0 +1,284 @@
+/* =========================================================
+   header.css — cabeçalho fixo, navegação e drawer mobile
+   ========================================================= */
+
+.site-header {
+  --nav-fg: rgba(255, 253, 248, 0.9);
+  --nav-fg-strong: var(--cream);
+  --mark-bg: rgba(255, 253, 248, 0.16);
+  --mark-border: rgba(255, 253, 248, 0.42);
+  --header-bg: transparent;
+  --header-border: transparent;
+
+  position: fixed;
+  inset: 0 0 auto 0;
+  z-index: 90;
+  background: var(--header-bg);
+  border-bottom: 1px solid var(--header-border);
+  transition: background-color var(--dur) var(--ease), border-color var(--dur) var(--ease),
+    box-shadow var(--dur) var(--ease), backdrop-filter var(--dur) var(--ease);
+}
+
+.site-header.is-scrolled {
+  --nav-fg: var(--ink-700);
+  --nav-fg-strong: var(--ink-900);
+  --mark-bg: rgba(196, 99, 63, 0.12);
+  --mark-border: rgba(196, 99, 63, 0.3);
+  --header-bg: rgba(251, 247, 240, 0.94);
+  --header-border: var(--sand-200);
+
+  backdrop-filter: blur(14px);
+  box-shadow: var(--shadow-sm);
+}
+
+.site-header__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-5);
+  min-height: var(--header-h);
+}
+
+/* ---------------------------------------------------------
+   Marca
+   --------------------------------------------------------- */
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.7rem;
+  text-decoration: none;
+  color: var(--nav-fg-strong);
+  flex: none;
+}
+
+.brand:hover {
+  color: var(--nav-fg-strong);
+}
+
+.brand__mark {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  background: var(--mark-bg);
+  border: 1.5px solid var(--mark-border);
+  color: var(--nav-fg-strong);
+  transition: background-color var(--dur) var(--ease), border-color var(--dur) var(--ease),
+    color var(--dur) var(--ease);
+}
+
+.brand__mark svg {
+  width: 22px;
+  height: 22px;
+}
+
+.brand__text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.05;
+}
+
+.brand__text strong {
+  font-family: var(--font-display);
+  font-size: 1.06rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.brand__text small {
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  opacity: 0.72;
+}
+
+/* ---------------------------------------------------------
+   Navegação principal
+   --------------------------------------------------------- */
+
+.site-nav__list {
+  display: flex;
+  align-items: center;
+  gap: clamp(1rem, 2.2vw, 2rem);
+}
+
+.site-nav a {
+  position: relative;
+  display: inline-block;
+  padding-block: 0.4rem;
+  font-size: 0.94rem;
+  font-weight: 500;
+  color: var(--nav-fg);
+  text-decoration: none;
+  transition: color var(--dur) var(--ease);
+}
+
+.site-nav a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 2px;
+  border-radius: 2px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform var(--dur) var(--ease);
+}
+
+.site-nav a:hover {
+  color: var(--nav-fg-strong);
+}
+
+.site-nav a:hover::after {
+  transform: scaleX(1);
+}
+
+.site-header__actions {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  flex: none;
+}
+
+.site-header__actions .btn--primary {
+  --btn-fg: var(--cream);
+}
+
+/* ---------------------------------------------------------
+   Botão hambúrguer
+   --------------------------------------------------------- */
+
+.nav-toggle {
+  display: none;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  border-radius: 12px;
+  border: 1.5px solid var(--mark-border);
+  background: var(--mark-bg);
+  color: var(--nav-fg-strong);
+  transition: background-color var(--dur) var(--ease), border-color var(--dur) var(--ease);
+}
+
+.nav-toggle__bars {
+  display: grid;
+  gap: 5px;
+  width: 22px;
+}
+
+.nav-toggle__bars i {
+  display: block;
+  height: 2px;
+  border-radius: 2px;
+  background: currentColor;
+  transition: transform var(--dur) var(--ease), opacity var(--dur) var(--ease);
+}
+
+.nav-toggle[aria-expanded="true"] .nav-toggle__bars i:nth-child(1) {
+  transform: translateY(7px) rotate(45deg);
+}
+
+.nav-toggle[aria-expanded="true"] .nav-toggle__bars i:nth-child(2) {
+  opacity: 0;
+}
+
+.nav-toggle[aria-expanded="true"] .nav-toggle__bars i:nth-child(3) {
+  transform: translateY(-7px) rotate(-45deg);
+}
+
+/* ---------------------------------------------------------
+   Drawer mobile
+   --------------------------------------------------------- */
+
+.nav-drawer {
+  position: fixed;
+  inset: 0;
+  z-index: 130;
+  display: flex;
+  visibility: hidden;
+  transition: visibility 0s linear 0.45s;
+}
+
+.nav-drawer[data-open="true"] {
+  visibility: visible;
+  transition-delay: 0s;
+}
+
+.nav-drawer__panel {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-5);
+  width: min(86vw, 350px);
+  height: 100%;
+  padding: var(--sp-5);
+  overflow-y: auto;
+  background: var(--cream);
+  box-shadow: var(--shadow-lg);
+  transform: translateX(-104%);
+  transition: transform 0.42s var(--ease);
+}
+
+.nav-drawer[data-open="true"] .nav-drawer__panel {
+  transform: none;
+}
+
+.nav-drawer__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.nav-drawer__title {
+  font-size: var(--fs-xs);
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-500);
+}
+
+.nav-drawer__list {
+  display: flex;
+  flex-direction: column;
+}
+
+.nav-drawer__list li + li {
+  border-top: 1px solid var(--sand-200);
+}
+
+.nav-drawer__list a {
+  display: block;
+  padding: var(--sp-4) 0;
+  font-family: var(--font-display);
+  font-size: 1.22rem;
+  font-weight: 600;
+  color: var(--ink-900);
+  text-decoration: none;
+}
+
+.nav-drawer__list a:hover {
+  color: var(--clay-600);
+}
+
+.nav-drawer__note {
+  font-size: var(--fs-sm);
+  color: var(--ink-500);
+  margin-top: auto;
+}
+
+.nav-drawer__scrim {
+  flex: 1;
+  background: rgba(41, 31, 24, 0.52);
+  opacity: 0;
+  transition: opacity 0.42s var(--ease);
+}
+
+.nav-drawer[data-open="true"] .nav-drawer__scrim {
+  opacity: 1;
+}

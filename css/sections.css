@@ -1,0 +1,125 @@
+/* =========================================================
+   sections.css — blocos específicos (split do roteiro, contato)
+   ========================================================= */
+
+/* ---------------------------------------------------------
+   Bloco em duas colunas (roteiro em destaque)
+   --------------------------------------------------------- */
+
+.split {
+  display: grid;
+  grid-template-columns: 1.02fr 1fr;
+  align-items: center;
+  gap: clamp(2rem, 5vw, 4rem);
+}
+
+.split__visual {
+  position: relative;
+}
+
+.stamp {
+  position: absolute;
+  right: clamp(-0.75rem, -1.5vw, -1.5rem);
+  bottom: clamp(-1.5rem, -2vw, -2rem);
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  padding: 0.85rem 1.25rem;
+  background: var(--cream);
+  border: 1px solid var(--sand-200);
+  border-radius: var(--r-md);
+  box-shadow: var(--shadow-lg);
+  transform: rotate(-2.5deg);
+  max-width: 78%;
+}
+
+.stamp strong {
+  font-family: var(--font-display);
+  font-size: var(--fs-lg);
+  color: var(--ink-900);
+  line-height: 1.15;
+}
+
+.stamp span {
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  color: var(--ink-500);
+}
+
+.split__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-3);
+}
+
+/* ---------------------------------------------------------
+   Contato / captação de lead
+   --------------------------------------------------------- */
+
+.contact {
+  display: grid;
+  grid-template-columns: 1fr 1.08fr;
+  align-items: start;
+  gap: clamp(1.75rem, 4vw, 3.5rem);
+  padding: clamp(1.5rem, 4vw, 3rem);
+  background: var(--cream);
+  border: 1px solid var(--sand-200);
+  border-radius: var(--r-xl);
+  box-shadow: var(--shadow-md);
+}
+
+.contact__list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-4);
+  margin-top: var(--sp-5);
+}
+
+.contact__list li {
+  position: relative;
+  padding-left: 2.1rem;
+  font-size: var(--fs-sm);
+  font-weight: 500;
+  color: var(--ink-700);
+}
+
+.contact__list li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.1em;
+  width: 1.35rem;
+  height: 1.35rem;
+  border-radius: 50%;
+  background: rgba(107, 122, 75, 0.16);
+}
+
+.contact__list li::after {
+  content: "";
+  position: absolute;
+  left: 0.46rem;
+  top: 0.36em;
+  width: 0.34rem;
+  height: 0.62rem;
+  border-right: 2px solid var(--olive-600);
+  border-bottom: 2px solid var(--olive-600);
+  transform: rotate(38deg);
+}
+
+.contact__form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-4);
+  padding: clamp(1.15rem, 3vw, 1.75rem);
+  background: var(--sand-50);
+  border: 1px solid var(--sand-200);
+  border-radius: var(--r-lg);
+}
+
+/* ---------------------------------------------------------
+   Ajustes do bloco escuro de depoimentos
+   --------------------------------------------------------- */
+
+.section--clay .slider__viewport {
+  box-shadow: 0 30px 60px -30px rgba(41, 31, 24, 0.6);
+}

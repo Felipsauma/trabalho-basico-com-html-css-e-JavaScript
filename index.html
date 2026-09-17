@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pé na Estrada — Viagens autorais pelo Brasil</title>
+  <meta name="description" content="Roteiros autorais, hospedagens selecionadas e suporte humano do começo ao fim. Viaje pelo Brasil com a Pé na Estrada." />
+  <meta name="theme-color" content="#C4633F" />
+
+  <!-- Favicon SVG Nativo da Marca -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M16 3.5 27.5 25.5a1 1 0 0 1-.9 1.5H5.4a1 1 0 0 1-.9-1.5L16 3.5Z' fill='%23C4633F'/%3E%3Cpath d='M9.5 21h13' stroke='%23FFFDF8' stroke-width='2.2' stroke-linecap='round'/%3E%3C/svg%3E" />
+
+  <!-- Metadados de Compartilhamento Social (Open Graph) -->
+  <meta property="og:title" content="Pé na Estrada — Viagens autorais pelo Brasil" />
+  <meta property="og:description" content="Roteiros autorais, hospedagens selecionadas e suporte humano do começo ao fim. Viaje pelo Brasil com a Pé na Estrada." />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="images/hero.jpg" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="css/base.css" />
+  <link rel="stylesheet" href="css/components.css" />
+  <link rel="stylesheet" href="css/header.css" />
+  <link rel="stylesheet" href="css/hero.css" />
+  
+  <link rel="stylesheet" href="css/sections.css" />
+  <link rel="stylesheet" href="css/footer.css" />
+  <link rel="stylesheet" href="css/responsive.css" />
+</head>
+<body>
+  <a class="skip-link" href="#conteudo">Pular para o conteúdo principal</a>
+
+  <header class="site-header" id="siteHeader">
+    <div class="container">
+      <div class="site-header__inner">
+        <a class="brand" href="#topo" aria-label="Pé na Estrada — página inicial">
+          <span class="brand__mark" aria-hidden="true">
+            <svg viewBox="0 0 32 32" fill="none" focusable="false">
+              <path d="M16 3.5 27.5 25.5a1 1 0 0 1-.9 1.5H5.4a1 1 0 0 1-.9-1.5L16 3.5Z" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"/>
+              <path d="M9.5 21h13" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
+            </svg>
+          </span>
+          <span class="brand__text">
+            <strong>Pé na Estrada</strong>
+            <small>viagens autorais</small>
+          </span>
+        </a>
+
+        <nav class="site-nav" aria-label="Navegação principal">
+          <ul class="site-nav__list">
+            <li><a href="#destinos">Destinos</a></li>
+            <li><a href="#experiencias">Experiências</a></li>
+            <li><a href="#roteiros">Roteiros</a></li>
+            <li><a href="#depoimentos">Depoimentos</a></li>
+          </ul>
+        </nav>
+
+        <div class="site-header__actions">
+          <div class="user-menu-wrapper" id="userMenuWrapper"></div>
+          <a class="btn btn--ghost btn--sm" href="#contato">Falar com consultor</a>
+          <a class="btn btn--primary btn--sm" href="#destinos">Planejar viagem</a>
+          <button class="nav-toggle" id="navToggle" type="button" aria-expanded="false" aria-controls="navDrawer" aria-label="Abrir menu de navegação">
+            <span class="nav-toggle__bars" aria-hidden="true"><i></i><i></i><i></i></span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="nav-drawer" id="navDrawer" data-open="false" role="dialog" aria-modal="true" aria-label="Menu de navegação">
+    <div class="nav-drawer__panel">
+      <div class="nav-drawer__head">
+        <span class="nav-drawer__title">Menu</span>
+        <button class="icon-btn" id="navClose" type="button" aria-label="Fechar menu">
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        </button>
+      </div>
+      <div class="drawer-auth" id="drawerAuth"></div>
+      <nav aria-label="Navegação mobile">
+        <ul class="nav-drawer__list">
+          <li><a href="#destinos">Destinos</a></li>
+          <li><a href="#experiencias">Experiências</a></li>
+          <li><a href="#roteiros">Roteiros</a></li>
+          <li><a href="#depoimentos">Depoimentos</a></li>
+          <li><a href="#contato">Contato</a></li>
+        </ul>
+      </nav>
+      <a class="btn btn--primary btn--block" href="#contato">Falar com consultor</a>
+      <p class="nav-drawer__note">Atendimento humano de segunda a sábado, das 8h às 20h.</p>
+    </div>
+    <button class="nav-drawer__scrim" type="button" tabindex="-1" aria-label="Fechar menu"></button>
+  </div>
+
+  <main id="conteudo">
+    <span id="topo"></span>
+
+    <section class="hero" aria-labelledby="heroTitulo">
+      <div class="hero__media" aria-hidden="true">
+        <img class="hero__img" src="images/hero.jpg" alt="" />
+        <div class="hero__veil"></div>
+      </div>
+
+      <div class="container hero__content">
+        <p class="eyebrow eyebrow--light">
+          <span class="eyebrow__dot" aria-hidden="true"></span>
+          Temporada 2026 aberta
+        </p>
+        <h1 class="hero__title" id="heroTitulo">
+          O Brasil inteiro cabe em
+          <em>uma semana bem planejada</em>
+        </h1>
+        <p class="hero__lead">
+          Roteiros autorais, hospedagens visitadas por nós e consultores que já pisaram em cada destino.
+          Sem pacote engessado, sem taxa escondida.
+        </p>
+
+        <form class="search-bar" id="searchForm" novalidate>
+          <div class="search-bar__field">
+            <label for="buscaDestino">Para onde</label>
+            <select id="buscaDestino" name="destino">
+              <option value="">Escolha um destino</option>
+              <option>Fernando de Noronha — PE</option>
+              <option>Chapada Diamantina — BA</option>
+              <option>Jericoacoara — CE</option>
+              <option>Lençóis Maranhenses — MA</option>
+              <option>Serra Gaúcha — RS</option>
+              <option>Rio de Janeiro — RJ</option>
+            </select>
+          </div>
+
+          <div class="search-bar__field">
+            <label for="buscaQuando">Quando</label>
+            <input type="month" id="buscaQuando" name="quando" />
+          </div>
+
+          <div class="search-bar__field">
+            <label for="buscaViajantes">Viajantes</label>
+            <select id="buscaViajantes" name="viajantes">
+              <option>1 pessoa</option>
+              <option selected>2 pessoas</option>
+              <option>3 pessoas</option>
+              <option>4 pessoas</option>
+              <option>5 ou mais</option>
+            </select>
+          </div>
+
+          <button class="btn btn--primary search-bar__submit" type="submit">
+            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="11" cy="11" r="6" stroke="currentColor" stroke-width="2"/><path d="m15.5 15.5 4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+            Buscar roteiros
+          </button>
+
+          <p class="search-bar__feedback" id="searchFeedback" role="status" aria-live="polite"></p>
+        </form>
+
+        <ul class="hero__stats">
+          <li><strong>+120</strong><span>destinos mapeados</span></li>
+          <li><strong>4,9</strong><span>nota média (1.842 avaliações)</span></li>
+          <li><strong>38 mil</strong><span>viajantes desde 2014</span></li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="section" id="destinos" aria-labelledby="destinosTitulo">
+      <div class="container">
+        <header class="section__head">
+          <p class="eyebrow">Destinos em destaque</p>
+          <h2 class="section__title" id="destinosTitulo">Escolha o cenário, a gente cuida do resto</h2>
+          <p class="section__lead">
+            Cada roteiro é montado com quem mora no lugar. Filtre pelo tipo de viagem que combina com você.
+          </p>
+        </header>
+
+        <div class="filters" role="group" aria-label="Filtrar destinos por experiência">
+          <button class="chip is-active" type="button" data-filter="todos" aria-pressed="true">Todos</button>
+          <button class="chip" type="button" data-filter="praia" aria-pressed="false">Praia</button>
+          <button class="chip" type="button" data-filter="serra" aria-pressed="false">Serra</button>
+          <button class="chip" type="button" data-filter="aventura" aria-pressed="false">Aventura</button>
+          <button class="chip" type="button" data-filter="cultura" aria-pressed="false">Cultura</button>
+        </div>
+
+        <ul class="card-grid" id="destinosGrid"></ul>
+        <p class="empty-state" id="destinosEmpty" hidden>Nenhum destino nessa categoria por enquanto. Tente outro filtro.</p>
+      </div>
+    </section>
+
+    <section class="section section--sand" id="experiencias" aria-labelledby="expTitulo">
+      <div class="container">
+        <header class="section__head section__head--center">
+          <p class="eyebrow">Por que a Pé na Estrada</p>
+          <h2 class="section__title" id="expTitulo">Viagem organizada, mas nunca engessada</h2>
+        </header>
+        <ul class="feature-grid" id="featureGrid"></ul>
+      </div>
+    </section>
+
+    <section class="section" id="roteiros" aria-labelledby="roteiroTitulo">
+      <div class="container">
+        <div class="split">
+          <div class="split__visual">
+            <div class="frame" id="roteiroVisual"></div>
+            <div class="stamp">
+              <strong>7 dias</strong>
+              <span>a partir de R$ 4.290 / pessoa</span>
+            </div>
+          </div>
+
+          <div class="split__content">
+            <p class="eyebrow">Roteiro da semana</p>
+            <h2 class="section__title" id="roteiroTitulo">Chapada Diamantina, dia por dia</h2>
+            <p class="section__lead">
+              Cachoeiras, grutas e trilhas com guias locais. Grupo de até 12 pessoas e hospedagem em pousadas
+              familiares de Lençóis.
+            </p>
+
+            <ul class="accordion" id="roteiroAccordion"></ul>
+
+            <div class="split__actions">
+              <a class="btn btn--primary" href="#contato">Quero esse roteiro</a>
+              <a class="btn btn--ghost" href="#depoimentos">Ver quem já foi</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section--clay" id="depoimentos" aria-labelledby="depoTitulo">
+      <div class="container">
+        <header class="section__head section__head--center">
+          <p class="eyebrow eyebrow--light">Depoimentos</p>
+          <h2 class="section__title" id="depoTitulo">Quem voltou, voltou diferente</h2>
+        </header>
+
+        <div class="slider" id="depoSlider" data-index="0">
+          <div class="slider__viewport">
+            <ul class="slider__track" id="depoTrack"></ul>
+          </div>
+
+          <div class="slider__controls">
+            <button class="icon-btn icon-btn--light" type="button" id="depoPrev" aria-label="Depoimento anterior">
+              <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M14.5 5.5 8 12l6.5 6.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+            </button>
+            <div class="slider__dots" id="depoDots" role="tablist" aria-label="Selecionar depoimento"></div>
+            <button class="icon-btn icon-btn--light" type="button" id="depoNext" aria-label="Próximo depoimento">
+              <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M9.5 5.5 16 12l-6.5 6.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="contato" aria-labelledby="contatoTitulo">
+      <div class="container">
+        <div class="contact">
+          <div class="contact__copy">
+            <p class="eyebrow">Próximo passo</p>
+            <h2 class="section__title" id="contatoTitulo">Receba 3 roteiros sob medida</h2>
+            <p class="section__lead">
+              Conte como você gosta de viajar e um consultor monta as opções em até 1 dia útil. Sem custo e sem compromisso.
+            </p>
+            <ul class="contact__list">
+              <li>Orçamento com valores finais, sem surpresa no checkout</li>
+              <li>Remarcação gratuita até 15 dias antes do embarque</li>
+              <li>Atendimento por WhatsApp com quem montou o roteiro</li>
+            </ul>
+          </div>
+
+          <form class="contact__form" id="leadForm" novalidate>
+            <div class="field">
+              <label for="leadNome">Nome completo</label>
+              <input type="text" id="leadNome" name="nome" autocomplete="name" placeholder="Como podemos te chamar" />
+              <p class="field__error" data-error-for="leadNome"></p>
+            </div>
+
+            <div class="field">
+              <label for="leadEmail">E-mail</label>
+              <input type="email" id="leadEmail" name="email" autocomplete="email" placeholder="voce@email.com" />
+              <p class="field__error" data-error-for="leadEmail"></p>
+            </div>
+
+            <div class="field-row">
+              <div class="field">
+                <label for="leadDestino">Destino de interesse</label>
+                <select id="leadDestino" name="destino">
+                  <option value="">Selecione</option>
+                  <option>Fernando de Noronha — PE</option>
+                  <option>Chapada Diamantina — BA</option>
+                  <option>Jericoacoara — CE</option>
+                  <option>Lençóis Maranhenses — MA</option>
+                  <option>Serra Gaúcha — RS</option>
+                  <option>Rio de Janeiro — RJ</option>
+                  <option>Ainda não sei</option>
+                </select>
+                <p class="field__error" data-error-for="leadDestino"></p>
+              </div>
+              <div class="field">
+                <label for="leadPessoas">Viajantes</label>
+                <select id="leadPessoas" name="pessoas">
+                  <option>1 pessoa</option>
+                  <option selected>2 pessoas</option>
+                  <option>3 pessoas</option>
+                  <option>4 pessoas</option>
+                  <option>5 ou mais</option>
+                </select>
+                <p class="field__error" data-error-for="leadPessoas"></p>
+              </div>
+            </div>
+
+            <div class="field">
+              <label for="leadMensagem">O que não pode faltar?</label>
+              <textarea id="leadMensagem" name="mensagem" rows="3" placeholder="Ex.: trilhas leves, comida local, poucas horas de estrada"></textarea>
+            </div>
+
+            <label class="checkbox">
+              <input type="checkbox" id="leadAceite" name="aceite" />
+              <span>Aceito receber os roteiros por e-mail e concordo com a política de privacidade.</span>
+            </label>
+            <p class="field__error" data-error-for="leadAceite"></p>
+
+            <button class="btn btn--primary btn--block" type="submit">Quero meus 3 roteiros</button>
+            <p class="form-status" id="leadStatus" role="status" aria-live="polite"></p>
+          </form>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="site-footer__grid">
+        <div class="site-footer__brand">
+          <a class="brand brand--footer" href="#topo">
+            <span class="brand__mark" aria-hidden="true">
+              <svg viewBox="0 0 32 32" fill="none" focusable="false">
+                <path d="M16 3.5 27.5 25.5a1 1 0 0 1-.9 1.5H5.4a1 1 0 0 1-.9-1.5L16 3.5Z" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"/>
+                <path d="M9.5 21h13" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
+              </svg>
+            </span>
+            <span class="brand__text"><strong>Pé na Estrada</strong><small>viagens autorais</small></span>
+          </a>
+          <p>Agência de viagens brasileira focada em roteiros autorais e turismo de base comunitária desde 2014.</p>
+        </div>
+
+        <nav class="site-footer__col" aria-label="Destinos">
+          <h3>Destinos</h3>
+          <ul>
+            <li><a href="#destinos">Fernando de Noronha</a></li>
+            <li><a href="#destinos">Chapada Diamantina</a></li>
+            <li><a href="#destinos">Jericoacoara</a></li>
+            <li><a href="#destinos">Lençóis Maranhenses</a></li>
+          </ul>
+        </nav>
+
+        <nav class="site-footer__col" aria-label="A agência">
+          <h3>A agência</h3>
+          <ul>
+            <li><a href="#experiencias">Como trabalhamos</a></li>
+            <li><a href="#roteiros">Roteiros prontos</a></li>
+            <li><a href="#depoimentos">Depoimentos</a></li>
+            <li><a href="#contato">Contato</a></li>
+          </ul>
+        </nav>
+
+        <div class="site-footer__col">
+          <h3>Fale com a gente</h3>
+          <ul class="site-footer__contact">
+            <li><a href="mailto:oi@penaestrada.com.br">oi@penaestrada.com.br</a></li>
+            <li><a href="tel:+5585999990000">+55 85 99999-0000</a></li>
+            <li>Rua da Praia, 240 — Fortaleza, CE</li>
+          </ul>
+          <ul class="social">
+            <li><a href="#contato" aria-label="Instagram">
+              <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="3.5" y="3.5" width="17" height="17" rx="5" stroke="currentColor" stroke-width="1.8" fill="none"/><circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="1.8" fill="none"/><circle cx="17" cy="7" r="1.1" fill="currentColor"/></svg>
+            </a></li>
+            <li><a href="#contato" aria-label="YouTube">
+              <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="2.8" y="5.5" width="18.4" height="13" rx="4" stroke="currentColor" stroke-width="1.8" fill="none"/><path d="M10.5 9.5 15 12l-4.5 2.5v-5Z" fill="currentColor"/></svg>
+            </a></li>
+            <li><a href="#contato" aria-label="WhatsApp">
+              <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3.8a8.2 8.2 0 0 0-7 12.5L4 20.2l4-1a8.2 8.2 0 1 0 4-15.4Z" stroke="currentColor" stroke-width="1.8" fill="none" stroke-linejoin="round"/><path d="M9 9.5c0 3 2.5 5.5 5.5 5.5" stroke="currentColor" stroke-width="1.8" fill="none" stroke-linecap="round"/></svg>
+            </a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="site-footer__bottom">
+        <p>© <span id="anoAtual">2026</span> Pé na Estrada Viagens LTDA · CNPJ 00.000.000/0001-00</p>
+        <ul>
+          <li><a href="#contato">Política de privacidade</a></li>
+          <li><a href="#contato">Termos de uso</a></li>
+          <li><a href="#contato">Cancelamento</a></li>
+        </ul>
+      </div>
+    </div>
+  </footer>
+
+  <button class="to-top" id="toTop" type="button" aria-label="Voltar ao topo">
+    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 19V6M6 11.5 12 5.5l6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+  </button>
+
+  <!-- Modal de Autenticação (Login / Cadastro / Recuperação) -->
+  <dialog class="auth-dialog" id="authDialog" aria-labelledby="authTitle">
+    <div class="auth-modal">
+      <button class="icon-btn modal-close-btn" id="authCloseBtn" type="button" aria-label="Fechar janela">
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      </button>
+
+      <div class="auth-header">
+        <span class="auth-header__badge">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          Área do Viajante
+        </span>
+        <h2 id="authTitle">Sua jornada começa aqui</h2>
+        <p id="authSubtitle">Entre para salvar roteiros e planejar com especialistas</p>
+      </div>
+
+      <div class="auth-tabs" role="tablist" aria-label="Opções de autenticação">
+        <button class="auth-tab is-active" id="tabLogin" type="button" role="tab" aria-selected="true" aria-controls="loginForm">Entrar</button>
+        <button class="auth-tab" id="tabRegister" type="button" role="tab" aria-selected="false" aria-controls="registerForm">Cadastrar</button>
+      </div>
+
+      <!-- Formulário de Login -->
+      <form class="auth-panel is-active" id="loginForm" novalidate>
+        <div class="auth-alert auth-alert--error" id="loginAlert" role="alert">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          <span id="loginAlertMsg">E-mail ou senha incorretos.</span>
+        </div>
+
+        <div class="field">
+          <label for="loginEmail">E-mail</label>
+          <div class="input-icon-wrap">
+            <input type="email" id="loginEmail" name="email" autocomplete="email" placeholder="seu@email.com" />
+            <svg class="field-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          </div>
+          <p class="field__error" data-error-for="loginEmail"></p>
+        </div>
+
+        <div class="field">
+          <label for="loginSenha">Senha</label>
+          <div class="input-icon-wrap">
+            <input type="password" id="loginSenha" name="senha" autocomplete="current-password" placeholder="Sua senha secreta" />
+            <svg class="field-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            <button class="pwd-toggle-btn" type="button" data-target="loginSenha" aria-label="Mostrar ou ocultar senha">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            </button>
+          </div>
+          <p class="field__error" data-error-for="loginSenha"></p>
+        </div>
+
+        <div class="auth-utilities">
+          <label class="checkbox">
+            <input type="checkbox" id="loginRemember" checked />
+            <span>Lembrar meu acesso</span>
+          </label>
+          <button class="auth-link" id="forgotPwdLink" type="button">Esqueceu a senha?</button>
+        </div>
+
+        <button class="btn btn--primary btn--block" type="submit">Entrar na conta</button>
+
+        <div class="demo-account-box">
+          <div class="demo-account-box__text">
+            <strong>Conta para teste rápido</strong>
+            mariana@exemplo.com (senha123)
+          </div>
+          <button class="btn--demo" id="demoFillBtn" type="button">Preencher</button>
+        </div>
+
+        <div class="auth-divider"><span>ou acesse com</span></div>
+
+        <div class="social-login-grid">
+          <button class="btn btn--social" type="button" data-provider="Google">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#EA4335" d="M12 5c1.6 0 3 .6 4.1 1.6l3.1-3.1C17.3 1.7 14.8 1 12 1 7.5 1 3.7 3.6 1.9 7.3l3.7 2.9C6.5 7.4 9 5 12 5z"/><path fill="#4285F4" d="M23.5 12.3c0-.8-.1-1.6-.2-2.3H12v4.6h6.5c-.3 1.5-1.1 2.8-2.4 3.7l3.7 2.9c2.2-2 3.7-5 3.7-8.9z"/><path fill="#FBBC05" d="M5.6 14.8c-.2-.7-.4-1.5-.4-2.3 0-.8.2-1.6.4-2.3L1.9 7.3C.7 9.7 0 12.3 0 15.1c0 2.8.7 5.4 1.9 7.8l3.7-2.9z"/><path fill="#34A853" d="M12 23.5c3.2 0 6-1.1 8-3l-3.7-2.9c-1.1.7-2.5 1.2-4.3 1.2-3 0-5.5-2.4-6.4-5.2L1.9 16.5C3.7 20.2 7.5 23.5 12 23.5z"/></svg>
+            Google
+          </button>
+          <button class="btn btn--social" type="button" data-provider="Apple">
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M15.97 6.88c.64-.78 1.08-1.86.96-2.95-.93.04-2.07.62-2.73 1.4-.58.67-1.09 1.77-.95 2.83 1.04.08 2.08-.5 2.72-1.28z"/></svg>
+            Apple
+          </button>
+        </div>
+      </form>
+
+      <!-- Formulário de Cadastro -->
+      <form class="auth-panel" id="registerForm" novalidate>
+        <div class="auth-alert auth-alert--error" id="registerAlert" role="alert">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          <span id="registerAlertMsg">Este e-mail já está cadastrado.</span>
+        </div>
+
+        <div class="field">
+          <label for="regNome">Nome completo</label>
+          <div class="input-icon-wrap">
+            <input type="text" id="regNome" name="nome" autocomplete="name" placeholder="Como podemos te chamar" />
+            <svg class="field-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          </div>
+          <p class="field__error" data-error-for="regNome"></p>
+        </div>
+
+        <div class="field">
+          <label for="regEmail">E-mail</label>
+          <div class="input-icon-wrap">
+            <input type="email" id="regEmail" name="email" autocomplete="email" placeholder="voce@email.com" />
+            <svg class="field-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          </div>
+          <p class="field__error" data-error-for="regEmail"></p>
+        </div>
+
+        <div class="field">
+          <label for="regSenha">Crie uma senha</label>
+          <div class="input-icon-wrap">
+            <input type="password" id="regSenha" name="senha" autocomplete="new-password" placeholder="Mínimo 6 caracteres" />
+            <svg class="field-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            <button class="pwd-toggle-btn" type="button" data-target="regSenha" aria-label="Mostrar ou ocultar senha">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            </button>
+          </div>
+          <div class="pwd-meter" id="pwdMeter" data-strength="0">
+            <div class="pwd-meter__bars">
+              <span class="pwd-meter__bar"></span>
+              <span class="pwd-meter__bar"></span>
+              <span class="pwd-meter__bar"></span>
+            </div>
+            <span class="pwd-meter__label" id="pwdMeterLabel">Força da senha</span>
+          </div>
+          <p class="field__error" data-error-for="regSenha"></p>
+        </div>
+
+        <div class="field">
+          <label for="regSenhaConfirma">Confirme a senha</label>
+          <div class="input-icon-wrap">
+            <input type="password" id="regSenhaConfirma" name="senha_confirma" autocomplete="new-password" placeholder="Repita sua senha" />
+            <svg class="field-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            <button class="pwd-toggle-btn" type="button" data-target="regSenhaConfirma" aria-label="Mostrar ou ocultar senha">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            </button>
+          </div>
+          <p class="field__error" data-error-for="regSenhaConfirma"></p>
+        </div>
+
+        <label class="checkbox">
+          <input type="checkbox" id="regTermos" />
+          <span>Li e concordo com os termos de uso e política de privacidade da Pé na Estrada.</span>
+        </label>
+        <p class="field__error" data-error-for="regTermos"></p>
+
+        <button class="btn btn--primary btn--block" type="submit">Criar minha conta</button>
+      </form>
+
+      <!-- Formulário de Recuperação de Senha -->
+      <form class="auth-panel" id="forgotForm" novalidate>
+        <div class="auth-alert" id="forgotAlert" role="alert">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          <span id="forgotAlertMsg">Link enviado com sucesso.</span>
+        </div>
+
+        <p style="font-size: var(--fs-sm); color: var(--ink-500); line-height: 1.5;">
+          Digite o e-mail associado à sua conta e enviaremos instruções com link seguro para você redefinir sua senha.
+        </p>
+
+        <div class="field">
+          <label for="forgotEmail">E-mail cadastrado</label>
+          <div class="input-icon-wrap">
+            <input type="email" id="forgotEmail" name="email" autocomplete="email" placeholder="seu@email.com" />
+            <svg class="field-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          </div>
+          <p class="field__error" data-error-for="forgotEmail"></p>
+        </div>
+
+        <button class="btn btn--primary btn--block" type="submit">Enviar link de recuperação</button>
+        <button class="auth-link" id="backToLoginBtn" type="button" style="text-align: center; margin-top: var(--sp-1);">Voltar para o login</button>
+      </form>
+    </div>
+  </dialog>
+
+  <!-- Modal de Roteiros Salvos (Favoritos) -->
+  <dialog class="favs-dialog" id="favsDialog" aria-labelledby="favsTitle">
+    <div class="favs-modal">
+      <div class="favs-header">
+        <h2 id="favsTitle">
+          <svg viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          Meus Roteiros Salvos
+        </h2>
+        <button class="icon-btn" id="favsCloseBtn" type="button" aria-label="Fechar lista de salvos">
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        </button>
+      </div>
+
+      <ul class="favs-list" id="favsList"></ul>
+
+      <div class="favs-empty" id="favsEmpty" hidden>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+        <p>Você ainda não salvou nenhum roteiro. Clique no ícone de coração nos cards para guardar suas viagens preferidas.</p>
+        <a class="btn btn--primary btn--sm" id="exploreDestinosBtn" href="#destinos">Explorar destinos</a>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- Contêiner de Notificações Toast -->
+  <div class="toast-container" id="toastContainer" aria-live="polite"></div>
+
+  <script src="js/scenes.js"></script>
+  <script src="js/data.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
