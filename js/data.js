@@ -106,11 +106,40 @@ var DATA = (function () {
       estado: "PE",
       categoria: "praia",
       dias: "5 dias",
+      duracaoDias: 5,
       preco: "5.890",
+      precoNum: 5890,
       nota: "4.9",
       avaliacoes: 124,
+      esforco: "Moderado",
+      melhorEpoca: "Agosto a Fevereiro",
       tags: ["Preservação", "Mergulho", "Pôr do Sol"],
       descricao: "Um santuário ecológico de águas cristalinas, lar de golfinhos e tartarugas marinhas. Praias eleitas as mais belas do planeta com controle diário de visitantes.",
+      inclusos: [
+        "Traslado privativo aeroporto / pousada",
+        "Passeio Ilhatur em 4x4 exclusivo com guia credenciado",
+        "Passeio de barco pelo Mar de Dentro",
+        "Hospedagem com café da manhã regional",
+        "Seguro viagem e condutor credenciado ICMBio"
+      ],
+      naoInclusos: [
+        "Taxa de Preservação Ambiental (TPA)",
+        "Ingresso do Parque Nacional Marinho",
+        "Passagens aéreas"
+      ],
+      opcionais: [
+        { id: "batismo", nome: "Mergulho de Batismo com cilindro e instrutor", preco: 580 },
+        { id: "canoa", nome: "Canoa Havaiana ao amanhecer com golfinhos", preco: 240 },
+        { id: "degustacao", nome: "Jantar degustação no Festival Gastronômico", preco: 320 }
+      ],
+      hospedagens: { standard: 0, boutique: 780, luxo: 1950 },
+      itinerario: [
+        { dia: "D1", titulo: "Chegada na Ilha e Pôr do Sol no Boldró", desc: "Boas-vindas personalizadas, check-in na pousada e fim de tarde icônico no Forte do Boldró com vista para o Morro do Pico e Dois Irmãos." },
+        { dia: "D2", titulo: "Circuito Ilhatur 4x4 Completo", desc: "Sancho, Baía dos Porcos, Cacimba do Padre, Mirante dos Golfinhos e banho de mar nas piscinas naturais do Sueste." },
+        { dia: "D3", titulo: "Trilha Histórica & Snorkel na Praia do Porto", desc: "Visita guiada pela Vila dos Remédios, Forte de Nossa Senhora e mergulho de observação com tartarugas e raias." },
+        { dia: "D4", titulo: "Navegação Contemplativa & Entardecer no Mar", desc: "Passeio de barco acompanhando o balé dos golfinhos rotadores e parada de snorkel em águas azul-turquesa." },
+        { dia: "D5", titulo: "Manhã Livre de Charme & Despedida", desc: "Tempo livre para fotos e artesanato local, seguido por transfer assistido ao aeroporto." }
+      ],
       getSvg: function (id) {
         return typeof SCENES !== "undefined" && SCENES.noronha ? SCENES.noronha(id) : "";
       }
@@ -121,11 +150,40 @@ var DATA = (function () {
       estado: "BA",
       categoria: "aventura",
       dias: "7 dias",
+      duracaoDias: 7,
       preco: "4.290",
+      precoNum: 4290,
       nota: "4.8",
       avaliacoes: 98,
+      esforco: "Intenso",
+      melhorEpoca: "Maio a Outubro",
       tags: ["Trilhas", "Cachoeiras", "Grutas"],
       descricao: "O paraíso nacional das trilhas e ecoturismo. Cachoeiras gigantescas de água avermelhada, grutas subterrâneas fascinantes e o pôr do sol inesquecível no Pai Inácio.",
+      inclusos: [
+        "Hospedagem com café em pousadas familiares de Lençóis",
+        "Guia nativo credenciado em todas as expedições",
+        "Transporte 4x4 de apoio para acesso aos atrativos",
+        "Lanches de trilha energéticos e seguro ecoturismo"
+      ],
+      naoInclusos: [
+        "Bebidas alcoólicas e jantares livres",
+        "Passagens aéreas ou rodoviárias até Lençóis"
+      ],
+      opcionais: [
+        { id: "buracao_rapel", nome: "Flutuação e rapel na Gruta da Pratinha", preco: 190 },
+        { id: "degustacao_cafe", nome: "Tour sensorial de cafés premiados da Chapada", preco: 180 },
+        { id: "transfer_salvador", nome: "Transfer privativo Salvador ⇄ Lençóis", preco: 450 }
+      ],
+      hospedagens: { standard: 0, boutique: 480, luxo: 1200 },
+      itinerario: [
+        { dia: "D1", titulo: "Chegada em Lençóis & Boas-Vindas", desc: "Recepção e traslado para a pousada, alinhamento técnico com guia nativo e jantar regional de boas-vindas." },
+        { dia: "D2", titulo: "Cachoeira da Fumaça & Pai Inácio", desc: "Trekking clássico até a queda livre de 340m e contemplação do pôr do sol inesquecível no Morro do Pai Inácio." },
+        { dia: "D3", titulo: "Gruta da Pratinha & Gruta Azul", desc: "Flutuação com máscara em águas subterrâneas azuis e espelho de luz natural nas cavernas calcárias." },
+        { dia: "D4", titulo: "Poço Encantado & Poço Azul", desc: "Contemplação do facho solar azul-neon no Poço Encantado e mergulho refrescante nas águas cristalinas do Poço Azul." },
+        { dia: "D5", titulo: "Expedição Cachoeira do Buracão", desc: "Caminhada pelo cânion sinuoso e nado pelo rio estreito até a fantástica queda d'água de 85 metros." },
+        { dia: "D6", titulo: "Águas Claras & Três Picos", desc: "Trilha leve por vales floridos e banho em piscina natural aos pés do majestoso maciço dos Três Picos." },
+        { dia: "D7", titulo: "Manhã Cultural em Lençóis & Retorno", desc: "Passeio pelo calçamento de pedra do centro histórico, café artesanal e traslado para retorno." }
+      ],
       getSvg: function (id) {
         return typeof SCENES !== "undefined" && SCENES.chapada ? SCENES.chapada(id) : "";
       }
@@ -136,11 +194,37 @@ var DATA = (function () {
       estado: "CE",
       categoria: "praia",
       dias: "4 dias",
+      duracaoDias: 4,
       preco: "3.150",
+      precoNum: 3150,
       nota: "4.7",
       avaliacoes: 85,
+      esforco: "Leve",
+      melhorEpoca: "Julho a Dezembro",
       tags: ["Kitesurf", "Dunas", "Vila de Charme"],
       descricao: "Uma charmosa vila de pescadores pé na areia cercada por dunas móveis e lagoas ideais para relaxar nas redes flutuantes. Paraíso dos ventos e do kitesurf.",
+      inclusos: [
+        "Traslado em 4x4 pelas dunas (Fortaleza ou Cruz ⇄ Jeri)",
+        "Passeios exclusivos de buggy Litoral Leste e Oeste",
+        "Pousada charmosa com café da manhã tropical",
+        "Seguro viagem e acompanhamento de guia"
+      ],
+      naoInclusos: [
+        "Taxa de Turismo Sustentável municipal",
+        "Almoços e jantares livres"
+      ],
+      opcionais: [
+        { id: "kitesurf", nome: "Aula VIP de introdução ao Kitesurf (2h)", preco: 420 },
+        { id: "catamara_sunset", nome: "Passeio de Catamarã com espumante no pôr do sol", preco: 210 },
+        { id: "buraco_azul_vip", nome: "Acesso à cabana lounge no Buraco Azul", preco: 150 }
+      ],
+      hospedagens: { standard: 0, boutique: 420, luxo: 990 },
+      itinerario: [
+        { dia: "D1", titulo: "Travessia das Dunas & Pôr do Sol Dourado", desc: "Chegada eletrizante em 4x4 pelas dunas e celebração do entardecer na icônica Duna do Pôr do Sol." },
+        { dia: "D2", titulo: "Litoral Leste: Lagoa do Paraíso & Pedra Furada", desc: "Dia nas redes flutuantes da lagoa de água doce e caminhada ecológica até o monumento da Pedra Furada." },
+        { dia: "D3", titulo: "Litoral Oeste: Mangue Seco & Tatajuba", desc: "Travessia de balsa artesanal, observação de cavalos-marinhos e descida de esquibunda nas dunas de Tatajuba." },
+        { dia: "D4", titulo: "Manhã de Charme & Despedida da Vila", desc: "Caminhada pelas vielas de areia sem postes de luz, compras de artesanato e transfer de volta." }
+      ],
       getSvg: function (id) {
         return typeof SCENES !== "undefined" && SCENES.jeri ? SCENES.jeri(id) : "";
       }
@@ -151,11 +235,39 @@ var DATA = (function () {
       estado: "MA",
       categoria: "aventura",
       dias: "5 dias",
+      duracaoDias: 5,
       preco: "3.850",
+      precoNum: 3850,
       nota: "4.9",
       avaliacoes: 112,
+      esforco: "Moderado",
+      melhorEpoca: "Junho a Setembro",
       tags: ["Lagoas", "Dunas Alvas", "Ecoturismo"],
       descricao: "Um impressionante deserto de areias branquíssimas pontilhado por milhares de lagoas sazonais de água doce e azulada formadas pelas chuvas do primeiro semestre.",
+      inclusos: [
+        "Traslados terrestres climatizados São Luís ⇄ Barreirinhas",
+        "Expedições 4x4 jardineira no Parque Nacional",
+        "Navegação em lancha voadeira pelo Rio Preguiças",
+        "Pousadas selecionadas em Barreirinhas e Atins com café",
+        "Guias locais experientes e seguro de viagem"
+      ],
+      naoInclusos: [
+        "Passagens até São Luís",
+        "Refeições não especificadas"
+      ],
+      opcionais: [
+        { id: "sobrevoo_dunas", nome: "Sobrevoo panorâmico de monomotor sobre as dunas", preco: 620 },
+        { id: "caiaque_preguicas", nome: "Expedição de caiaque pelo Rio Preguiças", preco: 180 },
+        { id: "jantar_camarao", nome: "Jantar especial do camarão grelhado no Canto do Atins", preco: 160 }
+      ],
+      hospedagens: { standard: 0, boutique: 520, luxo: 1150 },
+      itinerario: [
+        { dia: "D1", titulo: "São Luís para Barreirinhas & Circuito Lagoa Azul", desc: "Chegada em Barreirinhas, travessia de balsa e primeira contemplação das lagoas cristalinas ao pôr do sol." },
+        { dia: "D2", titulo: "Circuito Lagoa Bonita & Vista Panorâmica", desc: "Ascensão da duna de 30 metros com vista infinita para o deserto branco e banhos revigorantes." },
+        { dia: "D3", titulo: "Navegação no Rio Preguiças até Atins", desc: "Passeio de lancha rápida com paradas nos macacos de Vassouras, Farol de Mandacaru e ponta de Caburé." },
+        { dia: "D4", titulo: "Lagoas Secretas do Atins & Praias Fluviais", desc: "A atmosfera pacata e rústica de Atins, kitesurf e lagoas quase desertas com almoço regional." },
+        { dia: "D5", titulo: "Retorno a Barreirinhas e São Luís", desc: "Travessia fluvial e retorno rodoviário confortável ao aeroporto de São Luís." }
+      ],
       getSvg: lencoisSvg
     },
     {
@@ -164,11 +276,38 @@ var DATA = (function () {
       estado: "RS",
       categoria: "serra",
       dias: "5 dias",
+      duracaoDias: 5,
       preco: "2.980",
+      precoNum: 2980,
       nota: "4.9",
       avaliacoes: 142,
+      esforco: "Leve",
+      melhorEpoca: "Abril a Outubro (frio/vindima) ou Dezembro",
       tags: ["Gastronomia", "Enoturismo", "Clima de Serra"],
       descricao: "Charme, cultura e o melhor da gastronomia de herança italiana e alemã. Rotas vinícolas repletas de vinícolas premiadas, flores exuberantes e hospedagens coloniais.",
+      inclusos: [
+        "Hospedagem colonial com lareira em Gramado ou Canela",
+        "Transporte privativo climatizado durante os passeios",
+        "Degustação guiada em vinícolas boutique do Vale dos Vinhedos",
+        "Café da manhã colonial artesanal e ingressos selecionados"
+      ],
+      naoInclusos: [
+        "Passagens aéreas até Porto Alegre",
+        "Almoços livres e consumos extras"
+      ],
+      opcionais: [
+        { id: "sequencia_fondue", nome: "Jantar com sequência tradicional de fondue suíço", preco: 180 },
+        { id: "tour_cervejas", nome: "Rota das microcervejarias artesanais com harmonização", preco: 220 },
+        { id: "pisa_uva", nome: "Experiência de Vindima com pisa da uva e música", preco: 280 }
+      ],
+      hospedagens: { standard: 0, boutique: 420, luxo: 920 },
+      itinerario: [
+        { dia: "D1", titulo: "Porto Alegre à Serra & Boas-Vindas", desc: "Subida da serra pela Rota Romântica, check-in na pousada com lareira e primeiro café colonial." },
+        { dia: "D2", titulo: "Vale dos Vinhedos & Bento Gonçalves", desc: "Imersão nas vinícolas pioneiras de espumantes finos com degustação conduzida por sommeliers." },
+        { dia: "D3", titulo: "Canela & Cânions da Ferradura", desc: "Paisagens imponentes do Parque da Ferradura, Cascata do Caracol e parada em chocolateria tradicional." },
+        { dia: "D4", titulo: "Caminhos de Pedra & Tradição dos Imigrantes", desc: "Patrimônio histórico vivo: moinhos do século XIX, queijarias coloniais e cantinas familiares." },
+        { dia: "D5", titulo: "Compras de Charme em Gramado & Retorno", desc: "Manhã livre na Rua Coberta e traslado suave de volta ao aeroporto Salgado Filho." }
+      ],
       getSvg: serraSvg
     },
     {
@@ -177,12 +316,150 @@ var DATA = (function () {
       estado: "RJ",
       categoria: "cultura",
       dias: "4 dias",
+      duracaoDias: 4,
       preco: "2.450",
+      precoNum: 2450,
       nota: "4.8",
       avaliacoes: 215,
+      esforco: "Leve",
+      melhorEpoca: "Ano inteiro (especial de Maio a Novembro)",
       tags: ["Samba & Bossa", "História", "Praias Urbanas"],
       descricao: "A espetacular fusão entre mata atlântica, praias icônicas e vida cultural vibrante. Vivencie a herança histórica do centro antigo ao samba de raiz da Lapa.",
+      inclusos: [
+        "Hospedagem boutique em Santa Teresa ou na orla de Ipanema",
+        "Ingressos antecipados com hora marcada para Cristo e Pão de Açúcar",
+        "Walking tour cultural histórico pelo Centro e Pequena África",
+        "Transporte privativo nos passeios programados com guia credenciado"
+      ],
+      naoInclusos: [
+        "Refeições noturnas e bebidas alcoólicas",
+        "Passagens aéreas até o Rio"
+      ],
+      opcionais: [
+        { id: "samba_lapa", nome: "Noite de roda de samba com guia local na Lapa", preco: 160 },
+        { id: "asa_delta", nome: "Voo duplo panorâmico de asa-delta na Pedra Bonita", preco: 680 },
+        { id: "veleiro_baia", nome: "Passeio privativo de veleiro pela Baía de Guanabara", preco: 310 }
+      ],
+      hospedagens: { standard: 0, boutique: 380, luxo: 890 },
+      itinerario: [
+        { dia: "D1", titulo: "Chegada Carioca & Boemia de Santa Teresa", desc: "Recepção, subida de bondinho histórico e vista dos ateliês e casarões coloniais do bairro." },
+        { dia: "D2", titulo: "Maravilhas da Cidade: Corcovado & Bondinho", desc: "Acesso matinal sem filas ao Cristo Redentor e Pão de Açúcar com vista panorâmica de 360°." },
+        { dia: "D3", titulo: "Pequena África, Real Gabinete & Samba", desc: "Cais do Valongo, MAR, Confeitaria Colombo e imersão musical em roda de samba de raiz." },
+        { dia: "D4", titulo: "Praias Icônicas & Pôr do Sol no Arpoador", desc: "Água de coco na praia de Ipanema, calçadão e traslado planejado para embarque." }
+      ],
       getSvg: rioSvg
+    },
+    {
+      id: "amazonia",
+      nome: "Amazônia & Rio Negro",
+      estado: "AM",
+      categoria: "aventura",
+      dias: "6 dias",
+      duracaoDias: 6,
+      preco: "4.680",
+      precoNum: 4680,
+      nota: "4.9",
+      avaliacoes: 76,
+      esforco: "Moderado",
+      melhorEpoca: "Julho a Dezembro (praias fluviais) ou Março a Junho (cheia)",
+      tags: ["Floresta Tropical", "Botos Cor-de-Rosa", "Ecolodge de Selva"],
+      descricao: "Uma imersão sensorial na maior floresta do planeta. Hospedagem em ecolodge sustentável no Rio Negro, canoagem em igapós espelhados, contemplação de botos e vivência comunitária.",
+      inclusos: [
+        "Traslados fluviais e terrestres a partir de Manaus",
+        "Hospedagem em ecolodge de selva sustentável com pensão completa",
+        "Guias nativos mateiros e biólogos de campo",
+        "Passeios diurnos e focagens noturnas de canoa"
+      ],
+      naoInclusos: [
+        "Passagens aéreas até Manaus (MAO)",
+        "Bebidas alcoólicas"
+      ],
+      opcionais: [
+        { id: "hidroaviao", nome: "Voo panorâmico de hidroavião sobre Anavilhanas", preco: 890 },
+        { id: "pernoite_selva", nome: "Acampamento de sobrevivência com pernoite em rede", preco: 380 },
+        { id: "teatro_amazonas", nome: "City tour histórico com visita ao Teatro Amazonas", preco: 180 }
+      ],
+      hospedagens: { standard: 0, boutique: 620, luxo: 1480 },
+      itinerario: [
+        { dia: "D1", titulo: "Navegação pelo Rio Negro & Boas-Vindas", desc: "Saída de Manaus, travessia pelas águas escuras do Rio Negro e recepção no lodge com banquete regional." },
+        { dia: "D2", titulo: "Trekking Pedagógico & Botânica Amazônica", desc: "Caminhada interpretativa: árvores milenares como a sumaúma, cipós e remédios da floresta." },
+        { dia: "D3", titulo: "Igapós Inundados & Pôr do Sol Espelhado", desc: "Remada silenciosa em canoas tradicionais pelo labirinto de árvores alagadas e observação de fauna." },
+        { dia: "D4", titulo: "Botos Cor-de-Rosa & Comunidade Ribeirinha", desc: "Avistamento responsável e respeito aos hábitos dos botos, seguido de oficina de farinha de mandioca." },
+        { dia: "D5", titulo: "Pesca Esportiva de Piranha & Focagem Noturna", desc: "Prática artesanal com varinha de bambu e expedição noturna silenciosa com lanterna pelos igarapés." },
+        { dia: "D6", titulo: "Encontro das Águas & Despedida", desc: "Navegação contemplando o encontro dos rios Negro e Solimões sem se misturar, e retorno a Manaus." }
+      ],
+      getSvg: function (id) {
+        return typeof SCENES !== "undefined" && SCENES.amazonia ? SCENES.amazonia(id) : "";
+      }
+    },
+    {
+      id: "foz",
+      nome: "Foz do Iguaçu",
+      estado: "PR",
+      categoria: "aventura",
+      dias: "4 dias",
+      duracaoDias: 4,
+      preco: "2.890",
+      precoNum: 2890,
+      nota: "4.9",
+      avaliacoes: 163,
+      esforco: "Leve",
+      melhorEpoca: "Março a Maio ou Setembro a Novembro",
+      tags: ["Cataratas Monumentais", "Biodiversidade", "Tríplice Fronteira"],
+      descricao: "A força majestosa das Cataratas do Iguaçu, uma das Novas 7 Maravilhas da Natureza. Passarelas sobre as quedas, safari de barco nas correntezas do cânion e imersão no Parque das Aves.",
+      inclusos: [
+        "Traslado privativo aeroporto ⇄ hotel",
+        "Ingressos com acesso prioritário às Cataratas e Parque das Aves",
+        "Aventura náutica Macuco Safari sob as quedas d'água",
+        "Guia credenciado em todos os passeios e seguro viagem"
+      ],
+      naoInclusos: [
+        "Passagens aéreas até Foz do Iguaçu",
+        "Almoços e despesas em Puerto Iguazú / Ciudad del Este"
+      ],
+      opcionais: [
+        { id: "cataratas_argentina", nome: "Excursão de dia inteiro ao Parque Nacional Iguazú (Argentina)", preco: 320 },
+        { id: "voo_helicoptero", nome: "Sobrevoo de helicóptero sobre a Garganta do Diabo", preco: 650 },
+        { id: "luau_cataratas", nome: "Passeio noturno Luau das Cataratas em noites de lua cheia", preco: 240 }
+      ],
+      hospedagens: { standard: 0, boutique: 360, luxo: 1100 },
+      itinerario: [
+        { dia: "D1", titulo: "Chegada a Foz & Marco das Três Fronteiras", desc: "Check-in no hotel e entardecer cultural no Marco das Três Fronteiras com vista para o encontro dos rios Iguaçu e Paraná." },
+        { dia: "D2", titulo: "Cataratas Brasileiras & Aventura Macuco Safari", desc: "Passarela panorâmica em frente à Garganta do Diabo e banho inesquecível de barco sob as quedas." },
+        { dia: "D3", titulo: "Parque das Aves & Usina de Itaipu Panorâmica", desc: "Viveiros de imersão com araras e tucanos resgatados, seguido da grandiosidade da engenharia de Itaipu." },
+        { dia: "D4", titulo: "Manhã Gastronômica na Fronteira & Retorno", desc: "Tempo para adquirir vinhos artesanais e azeites, seguido por transfer assistido ao aeroporto." }
+      ],
+      getSvg: function (id) {
+        return typeof SCENES !== "undefined" && SCENES.foz ? SCENES.foz(id) : "";
+      }
+    }
+  ];
+
+  // Perguntas Frequentes (FAQ)
+  var FAQ = [
+    {
+      pergunta: "Como funcionam as viagens autorais em grupo ou privativas?",
+      resposta: "Nossos roteiros são desenhados para grupos enxutos (média de 6 a 12 viajantes), o que garante respeito às comunidades locais e acesso a recantos que grandes ônibus de turismo não alcançam. Você também pode solicitar a adaptação de qualquer roteiro para um formato 100% privativo para sua família ou grupo de amigos."
+    },
+    {
+      pergunta: "Posso viajar sozinho(a) nos roteiros da Pé na Estrada?",
+      resposta: "Com certeza! Cerca de 40% dos nossos viajantes embarcam desacompanhados. Você pode optar por quarto individual privativo ou solicitar a partilha de acomodação dupla com outro viajante do mesmo gênero para economizar."
+    },
+    {
+      pergunta: "Qual é a política de cancelamento e remarcação?",
+      resposta: "Sabemos que planos podem mudar. Oferecemos remarcação 100% gratuita para outra data em até 15 dias antes do embarque. Em caso de cancelamento formal, seguimos as diretrizes da Embratur e do Código de Defesa do Consumidor com processos ágeis e sem burocracia oculta."
+    },
+    {
+      pergunta: "Quais são as formas de pagamento disponíveis?",
+      resposta: "Facilitamos sua jornada com parcelamento em até 10x sem juros no cartão de crédito, ou desconto especial de 5% à vista via PIX ou transferência. Também disponibilizamos plano de pagamento programado com entrada e parcelas via boleto bancário quitadas até a data da viagem."
+    },
+    {
+      pergunta: "O que acontece se as condições climáticas mudarem durante o roteiro?",
+      resposta: "Nossos guias locais nativos acompanham a meteorologia diariamente. Caso uma cachoeira ou travessia marítima não apresente condições seguras, ativamos rotas e atrativos alternativos de mesmo nível, preservando sempre sua segurança e o encanto da viagem."
+    },
+    {
+      pergunta: "Vocês cuidam da compra das passagens aéreas?",
+      resposta: "Nossa expertise principal é a curadoria terrestre em cada destino (pousadas selecionadas, guias nativos, logística e experiências). No entanto, nossa equipe orienta os melhores voos e horários para coincidir com os traslados, podendo incluir a emissão aérea no seu pacote sob consulta."
     }
   ];
 
@@ -281,6 +558,7 @@ var DATA = (function () {
     DESTINOS: DESTINOS,
     FEATURE_GRID: FEATURE_GRID,
     ROTEIRO_ACCORDION: ROTEIRO_ACCORDION,
-    DEPOIMENTOS: DEPOIMENTOS
+    DEPOIMENTOS: DEPOIMENTOS,
+    FAQ: FAQ
   };
 })();

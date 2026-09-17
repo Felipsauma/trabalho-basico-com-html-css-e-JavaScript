@@ -1,29 +1,51 @@
-# 🧭 Trabalho Básico de CSS, HTML e JavaScript — Pé na Estrada
+# 🧭 Plataforma Pé na Estrada — Viagens Autorais pelo Brasil
 
-> Uma landing page moderna, autoral e interativa para agência de turismo desenvolvida com HTML, CSS e JavaScript puros.
+> Uma plataforma web avançada, interativa e autoral para agência de turismo desenvolvida com **HTML5, CSS3 e JavaScript Vanilla puros**, sem dependências externas pesadas.
 
 ![Pé na Estrada Preview](images/hero.jpg)
 
 ---
 
-## ✨ Destaques do Projeto
+## ✨ Destaques & Recursos Avançados
 
-- **🎨 Ilustrações Vetoriais Autorais**: Todas as ilustrações de destinos (Noronha, Jericoacoara, Chapada Diamantina, Lençóis Maranhenses, Serra Gaúcha e Rio de Janeiro) foram desenhadas em SVG vetorial puro, leves e responsivas.
-- **🔐 Sistema Completo de Autenticação**:
-  - Modal com abas para **Login**, **Cadastro** e **Recuperação de Senha**;
-  - Medidor de força de senha em tempo real;
-  - Alternador de visibilidade de senha;
-  - Suporte a persistência via `localStorage` e `sessionStorage`;
-  - Login social simulado (Google e Apple);
-  - Conta de demonstração com preenchimento em 1 clique (Mariana Silva).
-- **❤️ Roteiros Salvos (Favoritos)**:
-  - Botão de favoritar em cada card com animação suave de coração;
-  - Modal exclusivo com listagem dos destinos salvos pelo viajante logado;
-  - Atalho de planejamento direto a partir dos favoritos.
-- **🔔 Notificações Toast Flutuantes**: Feedback imediato para ações do usuário (login, logout, favoritar, solicitação de roteiros).
-- **📱 Responsividade Impecável**: Adaptado para celulares, tablets e desktops (menu lateral drawer, slider com gestos touch/swipe).
-- **📋 Roteiro Interativo**: Acordeão dia a dia com a programação completa da Chapada Diamantina.
-- **⚡ Zero Dependências Pesadas**: Construído com HTML5 semântico, CSS3 modular com Design Tokens e JavaScript Vanilla puro.
+- **🌓 Suporte Nativo a Modo Escuro & Claro (Dark / Light Mode)**:
+  - Alternador fluido no cabeçalho e menu lateral (drawer mobile);
+  - Paleta noturna terrosa desenhada especialmente para contraste visual e conforto;
+  - Persistência no `localStorage` e detecção automática de `prefers-color-scheme`.
+- **🔍 Busca Multidimensional, Filtros & Ordenação em Tempo Real**:
+  - Busca instantânea por texto (nome, atrações, estado ou bioma);
+  - Slider interativo de faixa de orçamento máximo (com atualização de valores em tempo real);
+  - Ordenação rápida: *Mais Recomendados (Nota)*, *Menor Preço*, *Maior Preço* e *Menor Duração (Dias)*;
+  - Filtro por categorias com chips acessíveis (Praia, Serra, Aventura, Cultura);
+  - Contador de resultados ao vivo e botão de limpeza instantânea de filtros.
+- **🗺️ Modal Imersivo do Roteiro & Simulador de Orçamento em Tempo Real**:
+  - Exibição de banner SVG em alta resolução, galeria, o que está incluso e o que não inclui;
+  - Itinerário detalhado dia a dia da expedição;
+  - **Calculadora Financeira Interativa**:
+    - Ajuste dinâmico do número de viajantes com cálculo de desconto de grupo (8% para 4 ou mais pessoas);
+    - Seleção de categoria de hospedagem (*Pousada Familiar*, *Pousada Charme*, *Suíte Luxo*);
+    - Adicionais opcionais customizados (mergulhos, voos panorâmicos, experiências gastronômicas);
+    - Cálculo matemático exato com parcelamento em até 10x sem juros no cartão ou 5% de desconto à vista via PIX;
+    - Ação de envio da simulação direto para o formulário de contato com todos os campos pré-preenchidos;
+    - Salvamento da simulação na conta do viajante.
+- **⚖️ Comparador Lado a Lado de Roteiros**:
+  - Seleção de até 3 destinos para comparar simultaneamente;
+  - Barra de ancoragem inferior flutuante (*Dock*) com contagem e chips removíveis;
+  - Modal comparativo em grade exibindo investimento, custo médio diário, nível de esforço físico, melhor época e destaques.
+- **🎨 8 Ilustrações Vetoriais Autorais em SVG Puro**:
+  - Noronha, Jericoacoara, Chapada Diamantina, Lençóis Maranhenses, Serra Gaúcha, Rio de Janeiro e os novos destinos: **Amazônia & Rio Negro (AM)** e **Foz do Iguaçu (PR)**.
+- **👤 Painel do Viajante & Área de Membros (Dashboard)**:
+  - Histórico de simulações e propostas salvas pelo usuário com reativação em 1 clique;
+  - Gestão de Roteiros Favoritos;
+  - Formulário de Preferências de Viagem (estilo, ritmo e restrições alimentares);
+  - Sistema de login, cadastro, recuperação de senha, conta de demonstração e login social simulado.
+- **❓ FAQ Interativo com Acordeão Acessível**:
+  - Dúvidas frequentes sobre logística, cancelamentos, grupos, pagamentos e passagens aéreas.
+- **⚡ Refinamento de Usabilidade & Performance**:
+  - Barra de progresso de leitura superior (*Scroll Indicator*);
+  - Máscara dinâmica de telefone e WhatsApp `(00) 00000-0000`;
+  - Compartilhamento de roteiros via Web Share API com cópia para área de transferência;
+  - Notificações Toast contextuais (sucesso, aviso, erro e informação).
 
 ---
 
@@ -31,21 +53,21 @@
 
 ```text
 ├── css/
-│   ├── base.css          # Reset, tokens de cores, tipografia e utilitários
-│   ├── components.css    # Botões, cards, acordeão, slider, modais e formulários
+│   ├── base.css          # Reset, tokens de cores (Light/Dark mode), tipografia e utilitários
+│   ├── components.css    # Botões, simulador, comparador, chips, cards, modais e formulários
 │   ├── footer.css        # Estilos do rodapé
 │   ├── header.css        # Cabeçalho fixo, navegação e drawer mobile
 │   ├── hero.css          # Seção hero e barra de busca rápida
-│   ├── responsive.css    # Breakpoints para tablets e celulares
-│   └── sections.css      # Ajustes de seções split e formulário de contato
+│   ├── responsive.css    # Breakpoints para tablets, celulares e bottom sheets
+│   └── sections.css      # Ajustes de seções split, FAQ e formulário de contato
 ├── images/
 │   └── hero.jpg          # Imagem de capa do hero
 ├── js/
-│   ├── data.js           # Dados estruturados de destinos, diferenciais e depoimentos
-│   ├── main.js           # Interatividade, estado de autenticação, favoritos e UI
-│   └── scenes.js         # Ilustrações vetoriais em SVG
+│   ├── data.js           # Dados estruturados de 8 destinos, opcionais, FAQ e depoimentos
+│   ├── main.js           # Interatividade completa: temas, filtros, simulador, comparador e auth
+│   └── scenes.js         # Ilustrações vetoriais autorais em SVG
 ├── .gitignore            # Arquivos e pastas ignorados pelo Git
-├── index.html            # Estrutura principal da página
+├── index.html            # Estrutura principal da aplicação
 └── README.md             # Documentação do projeto
 ```
 
@@ -53,9 +75,9 @@
 
 ## 🚀 Como Executar Localmente
 
-Como o projeto utiliza tecnologias web nativas, não é necessário instalar dependências ou rodar comandos de build.
+Como o projeto utiliza tecnologias web nativas, não é necessário instalar dependências como Node.js ou rodar comandos de build.
 
-1. Clone o repositório:
+1. Clone o repositório ou baixe os arquivos:
    ```bash
    git clone https://github.com/SEU-USUARIO/trabalho-basico-de-css-html-e-javascript.git
    ```
@@ -63,16 +85,16 @@ Como o projeto utiliza tecnologias web nativas, não é necessário instalar dep
    ```bash
    cd trabalho-basico-de-css-html-e-javascript
    ```
-3. Abra o arquivo `index.html` diretamente no seu navegador, ou utilize extensões como o **Live Server** no VS Code.
+3. Abra o arquivo `index.html` diretamente no seu navegador, ou utilize o Live Server no VS Code.
 
 ---
 
 ## 🛠️ Tecnologias Utilizadas
 
-- **HTML5** (Semântica acessível com ARIA, tags de diálogo nativo `<dialog>`, Open Graph)
-- **CSS3** (CSS Variables, Flexbox, CSS Grid, Glassmorphism/Backdrop-filter, Keyframe animations)
-- **JavaScript (ES6+)** (LocalStorage API, Dialog API, Touch events, DOM manipulation)
-- **Google Fonts** (*Fraunces* para títulos elegantes e *Inter* para leitura nítida)
+- **HTML5**: Semântica estrita, ARIA accessibility, elementos nativos `<dialog>`, `<aside>`, Open Graph.
+- **CSS3**: CSS Custom Properties (Design Tokens para temas Claro e Escuro), CSS Grid, Flexbox, Keyframe animations, Backdrop-filter.
+- **JavaScript (ES6+)**: LocalStorage API, Dialog API, Web Share API, Clipboard API, Touch gestures, DOM reactive state.
+- **Tipografia**: Google Fonts (*Fraunces* e *Inter*).
 
 ---
 

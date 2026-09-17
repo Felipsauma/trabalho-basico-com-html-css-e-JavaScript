@@ -102,9 +102,98 @@ var SCENES = (function () {
           );
         }
 
-        return {
-          noronha: noronha,
-          jeri: jeri,
-          chapada: chapada
-        };
-      })();
+  function amazonia(id) {
+    return (
+      '<svg ' + SIZE + '>' +
+      '<defs>' +
+      '<linearGradient id="' + id + '-sky" x1="0" y1="0" x2="0" y2="1">' +
+      '<stop offset="0" stop-color="#2a4736"/><stop offset="0.6" stop-color="#4d7857"/><stop offset="1" stop-color="#8bb38d"/>' +
+      "</linearGradient>" +
+      '<linearGradient id="' + id + '-river" x1="0" y1="0" x2="1" y2="0.8">' +
+      '<stop offset="0" stop-color="#14261c"/><stop offset="0.5" stop-color="#1e3b2c"/><stop offset="1" stop-color="#14261c"/>' +
+      "</linearGradient>" +
+      '<linearGradient id="' + id + '-mist" x1="0" y1="0" x2="0" y2="1">' +
+      '<stop offset="0" stop-color="#ffffff" stop-opacity="0.35"/><stop offset="1" stop-color="#ffffff" stop-opacity="0"/>' +
+      "</linearGradient>" +
+      "</defs>" +
+      '<rect width="400" height="300" fill="url(#' + id + '-sky)"/>' +
+      '<circle cx="200" cy="110" r="45" fill="#fdeec2" opacity="0.35"/>' +
+      // Copa da floresta densa ao fundo
+      '<path d="M-20 160c30-18 60-12 90 2s70-15 110-2 80-20 130 5 70-12 110 5v130h-440Z" fill="#1b3826" opacity="0.85"/>' +
+      // Névoa matinal amazônica
+      '<rect y="125" width="400" height="40" fill="url(#' + id + '-mist)"/>' +
+      // Rio Negro serpenteando
+      '<path d="M-10 180c100 10 150-15 220 20s110 50 190 35v65H-10Z" fill="url(#' + id + '-river)"/>' +
+      '<path d="M20 210c80 8 130-10 180 15s100 35 180 20" stroke="#48785c" stroke-width="2" fill="none" opacity="0.4"/>' +
+      // Margem e vegetação frontal (igapó)
+      '<path d="M-20 230c60-15 130 5 180 35s120 15 260-10v45h-440Z" fill="#0d1f14"/>' +
+      // Vitória-régia flutuando
+      '<ellipse cx="140" cy="245" rx="36" ry="12" fill="#2d5e3c" stroke="#1d4028" stroke-width="2"/>' +
+      '<ellipse cx="230" cy="265" rx="48" ry="14" fill="#2d5e3c" stroke="#1d4028" stroke-width="2"/>' +
+      '<ellipse cx="320" cy="250" rx="30" ry="10" fill="#244d31"/>' +
+      // Silhueta de canoa tradicional
+      '<path d="M70 215c18 6 36 6 54 0l-2 3c-16 4-34 4-50 0Z" fill="#0a140d"/>' +
+      '<path d="M102 210v7" stroke="#0a140d" stroke-width="2" stroke-linecap="round"/>' +
+      // Pássaros amazônicos em voo
+      '<path d="M110 70c6-5 12-5 18 0" stroke="#d5e8d4" stroke-width="1.8" fill="none" stroke-linecap="round"/>' +
+      '<path d="M132 60c5-4 10-4 15 0" stroke="#d5e8d4" stroke-width="1.8" fill="none" stroke-linecap="round"/>' +
+      "</svg>"
+    );
+  }
+
+  function foz(id) {
+    return (
+      '<svg ' + SIZE + '>' +
+      '<defs>' +
+      '<linearGradient id="' + id + '-sky" x1="0" y1="0" x2="0" y2="1">' +
+      '<stop offset="0" stop-color="#4a8ec2"/><stop offset="0.6" stop-color="#8ac7e8"/><stop offset="1" stop-color="#daf0fa"/>' +
+      "</linearGradient>" +
+      '<linearGradient id="' + id + '-cliff" x1="0" y1="0" x2="1" y2="1">' +
+      '<stop offset="0" stop-color="#3b322a"/><stop offset="1" stop-color="#241e19"/>' +
+      "</linearGradient>" +
+      '<linearGradient id="' + id + '-waterfall" x1="0" y1="0" x2="0" y2="1">' +
+      '<stop offset="0" stop-color="#eaf6fa"/><stop offset="0.8" stop-color="#ffffff"/><stop offset="1" stop-color="#9dd5e8"/>' +
+      "</linearGradient>" +
+      '<linearGradient id="' + id + '-rainbow" x1="0" y1="0" x2="1" y2="0">' +
+      '<stop offset="0%" stop-color="#ff0000" stop-opacity="0.35"/>' +
+      '<stop offset="25%" stop-color="#ffaa00" stop-opacity="0.35"/>' +
+      '<stop offset="50%" stop-color="#00ff88" stop-opacity="0.35"/>' +
+      '<stop offset="75%" stop-color="#00aaff" stop-opacity="0.35"/>' +
+      '<stop offset="100%" stop-color="#aa00ff" stop-opacity="0.35"/>' +
+      "</linearGradient>" +
+      "</defs>" +
+      '<rect width="400" height="300" fill="url(#' + id + '-sky)"/>' +
+      '<circle cx="280" cy="70" r="40" fill="#fffbe6" opacity="0.6"/>' +
+      // Paredões rochosos e cânion
+      '<path d="M-10 110l90 30 50-20 60 40 80-30 80 20 60-30v180H-10Z" fill="url(#' + id + '-cliff)"/>' +
+      // Vegetação subtropical nas bordas dos paredões
+      '<path d="M-10 105c30-10 60 5 90-5s70 8 110-4 80 10 130-6 60 6 90-2v25H-10Z" fill="#2d4a2a"/>' +
+      // Quedas d'água monumentais (Cataratas)
+      '<rect x="40" y="130" width="34" height="110" rx="3" fill="url(#' + id + '-waterfall)"/>' +
+      '<rect x="90" y="140" width="48" height="100" rx="4" fill="url(#' + id + '-waterfall)"/>' +
+      '<rect x="156" y="125" width="88" height="120" rx="5" fill="url(#' + id + '-waterfall)"/>' +
+      '<rect x="260" y="142" width="42" height="100" rx="4" fill="url(#' + id + '-waterfall)"/>' +
+      '<rect x="318" y="132" width="55" height="110" rx="4" fill="url(#' + id + '-waterfall)"/>' +
+      // Névoa densa na base da garganta
+      '<ellipse cx="200" cy="240" rx="190" ry="38" fill="#ffffff" opacity="0.65"/>' +
+      '<ellipse cx="200" cy="245" rx="150" ry="25" fill="#cdebf5" opacity="0.45"/>' +
+      // Arco-íris sobre a garganta
+      '<path d="M110 210 A100 70 0 0 1 290 200" stroke="url(#' + id + '-rainbow)" stroke-width="8" fill="none" stroke-linecap="round"/>' +
+      // Rio inferior bravio
+      '<path d="M0 248c50 8 100-6 150 4s100 8 150-2 70 6 100 0v50H0Z" fill="#1d546b"/>' +
+      '<path d="M0 262c60-4 120 6 180-2s110-4 160 4 40-4 60 0v40H0Z" fill="#143c4d"/>' +
+      // Passarela de observação panorâmica
+      '<path d="M120 270h160" stroke="#7a5538" stroke-width="4" stroke-linecap="round"/>' +
+      '<path d="M140 270v15M180 270v15M220 270v15M260 270v15" stroke="#4a321f" stroke-width="2"/>' +
+      "</svg>"
+    );
+  }
+
+  return {
+    noronha: noronha,
+    jeri: jeri,
+    chapada: chapada,
+    amazonia: amazonia,
+    foz: foz
+  };
+})();

@@ -30,6 +30,7 @@
   <link rel="stylesheet" href="css/responsive.css" />
 </head>
 <body>
+  <div class="scroll-progress" id="scrollProgress"></div>
   <a class="skip-link" href="#conteudo">Pular para o conteúdo principal</a>
 
   <header class="site-header" id="siteHeader">
@@ -54,10 +55,15 @@
             <li><a href="#experiencias">Experiências</a></li>
             <li><a href="#roteiros">Roteiros</a></li>
             <li><a href="#depoimentos">Depoimentos</a></li>
+            <li><a href="#faq">Dúvidas</a></li>
           </ul>
         </nav>
 
         <div class="site-header__actions">
+          <button class="theme-toggle" id="themeToggleBtn" type="button" aria-label="Alternar tema claro e escuro">
+            <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+            <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+          </button>
           <div class="user-menu-wrapper" id="userMenuWrapper"></div>
           <a class="btn btn--ghost btn--sm" href="#contato">Falar com consultor</a>
           <a class="btn btn--primary btn--sm" href="#destinos">Planejar viagem</a>
@@ -73,9 +79,15 @@
     <div class="nav-drawer__panel">
       <div class="nav-drawer__head">
         <span class="nav-drawer__title">Menu</span>
-        <button class="icon-btn" id="navClose" type="button" aria-label="Fechar menu">
-          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-        </button>
+        <div style="display: flex; align-items: center; gap: var(--sp-2);">
+          <button class="theme-toggle" id="drawerThemeToggleBtn" type="button" aria-label="Alternar tema">
+            <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+            <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+          </button>
+          <button class="icon-btn" id="navClose" type="button" aria-label="Fechar menu">
+            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          </button>
+        </div>
       </div>
       <div class="drawer-auth" id="drawerAuth"></div>
       <nav aria-label="Navegação mobile">
@@ -84,6 +96,7 @@
           <li><a href="#experiencias">Experiências</a></li>
           <li><a href="#roteiros">Roteiros</a></li>
           <li><a href="#depoimentos">Depoimentos</a></li>
+          <li><a href="#faq">Dúvidas Frequentes</a></li>
           <li><a href="#contato">Contato</a></li>
         </ul>
       </nav>
@@ -127,6 +140,8 @@
               <option>Lençóis Maranhenses — MA</option>
               <option>Serra Gaúcha — RS</option>
               <option>Rio de Janeiro — RJ</option>
+              <option>Amazônia & Rio Negro — AM</option>
+              <option>Foz do Iguaçu — PR</option>
             </select>
           </div>
 
@@ -168,20 +183,59 @@
           <p class="eyebrow">Destinos em destaque</p>
           <h2 class="section__title" id="destinosTitulo">Escolha o cenário, a gente cuida do resto</h2>
           <p class="section__lead">
-            Cada roteiro é montado com quem mora no lugar. Filtre pelo tipo de viagem que combina com você.
+            Cada roteiro é montado com quem mora no lugar. Filtre por palavra-chave, preço, ritmo ou ordene como preferir.
           </p>
         </header>
 
-        <div class="filters" role="group" aria-label="Filtrar destinos por experiência">
-          <button class="chip is-active" type="button" data-filter="todos" aria-pressed="true">Todos</button>
-          <button class="chip" type="button" data-filter="praia" aria-pressed="false">Praia</button>
-          <button class="chip" type="button" data-filter="serra" aria-pressed="false">Serra</button>
-          <button class="chip" type="button" data-filter="aventura" aria-pressed="false">Aventura</button>
-          <button class="chip" type="button" data-filter="cultura" aria-pressed="false">Cultura</button>
+        <!-- Barra de Filtros e Busca Avançada -->
+        <div class="destinos-controls" role="region" aria-label="Filtros avançados de destinos">
+          <div class="destinos-controls__top">
+            <div class="filter-search-wrap">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+              <input type="search" class="filter-search-input" id="destinosSearchInput" placeholder="Buscar por praia, estado, atração (ex.: trilha, BA, barco)..." aria-label="Buscar destinos" />
+            </div>
+
+            <div class="filter-price-wrap">
+              <div class="filter-price-label">
+                <span>Orçamento Máximo</span>
+                <span class="filter-price-badge" id="destinosPriceValue">Até R$ 6.000</span>
+              </div>
+              <input type="range" class="filter-price-slider" id="destinosPriceSlider" min="2000" max="6000" step="100" value="6000" aria-label="Filtrar por preço máximo por pessoa" />
+            </div>
+
+            <div class="filter-sort-wrap">
+              <label class="filter-sort-label" for="destinosSortSelect">Ordenar por</label>
+              <select class="filter-sort-select" id="destinosSortSelect">
+                <option value="populares">Recomendados (Nota)</option>
+                <option value="preco-asc">Menor Preço</option>
+                <option value="preco-desc">Maior Preço</option>
+                <option value="duracao-asc">Menor Duração (Dias)</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="destinos-controls__bottom">
+            <div class="filters" role="group" aria-label="Filtrar destinos por experiência">
+              <button class="chip is-active" type="button" data-filter="todos" aria-pressed="true">Todos</button>
+              <button class="chip" type="button" data-filter="praia" aria-pressed="false">Praia</button>
+              <button class="chip" type="button" data-filter="serra" aria-pressed="false">Serra</button>
+              <button class="chip" type="button" data-filter="aventura" aria-pressed="false">Aventura</button>
+              <button class="chip" type="button" data-filter="cultura" aria-pressed="false">Cultura</button>
+            </div>
+
+            <div class="destinos-status-info">
+              <span>Exibindo <strong id="destinosCount">8</strong> de 8 roteiros</span>
+              <button class="btn-reset-filters" id="btnResetFilters" type="button">Limpar filtros</button>
+            </div>
+          </div>
         </div>
 
         <ul class="card-grid" id="destinosGrid"></ul>
-        <p class="empty-state" id="destinosEmpty" hidden>Nenhum destino nessa categoria por enquanto. Tente outro filtro.</p>
+        <div class="empty-state" id="destinosEmpty" hidden>
+          <p style="font-weight: 600; margin-bottom: 0.5rem;">Nenhum roteiro encontrado para esses critérios.</p>
+          <p style="font-size: var(--fs-sm); color: var(--ink-500); margin-bottom: var(--sp-4);">Tente aumentar o limite de preço, mudar a categoria ou usar outros termos na busca.</p>
+          <button class="btn btn--primary btn--sm" id="emptyResetBtn" type="button">Ver todos os roteiros</button>
+        </div>
       </div>
     </section>
 
@@ -250,6 +304,20 @@
       </div>
     </section>
 
+    <section class="section section--sand" id="faq" aria-labelledby="faqTitulo">
+      <div class="container">
+        <header class="section__head section__head--center">
+          <p class="eyebrow">Dúvidas Frequentes</p>
+          <h2 class="section__title" id="faqTitulo">Tudo o que você precisa saber antes de embarcar</h2>
+          <p class="section__lead">
+            Transparência e clareza do primeiro contato ao retorno da sua viagem.
+          </p>
+        </header>
+
+        <ul class="faq-list" id="faqList"></ul>
+      </div>
+    </section>
+
     <section class="section" id="contato" aria-labelledby="contatoTitulo">
       <div class="container">
         <div class="contact">
@@ -273,10 +341,18 @@
               <p class="field__error" data-error-for="leadNome"></p>
             </div>
 
-            <div class="field">
-              <label for="leadEmail">E-mail</label>
-              <input type="email" id="leadEmail" name="email" autocomplete="email" placeholder="voce@email.com" />
-              <p class="field__error" data-error-for="leadEmail"></p>
+            <div class="field-row">
+              <div class="field">
+                <label for="leadEmail">E-mail</label>
+                <input type="email" id="leadEmail" name="email" autocomplete="email" placeholder="voce@email.com" />
+                <p class="field__error" data-error-for="leadEmail"></p>
+              </div>
+
+              <div class="field">
+                <label for="leadTel">WhatsApp / Telefone</label>
+                <input type="tel" id="leadTel" name="telefone" placeholder="(00) 00000-0000" maxlength="15" />
+                <p class="field__error" data-error-for="leadTel"></p>
+              </div>
             </div>
 
             <div class="field-row">
@@ -290,6 +366,8 @@
                   <option>Lençóis Maranhenses — MA</option>
                   <option>Serra Gaúcha — RS</option>
                   <option>Rio de Janeiro — RJ</option>
+                  <option>Amazônia & Rio Negro — AM</option>
+                  <option>Foz do Iguaçu — PR</option>
                   <option>Ainda não sei</option>
                 </select>
                 <p class="field__error" data-error-for="leadDestino"></p>
@@ -309,7 +387,7 @@
 
             <div class="field">
               <label for="leadMensagem">O que não pode faltar?</label>
-              <textarea id="leadMensagem" name="mensagem" rows="3" placeholder="Ex.: trilhas leves, comida local, poucas horas de estrada"></textarea>
+              <textarea id="leadMensagem" name="mensagem" rows="3" placeholder="Ex.: trilhas leves, comida local, poucas horas de estrada..."></textarea>
             </div>
 
             <label class="checkbox">
@@ -591,6 +669,229 @@
         <p>Você ainda não salvou nenhum roteiro. Clique no ícone de coração nos cards para guardar suas viagens preferidas.</p>
         <a class="btn btn--primary btn--sm" id="exploreDestinosBtn" href="#destinos">Explorar destinos</a>
       </div>
+    </div>
+  </dialog>
+
+  <!-- Modal de Detalhes do Roteiro & Simulador de Orçamento -->
+  <dialog class="detail-dialog" id="destinationModal" aria-labelledby="detailTitle">
+    <div class="detail-modal">
+      <button class="icon-btn modal-close-btn" id="detailCloseBtn" type="button" aria-label="Fechar detalhes">
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      </button>
+
+      <div class="detail-banner">
+        <div class="detail-banner__media" id="detailBannerMedia"></div>
+        <div class="detail-banner__scrim"></div>
+        <div class="detail-banner__content">
+          <div>
+            <h2 class="detail-banner__title" id="detailTitle">Fernando de Noronha</h2>
+            <div class="detail-banner__badges" id="detailBadges"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="detail-tabs" role="tablist">
+        <button class="detail-tab is-active" id="tabDetailOverview" type="button" role="tab" aria-selected="true" data-tab="overview">Visão Geral</button>
+        <button class="detail-tab" id="tabDetailItinerary" type="button" role="tab" aria-selected="false" data-tab="itinerary">Itinerário Completo</button>
+        <button class="detail-tab" id="tabDetailSimulator" type="button" role="tab" aria-selected="false" data-tab="simulator">Simulador de Orçamento</button>
+      </div>
+
+      <div class="detail-body">
+        <!-- Tab Visão Geral -->
+        <div class="detail-panel is-active" id="panelDetailOverview">
+          <div class="detail-overview__grid">
+            <div>
+              <div class="detail-box">
+                <h4>Sobre a Experiência</h4>
+                <p id="detailDescText" style="line-height: 1.6;"></p>
+              </div>
+              <div class="detail-box">
+                <h4>O que está incluso no pacote</h4>
+                <ul class="detail-check-list" id="detailInclusosList"></ul>
+              </div>
+            </div>
+            <div>
+              <div class="detail-box">
+                <h4>Não inclui</h4>
+                <ul class="detail-check-list detail-check-list--danger" id="detailNaoInclusosList"></ul>
+              </div>
+              <div class="detail-box">
+                <h4>Melhor época para ir</h4>
+                <p id="detailMelhorEpoca" style="font-size: var(--fs-sm); color: var(--ink-700);"></p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab Itinerário -->
+        <div class="detail-panel" id="panelDetailItinerary">
+          <div class="itinerary-timeline" id="detailItineraryTimeline"></div>
+        </div>
+
+        <!-- Tab Simulador Financeiro -->
+        <div class="detail-panel" id="panelDetailSimulator">
+          <div class="simulator-layout">
+            <div class="simulator-options">
+              <div class="sim-group">
+                <span class="sim-group__title">1. Número de Viajantes</span>
+                <div class="sim-counter-wrap">
+                  <button class="sim-counter-btn" id="simTravelersMinus" type="button" aria-label="Diminuir viajantes">−</button>
+                  <span class="sim-counter-val" id="simTravelersCount">2</span>
+                  <button class="sim-counter-btn" id="simTravelersPlus" type="button" aria-label="Aumentar viajantes">+</button>
+                </div>
+              </div>
+
+              <div class="sim-group">
+                <span class="sim-group__title">2. Categoria de Hospedagem</span>
+                <div class="sim-radio-grid">
+                  <label class="sim-radio-card">
+                    <input type="radio" name="simHotel" value="standard" checked />
+                    <div class="sim-radio-box">
+                      <strong>Pousada Familiar</strong>
+                      <small>Incluso no pacote</small>
+                    </div>
+                  </label>
+                  <label class="sim-radio-card">
+                    <input type="radio" name="simHotel" value="boutique" />
+                    <div class="sim-radio-box">
+                      <strong>Pousada Charme</strong>
+                      <small id="simHotelBoutiquePrice">+R$ 0</small>
+                    </div>
+                  </label>
+                  <label class="sim-radio-card">
+                    <input type="radio" name="simHotel" value="luxo" />
+                    <div class="sim-radio-box">
+                      <strong>Suíte Luxo</strong>
+                      <small id="simHotelLuxoPrice">+R$ 0</small>
+                    </div>
+                  </label>
+                </div>
+              </div>
+
+              <div class="sim-group">
+                <span class="sim-group__title">3. Experiências Opcionais Extras</span>
+                <div class="sim-addons-list" id="simAddonsList"></div>
+              </div>
+            </div>
+
+            <!-- Card Totalizador -->
+            <div class="simulator-totalizer">
+              <h4 style="font-size: var(--fs-md); font-weight: 700;">Resumo da Simulação</h4>
+              <div class="sim-breakdown-row">
+                <span>Roteiro base (<span id="simSummaryPersons">2</span>x)</span>
+                <strong id="simBreakdownBase">R$ 0</strong>
+              </div>
+              <div class="sim-breakdown-row">
+                <span>Upgrade de hospedagem</span>
+                <strong id="simBreakdownHotel">R$ 0</strong>
+              </div>
+              <div class="sim-breakdown-row">
+                <span>Opcionais selecionados</span>
+                <strong id="simBreakdownAddons">R$ 0</strong>
+              </div>
+              <div class="sim-breakdown-row is-discount" id="simDiscountRow" hidden>
+                <span>Desconto de Grupo (8%)</span>
+                <strong id="simBreakdownDiscount">- R$ 0</strong>
+              </div>
+              <div class="sim-total-divider"></div>
+              <div class="sim-total-price-wrap">
+                <small>Investimento Total Estimado</small>
+                <strong id="simTotalPrice">R$ 0</strong>
+              </div>
+              <div class="sim-installments-badge">
+                ou até <strong>10x sem juros</strong> de <strong id="simInstallmentPrice">R$ 0</strong> no cartão
+                <div style="font-size: 0.72rem; color: var(--success); margin-top: 3px;">✓ 5% de desconto à vista no PIX: <strong id="simPixPrice">R$ 0</strong></div>
+              </div>
+
+              <button class="btn btn--primary btn--block" id="btnBookSimulatedTrip" type="button">
+                Solicitar este roteiro personalizado
+              </button>
+              <button class="btn btn--ghost btn--sm btn--block" id="btnSaveSimulation" type="button">
+                Salvar simulação na minha conta
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- Barra Flutuante de Comparação -->
+  <aside class="compare-bar" id="compareBar" aria-label="Comparação de destinos">
+    <div class="compare-bar__info">
+      <span class="compare-bar__title">Comparar Roteiros</span>
+      <span class="compare-bar__subtitle" id="compareBarCount">0 de 3 selecionados</span>
+    </div>
+    <div class="compare-bar__items" id="compareBarItems"></div>
+    <div class="compare-bar__actions">
+      <button class="btn btn--primary btn--sm" id="openCompareModalBtn" type="button">Comparar agora</button>
+      <button class="icon-btn" id="clearCompareBtn" type="button" aria-label="Limpar comparação">
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+  </aside>
+
+  <!-- Modal de Comparação Lado a Lado -->
+  <dialog class="compare-dialog" id="compareModal" aria-labelledby="compareTitle">
+    <div class="compare-modal">
+      <div class="compare-header">
+        <h2 id="compareTitle">Comparativo de Roteiros</h2>
+        <button class="icon-btn" id="compareCloseBtn" type="button" aria-label="Fechar comparador">
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        </button>
+      </div>
+      <div class="compare-grid" id="compareGrid"></div>
+    </div>
+  </dialog>
+
+  <!-- Modal de Perfil do Viajante e Simulações -->
+  <dialog class="profile-dialog" id="profileModal" aria-labelledby="profileTitle">
+    <div class="profile-modal">
+      <div class="profile-header">
+        <h2 id="profileTitle">Painel do Viajante</h2>
+        <button class="icon-btn" id="profileCloseBtn" type="button" aria-label="Fechar painel">
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        </button>
+      </div>
+
+      <div class="auth-tabs" role="tablist" style="margin-bottom: var(--sp-5);">
+        <button class="auth-tab is-active" id="tabProfileQuotes" type="button" role="tab" aria-selected="true">Minhas Simulações</button>
+        <button class="auth-tab" id="tabProfilePrefs" type="button" role="tab" aria-selected="false">Preferências de Viagem</button>
+      </div>
+
+      <!-- Painel de Simulações -->
+      <div id="panelProfileQuotes">
+        <div id="profileQuotesList"></div>
+        <div class="empty-state" id="profileQuotesEmpty" hidden>
+          Nenhuma simulação salva ainda. Abra os detalhes de um destino e clique em "Salvar simulação".
+        </div>
+      </div>
+
+      <!-- Painel de Preferências -->
+      <form id="panelProfilePrefs" style="display: none;">
+        <div class="field">
+          <label for="prefEstilo">Estilo de Viagem Preferido</label>
+          <select id="prefEstilo" name="estilo">
+            <option value="equilibrado">Equilibrado (Conforto + Passeios)</option>
+            <option value="aventura">Ecoturismo & Aventura</option>
+            <option value="relax">Relaxamento Total & Praias</option>
+            <option value="gastronomia">Cultura & Gastronomia</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="prefRitmo">Ritmo de Atividades</label>
+          <select id="prefRitmo" name="ritmo">
+            <option value="moderado">Moderado (Passeio pela manhã, tarde livre)</option>
+            <option value="tranquilo">Tranquilo (Sem pressa, poucas caminhadas)</option>
+            <option value="intenso">Intenso (Quero explorar o máximo todo dia)</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="prefRestricoes">Observações ou Restrições Alimentares</label>
+          <input type="text" id="prefRestricoes" name="restricoes" placeholder="Ex.: vegetariano, intolerância a glúten..." />
+        </div>
+        <button class="btn btn--primary btn--block" type="submit" style="margin-top: var(--sp-4);">Salvar Preferências</button>
+      </form>
     </div>
   </dialog>
 
