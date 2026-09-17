@@ -1,6 +1,6 @@
-# 🧭 Pé na Estrada — Viagens Autorais pelo Brasil
+# 🧭 Trabalho Básico de CSS, HTML e JavaScript — Pé na Estrada
 
-> Uma landing page moderna, autoral e interativa para agência de turismo e expedições sob medida pelo Brasil.
+> Uma landing page moderna, autoral e interativa para agência de turismo desenvolvida com HTML, CSS e JavaScript puros.
 
 ![Pé na Estrada Preview](images/hero.jpg)
 
@@ -57,11 +57,11 @@ Como o projeto utiliza tecnologias web nativas, não é necessário instalar dep
 
 1. Clone o repositório:
    ```bash
-   git clone https://github.com/SEU-USUARIO/pe-na-estrada.git
+   git clone https://github.com/SEU-USUARIO/trabalho-basico-de-css-html-e-javascript.git
    ```
 2. Acesse a pasta do projeto:
    ```bash
-   cd pe-na-estrada
+   cd trabalho-basico-de-css-html-e-javascript
    ```
 3. Abra o arquivo `index.html` diretamente no seu navegador, ou utilize extensões como o **Live Server** no VS Code.
 
@@ -79,3 +79,4 @@ Como o projeto utiliza tecnologias web nativas, não é necessário instalar dep
 ## 📄 Licença
 
 Este projeto é disponibilizado sob a licença [MIT](LICENSE).
+
