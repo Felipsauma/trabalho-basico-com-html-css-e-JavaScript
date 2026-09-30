@@ -4,7 +4,7 @@
 
 .site-header {
   --nav-fg: rgba(255, 253, 248, 0.9);
-  --nav-fg-strong: var(--cream);
+  --nav-fg-strong: var(--on-photo);
   --mark-bg: rgba(255, 253, 248, 0.16);
   --mark-border: rgba(255, 253, 248, 0.42);
   --header-bg: transparent;
@@ -134,8 +134,13 @@
   color: var(--nav-fg-strong);
 }
 
-.site-nav a:hover::after {
+.site-nav a:hover::after,
+.site-nav a[aria-current="true"]::after {
   transform: scaleX(1);
+}
+
+.site-nav a[aria-current="true"] {
+  color: var(--nav-fg-strong);
 }
 
 .site-header__actions {
@@ -262,7 +267,8 @@
   text-decoration: none;
 }
 
-.nav-drawer__list a:hover {
+.nav-drawer__list a:hover,
+.nav-drawer__list a[aria-current="true"] {
   color: var(--clay-600);
 }
 
@@ -281,4 +287,9 @@
 
 .nav-drawer[data-open="true"] .nav-drawer__scrim {
   opacity: 1;
+}
+
+/* Modo escuro: fundo do cabeçalho fixo acompanha o tema */
+[data-theme="dark"] .site-header.is-scrolled {
+  --header-bg: rgba(20, 16, 12, 0.9);
 }

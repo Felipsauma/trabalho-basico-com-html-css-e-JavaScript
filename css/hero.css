@@ -47,12 +47,12 @@
 
 .hero__content {
   position: relative;
-  color: var(--cream);
+  color: var(--on-photo);
 }
 
 .hero__title {
   font-size: var(--fs-3xl);
-  color: var(--cream);
+  color: var(--on-photo);
   max-width: 22ch;
   margin-bottom: var(--sp-4);
   text-shadow: 0 2px 24px rgba(41, 31, 24, 0.35);
@@ -184,11 +184,21 @@
   font-family: var(--font-display);
   font-size: clamp(1.5rem, 3vw, 1.95rem);
   font-weight: 600;
-  color: var(--cream);
+  color: var(--on-photo);
   line-height: 1.1;
 }
 
 .hero__stats span {
   font-size: 0.82rem;
   color: rgba(255, 253, 248, 0.74);
+}
+
+/* Modo escuro: a barra de busca usa superfície escura para manter o texto legível */
+[data-theme="dark"] .search-bar {
+  background: rgba(26, 20, 16, 0.94);
+  border-color: rgba(255, 253, 248, 0.1);
+}
+
+[data-theme="dark"] .hero__title em {
+  color: #eadcc6;
 }

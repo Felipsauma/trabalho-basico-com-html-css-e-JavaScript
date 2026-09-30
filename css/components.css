@@ -80,14 +80,14 @@
 }
 
 .site-header .btn--ghost {
-  --btn-fg: var(--cream);
+  --btn-fg: var(--on-photo);
   --btn-border: rgba(255, 253, 248, 0.42);
 }
 
 .site-header .btn--ghost:hover {
   --btn-bg: rgba(255, 253, 248, 0.14);
   --btn-border: rgba(255, 253, 248, 0.75);
-  color: var(--cream);
+  color: var(--on-photo);
 }
 
 .site-header.is-scrolled .btn--ghost {
@@ -1234,7 +1234,7 @@
   background: rgba(255, 253, 248, 0.16);
   border: 1.5px solid rgba(255, 253, 248, 0.42);
   border-radius: var(--r-pill);
-  color: var(--cream);
+  color: var(--on-photo);
   font-size: var(--fs-sm);
   font-weight: 600;
   transition: all var(--dur) var(--ease);
@@ -1787,7 +1787,7 @@
 .site-header .theme-toggle {
   border-color: rgba(255, 253, 248, 0.35);
   background: rgba(255, 253, 248, 0.12);
-  color: var(--cream);
+  color: var(--on-photo);
 }
 
 .site-header.is-scrolled .theme-toggle {

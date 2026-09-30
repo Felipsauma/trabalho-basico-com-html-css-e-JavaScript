@@ -7,6 +7,17 @@
   <meta name="description" content="Roteiros autorais, hospedagens selecionadas e suporte humano do começo ao fim. Viaje pelo Brasil com a Pé na Estrada." />
   <meta name="theme-color" content="#C4633F" />
 
+  <!-- Aplica o tema salvo antes da renderização para evitar "piscada" de cores -->
+  <script>
+    (function () {
+      try {
+        var t = localStorage.getItem("penaestrada_theme");
+        if (!t) t = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+        document.documentElement.setAttribute("data-theme", t);
+      } catch (e) {}
+    })();
+  </script>
+
   <!-- Favicon SVG Nativo da Marca -->
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M16 3.5 27.5 25.5a1 1 0 0 1-.9 1.5H5.4a1 1 0 0 1-.9-1.5L16 3.5Z' fill='%23C4633F'/%3E%3Cpath d='M9.5 21h13' stroke='%23FFFDF8' stroke-width='2.2' stroke-linecap='round'/%3E%3C/svg%3E" />
 
@@ -111,7 +122,7 @@
 
     <section class="hero" aria-labelledby="heroTitulo">
       <div class="hero__media" aria-hidden="true">
-        <img class="hero__img" src="images/hero.jpg" alt="" />
+        <img class="hero__img" src="images/hero.jpg" alt="" fetchpriority="high" decoding="async" />
         <div class="hero__veil"></div>
       </div>
 
@@ -224,7 +235,7 @@
             </div>
 
             <div class="destinos-status-info">
-              <span>Exibindo <strong id="destinosCount">8</strong> de 8 roteiros</span>
+              <span role="status" aria-live="polite">Exibindo <strong id="destinosCount">8</strong> de <span id="destinosTotal">8</span> roteiros</span>
               <button class="btn-reset-filters" id="btnResetFilters" type="button">Limpar filtros</button>
             </div>
           </div>
@@ -690,7 +701,7 @@
         </div>
       </div>
 
-      <div class="detail-tabs" role="tablist">
+      <div class="detail-tabs" role="tablist" aria-label="Seções do roteiro">
         <button class="detail-tab is-active" id="tabDetailOverview" type="button" role="tab" aria-selected="true" data-tab="overview">Visão Geral</button>
         <button class="detail-tab" id="tabDetailItinerary" type="button" role="tab" aria-selected="false" data-tab="itinerary">Itinerário Completo</button>
         <button class="detail-tab" id="tabDetailSimulator" type="button" role="tab" aria-selected="false" data-tab="simulator">Simulador de Orçamento</button>
@@ -855,8 +866,8 @@
       </div>
 
       <div class="auth-tabs" role="tablist" style="margin-bottom: var(--sp-5);">
-        <button class="auth-tab is-active" id="tabProfileQuotes" type="button" role="tab" aria-selected="true">Minhas Simulações</button>
-        <button class="auth-tab" id="tabProfilePrefs" type="button" role="tab" aria-selected="false">Preferências de Viagem</button>
+        <button class="auth-tab is-active" id="tabProfileQuotes" type="button" role="tab" aria-selected="true" aria-controls="panelProfileQuotes">Minhas Simulações</button>
+        <button class="auth-tab" id="tabProfilePrefs" type="button" role="tab" aria-selected="false" aria-controls="panelProfilePrefs">Preferências de Viagem</button>
       </div>
 
       <!-- Painel de Simulações -->

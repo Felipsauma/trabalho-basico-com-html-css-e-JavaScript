@@ -31,6 +31,7 @@
   --ink-300: #a9998a;
 
   --cream: #fffdf8;
+  --on-photo: #fffdf8; /* texto sobre fotos: não muda no modo escuro */
   --white: #ffffff;
 
   --success: #4d7c4a;
@@ -90,6 +91,7 @@
    ========================================================= */
 
 [data-theme="dark"] {
+  color-scheme: dark;       /* controles nativos (select, calendário) no tema escuro */
   --sand-50: #14100c;       /* Fundo primário */
   --sand-100: #1e1813;      /* Fundo secundário */
   --sand-200: #2c231b;      /* Bordas sutis */
@@ -156,10 +158,10 @@ body {
   overflow-x: hidden;
 }
 
-body.is-locked {
+body.is-locked,
+html.has-modal body {
   overflow: hidden;
 }
-
 img,
 svg,
 video {
@@ -327,6 +329,12 @@ strong {
 
 .section--clay .eyebrow {
   color: var(--sand-300);
+}
+
+/* No modo escuro os tons de areia viram fundos; sobre foto/terracota mantemos areia clara */
+[data-theme="dark"] .eyebrow--light,
+[data-theme="dark"] .section--clay .eyebrow {
+  color: #eadcc6;
 }
 
 .eyebrow__dot {

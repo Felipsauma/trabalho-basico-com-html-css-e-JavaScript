@@ -12,13 +12,21 @@
 
   var THEME_STORAGE_KEY = "penaestrada_theme";
 
+  function getSavedTheme() {
+    try {
+      return localStorage.getItem(THEME_STORAGE_KEY);
+    } catch (e) {
+      return null;
+    }
+  }
+
   function initTheme() {
-    var saved = localStorage.getItem(THEME_STORAGE_KEY);
+    var saved = getSavedTheme();
     if (!saved) {
       var prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
       saved = prefersDark ? "dark" : "light";
     }
-    applyTheme(saved);
+    applyTheme(saved, false);
 
     var toggleBtn = document.getElementById("themeToggleBtn");
     var drawerToggleBtn = document.getElementById("drawerThemeToggleBtn");
@@ -26,8 +34,8 @@
     function handleToggle() {
       var current = document.documentElement.getAttribute("data-theme") || "light";
       var next = current === "dark" ? "light" : "dark";
-      applyTheme(next);
-      showToast(next === "dark" ? "Modo Noturno ativado" : "Modo Claro ativado", "info");
+      // Só persiste quando o usuário escolhe explicitamente; assim o tema do sistema continua valendo por padrão
+      applyTheme(next, true);
     }
 
     if (toggleBtn) toggleBtn.addEventListener("click", handleToggle);
@@ -35,18 +43,30 @@
 
     if (window.matchMedia) {
       window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", function (e) {
-        if (!localStorage.getItem(THEME_STORAGE_KEY)) {
-          applyTheme(e.matches ? "dark" : "light");
+        if (!getSavedTheme()) {
+          applyTheme(e.matches ? "dark" : "light", false);
         }
       });
     }
   }
 
-  function applyTheme(theme) {
+  function applyTheme(theme, persist) {
     document.documentElement.setAttribute("data-theme", theme);
-    try {
-      localStorage.setItem(THEME_STORAGE_KEY, theme);
-    } catch (e) {}
+
+    var isDark = theme === "dark";
+    document.querySelectorAll(".theme-toggle").forEach(function (btn) {
+      btn.setAttribute("aria-pressed", String(isDark));
+      btn.setAttribute("aria-label", isDark ? "Ativar tema claro" : "Ativar tema escuro");
+    });
+
+    var metaTheme = document.querySelector('meta[name="theme-color"]');
+    if (metaTheme) metaTheme.setAttribute("content", isDark ? "#14100c" : "#C4633F");
+
+    if (persist) {
+      try {
+        localStorage.setItem(THEME_STORAGE_KEY, theme);
+      } catch (e) {}
+    }
   }
 
   /* ---------------------------------------------------------
@@ -110,7 +130,8 @@
 
   function setCurrentUser(user, remember) {
     try {
-      var json = JSON.stringify(user);
+      // A sessão guarda apenas a identificação; a senha nunca é copiada para ela
+      var json = JSON.stringify({ nome: user.nome, email: user.email });
       if (remember) {
         localStorage.setItem(STORAGE_SESSION_KEY, json);
         sessionStorage.removeItem(STORAGE_SESSION_KEY);
@@ -191,8 +212,8 @@
   }
 
   function escapeHtml(str) {
-    if (!str) return "";
-    return str
+    if (str === null || str === undefined) return "";
+    return String(str)
       .replace(/&/g, "&amp;")
       .replace(/</g, "&lt;")
       .replace(/>/g, "&gt;")
@@ -274,16 +295,45 @@
     });
   }
 
+  // Os <dialog> já fecham com Esc nativamente; aqui tratamos apenas o drawer e o dropdown
   document.addEventListener("keydown", function (e) {
     if (e.key === "Escape") {
       if (navDrawer && navDrawer.getAttribute("data-open") === "true") {
         closeDrawer();
+        if (navToggle) navToggle.focus();
       }
       closeUserDropdown();
-      closeAuthDialog();
-      closeFavsDialog();
     }
   });
+
+  // Fecha qualquer modal ao clicar no fundo escurecido (backdrop) e trava a rolagem da página enquanto aberto
+  document.querySelectorAll("dialog").forEach(function (dlg) {
+    dlg.addEventListener("click", function (e) {
+      if (e.target !== dlg) return;
+      var rect = dlg.getBoundingClientRect();
+      var isInDialog =
+        rect.top <= e.clientY &&
+        e.clientY <= rect.top + rect.height &&
+        rect.left <= e.clientX &&
+        e.clientX <= rect.left + rect.width;
+      if (!isInDialog) dlg.close();
+    });
+    dlg.addEventListener("close", function () {
+      if (!document.querySelector("dialog[open]")) {
+        document.documentElement.classList.remove("has-modal");
+      }
+    });
+  });
+
+  function showDialog(dlg) {
+    if (!dlg) return;
+    if (typeof dlg.showModal === "function") {
+      if (!dlg.open) dlg.showModal();
+    } else {
+      dlg.setAttribute("open", "true");
+    }
+    document.documentElement.classList.add("has-modal");
+  }
 
   /* ---------------------------------------------------------
      4. GERENCIAMENTO DE UI DE AUTENTICAÇÃO E PERFIL
@@ -310,11 +360,7 @@
     closeDrawer();
     closeUserDropdown();
     switchAuthTab(initialTab || "login");
-    if (typeof authDialog.showModal === "function") {
-      authDialog.showModal();
-    } else {
-      authDialog.setAttribute("open", "true");
-    }
+    showDialog(authDialog);
   }
 
   function closeAuthDialog() {
@@ -332,17 +378,8 @@
   }
 
   if (authDialog) {
-    authDialog.addEventListener("click", function (e) {
-      var rect = authDialog.getBoundingClientRect();
-      var isInDialog =
-        rect.top <= e.clientY &&
-        e.clientY <= rect.top + rect.height &&
-        rect.left <= e.clientX &&
-        e.clientX <= rect.left + rect.width;
-      if (!isInDialog) {
-        closeAuthDialog();
-      }
-    });
+    // Limpa os erros também quando o modal é fechado com Esc ou clique no fundo
+    authDialog.addEventListener("close", clearFormErrors);
   }
 
   function switchAuthTab(tab) {
@@ -435,11 +472,13 @@
     });
   }
 
+  // Limpa apenas os erros dos formulários de autenticação (não mexe no formulário de contato)
   function clearFormErrors() {
-    document.querySelectorAll(".field.has-error").forEach(function (el) {
+    if (!authDialog) return;
+    authDialog.querySelectorAll(".field.has-error").forEach(function (el) {
       el.classList.remove("has-error");
     });
-    document.querySelectorAll(".field__error").forEach(function (el) {
+    authDialog.querySelectorAll(".field__error").forEach(function (el) {
       el.textContent = "";
     });
     var alerts = [document.getElementById("loginAlert"), document.getElementById("registerAlert"), document.getElementById("forgotAlert")];
@@ -870,11 +909,7 @@
   function openFavsDialog() {
     if (!favsDialog) return;
     renderFavsList();
-    if (typeof favsDialog.showModal === "function") {
-      favsDialog.showModal();
-    } else {
-      favsDialog.setAttribute("open", "true");
-    }
+    showDialog(favsDialog);
   }
 
   function closeFavsDialog() {
@@ -888,20 +923,6 @@
 
   if (favsCloseBtn) {
     favsCloseBtn.addEventListener("click", closeFavsDialog);
-  }
-
-  if (favsDialog) {
-    favsDialog.addEventListener("click", function (e) {
-      var rect = favsDialog.getBoundingClientRect();
-      var isInDialog =
-        rect.top <= e.clientY &&
-        e.clientY <= rect.top + rect.height &&
-        rect.left <= e.clientX &&
-        e.clientX <= rect.left + rect.width;
-      if (!isInDialog) {
-        closeFavsDialog();
-      }
-    });
   }
 
   if (exploreDestinosBtn) {
@@ -962,14 +983,26 @@
     });
   }
 
+  // Aceita "Nome — UF" ou "Nome (UF)" e seleciona a opção correspondente no formulário de contato
   function preSelectLeadDestino(destValue) {
     var sel = document.getElementById("leadDestino");
-    if (!sel) return;
+    if (!sel || !destValue) return;
+    var nome = destValue.split(" — ")[0].replace(/\s*\([A-Z]{2}\)\s*$/, "").trim();
     for (var i = 0; i < sel.options.length; i++) {
-      if (sel.options[i].text.indexOf(destValue.split(" — ")[0]) > -1) {
+      if (sel.options[i].text.indexOf(nome) > -1) {
         sel.selectedIndex = i;
         break;
-       }
+      }
+    }
+  }
+
+  // Leva o usuário até o formulário de contato e foca o primeiro campo vazio
+  function goToLeadForm() {
+    var contatoSec = document.getElementById("contato");
+    if (contatoSec) contatoSec.scrollIntoView({ behavior: "smooth" });
+    var nomeInp = document.getElementById("leadNome");
+    if (nomeInp && !nomeInp.value) {
+      setTimeout(function () { nomeInp.focus({ preventScroll: true }); }, 500);
     }
   }
 
@@ -993,9 +1026,22 @@
   var maxPrice = 6000;
   var currentSort = "populares";
 
+  // Remove acentos e caixa para que "lencois" encontre "Lençóis"
+  function normalizeText(str) {
+    return String(str || "")
+      .normalize("NFD")
+      .replace(/[̀-ͯ]/g, "")
+      .toLowerCase();
+  }
+
   function renderDestinos() {
     if (!destinosGrid) return;
     destinosGrid.innerHTML = "";
+
+    var destinosTotal = document.getElementById("destinosTotal");
+    if (destinosTotal) destinosTotal.textContent = (DATA.DESTINOS || []).length;
+
+    var user = getCurrentUser();
 
     var list = (DATA.DESTINOS || []).filter(function (d) {
       // 1. Categoria
@@ -1008,11 +1054,11 @@
       }
       // 3. Busca Textual
       if (searchQuery) {
-        var q = searchQuery.toLowerCase();
-        var matchNome = d.nome.toLowerCase().indexOf(q) > -1;
-        var matchEstado = d.estado.toLowerCase().indexOf(q) > -1;
-        var matchDesc = (d.descricao || "").toLowerCase().indexOf(q) > -1;
-        var matchTags = (d.tags || []).some(function (t) { return t.toLowerCase().indexOf(q) > -1; });
+        var q = normalizeText(searchQuery);
+        var matchNome = normalizeText(d.nome).indexOf(q) > -1;
+        var matchEstado = normalizeText(d.estado).indexOf(q) > -1;
+        var matchDesc = normalizeText(d.descricao).indexOf(q) > -1;
+        var matchTags = (d.tags || []).some(function (t) { return normalizeText(t).indexOf(q) > -1; });
         if (!matchNome && !matchEstado && !matchDesc && !matchTags) {
           return false;
         }
@@ -1045,7 +1091,6 @@
       var card = document.createElement("li");
       card.className = "card";
 
-      var user = getCurrentUser();
       var isFav = user && user.favoritos && user.favoritos.indexOf(d.id) > -1;
       var isCompared = comparedDestinos.indexOf(d.id) > -1;
 
@@ -1148,13 +1193,16 @@
   function shareDestino(destino) {
     var title = "Roteiro Autoral: " + destino.nome + " — Pé na Estrada";
     var text = "Olha que viagem incrível para " + destino.nome + " (" + destino.dias + ") a partir de R$ " + destino.preco + "!";
-    var url = window.location.href.split("#")[0] + "#destinos";
+    // Link direto: abrir a URL já exibe os detalhes deste roteiro
+    var url = window.location.href.split("#")[0] + "#roteiro-" + destino.id;
 
     if (navigator.share) {
       navigator.share({ title: title, text: text, url: url }).catch(function () {});
     } else if (navigator.clipboard) {
       navigator.clipboard.writeText(title + " — " + text + " " + url).then(function () {
         showToast("Link do roteiro copiado para a área de transferência!", "success", "Compartilhar");
+      }).catch(function () {
+        showToast("Não foi possível copiar o link. Copie da barra de endereço: " + url, "error");
       });
     } else {
       showToast("Explore " + destino.nome + " no site da Pé na Estrada!", "info");
@@ -1359,11 +1407,7 @@
       compareGrid.appendChild(col);
     });
 
-    if (typeof compareModal.showModal === "function") {
-      compareModal.showModal();
-    } else {
-      compareModal.setAttribute("open", "true");
-    }
+    showDialog(compareModal);
   }
 
   function closeCompareModal() {
@@ -1472,13 +1516,8 @@
     if (boutiquePriceEl) boutiquePriceEl.textContent = "+R$ " + (dest.hospedagens && dest.hospedagens.boutique ? dest.hospedagens.boutique.toLocaleString("pt-BR") : "450");
     if (luxoPriceEl) luxoPriceEl.textContent = "+R$ " + (dest.hospedagens && dest.hospedagens.luxo ? dest.hospedagens.luxo.toLocaleString("pt-BR") : "1.100");
 
-    var hotelRadios = document.querySelectorAll('input[name="simHotel"]');
-    hotelRadios.forEach(function (r) {
+    document.querySelectorAll('input[name="simHotel"]').forEach(function (r) {
       r.checked = r.value === "standard";
-      r.addEventListener("change", function () {
-        simHotelTier = r.value;
-        updateSimulationTotal();
-      });
     });
 
     var addonsList = document.getElementById("simAddonsList");
@@ -1515,11 +1554,7 @@
     switchDetailTab("overview");
     updateSimulationTotal();
 
-    if (typeof destinationModal.showModal === "function") {
-      destinationModal.showModal();
-    } else {
-      destinationModal.setAttribute("open", "true");
-    }
+    showDialog(destinationModal);
   }
 
   function closeDestinationModal() {
@@ -1533,9 +1568,25 @@
 
   if (detailCloseBtn) detailCloseBtn.addEventListener("click", closeDestinationModal);
 
+  // Listeners registrados uma única vez (antes eram duplicados a cada abertura do modal)
+  document.querySelectorAll('input[name="simHotel"]').forEach(function (r) {
+    r.addEventListener("change", function () {
+      simHotelTier = r.value;
+      updateSimulationTotal();
+    });
+  });
+
+  // Remove o "#roteiro-..." da URL ao fechar os detalhes
+  if (destinationModal) {
+    destinationModal.addEventListener("close", function () {
+      if (/^#roteiro-/.test(window.location.hash) && window.history.replaceState) {
+        window.history.replaceState(null, "", window.location.pathname + window.location.search + "#destinos");
+      }
+    });
+  }
+
   function switchDetailTab(tabName) {
     var tabs = [tabDetailOverview, tabDetailItinerary, tabDetailSimulator];
-    var panels = [panelDetailOverview, panelDetailItinerary, panelDetailSimulator];
 
     tabs.forEach(function (t) {
       if (!t) return;
@@ -1552,6 +1603,20 @@
   if (tabDetailOverview) tabDetailOverview.addEventListener("click", function () { switchDetailTab("overview"); });
   if (tabDetailItinerary) tabDetailItinerary.addEventListener("click", function () { switchDetailTab("itinerary"); });
   if (tabDetailSimulator) tabDetailSimulator.addEventListener("click", function () { switchDetailTab("simulator"); });
+
+  // Navegação entre abas pelas setas do teclado (padrão ARIA de tablist)
+  document.querySelectorAll('[role="tablist"]').forEach(function (list) {
+    list.addEventListener("keydown", function (e) {
+      if (e.key !== "ArrowRight" && e.key !== "ArrowLeft") return;
+      var tabs = Array.prototype.slice.call(list.querySelectorAll('[role="tab"]'));
+      var idx = tabs.indexOf(document.activeElement);
+      if (idx < 0) return;
+      e.preventDefault();
+      var next = tabs[(idx + (e.key === "ArrowRight" ? 1 : -1) + tabs.length) % tabs.length];
+      next.focus();
+      next.click();
+    });
+  });
 
   // Controle de Viajantes do Simulador
   var simTravelersMinus = document.getElementById("simTravelersMinus");
@@ -1630,6 +1695,14 @@
     if (pixPriceEl) pixPriceEl.textContent = "R$ " + pixDiscounted.toLocaleString("pt-BR");
   }
 
+  // Seleciona "N pessoas" no formulário de contato (5 ou mais caem na última opção)
+  function preSelectLeadPessoas(qtd) {
+    var sel = document.getElementById("leadPessoas");
+    if (!sel) return;
+    var n = Math.min(parseInt(qtd, 10) || 2, 5);
+    sel.selectedIndex = Math.min(n - 1, sel.options.length - 1);
+  }
+
   // Ações de Contratação e Salvamento da Simulação
   var btnBookSimulatedTrip = document.getElementById("btnBookSimulatedTrip");
   var btnSaveSimulation = document.getElementById("btnSaveSimulation");
@@ -1661,26 +1734,12 @@
 
       preSelectLeadDestino(destNameFull);
 
-      var selPessoas = document.getElementById("leadPessoas");
-      if (selPessoas) {
-        for (var i = 0; i < selPessoas.options.length; i++) {
-          if (selPessoas.options[i].text.indexOf(String(simTravelers)) > -1 || (simTravelers >= 5 && selPessoas.options[i].text.indexOf("5") > -1)) {
-            selPessoas.selectedIndex = i;
-            break;
-          }
-        }
-      }
+      preSelectLeadPessoas(simTravelers);
 
       var msgField = document.getElementById("leadMensagem");
       if (msgField) msgField.value = msg;
 
-      var contatoSec = document.getElementById("contato");
-      if (contatoSec) {
-        contatoSec.scrollIntoView({ behavior: "smooth" });
-      }
-
-      var nomeInp = document.getElementById("leadNome");
-      if (nomeInp) setTimeout(function () { nomeInp.focus(); }, 400);
+      goToLeadForm();
 
       showToast("Configuração personalizada aplicada ao formulário de contato!", "success", "Proposta montada");
     });
@@ -1688,8 +1747,10 @@
 
   if (btnSaveSimulation) {
     btnSaveSimulation.addEventListener("click", function () {
+      if (!activeDestino) return;
       var user = getCurrentUser();
       if (!user) {
+        closeDestinationModal();
         showToast("Faça login para salvar suas simulações no Painel do Viajante!", "info", "Identifique-se");
         openAuthDialog("login");
         return;
@@ -1758,11 +1819,7 @@
 
     switchProfileTab("quotes");
 
-    if (typeof profileModal.showModal === "function") {
-      profileModal.showModal();
-    } else {
-      profileModal.setAttribute("open", "true");
-    }
+    showDialog(profileModal);
   }
 
   function closeProfileModal() {
@@ -1777,8 +1834,14 @@
   if (profileCloseBtn) profileCloseBtn.addEventListener("click", closeProfileModal);
 
   function switchProfileTab(tab) {
-    if (tabProfileQuotes) tabProfileQuotes.classList.toggle("is-active", tab === "quotes");
-    if (tabProfilePrefs) tabProfilePrefs.classList.toggle("is-active", tab === "prefs");
+    if (tabProfileQuotes) {
+      tabProfileQuotes.classList.toggle("is-active", tab === "quotes");
+      tabProfileQuotes.setAttribute("aria-selected", String(tab === "quotes"));
+    }
+    if (tabProfilePrefs) {
+      tabProfilePrefs.classList.toggle("is-active", tab === "prefs");
+      tabProfilePrefs.setAttribute("aria-selected", String(tab === "prefs"));
+    }
     if (panelProfileQuotes) panelProfileQuotes.style.display = tab === "quotes" ? "block" : "none";
     if (panelProfilePrefs) panelProfilePrefs.style.display = tab === "prefs" ? "block" : "none";
   }
@@ -1818,12 +1881,12 @@
       card.querySelector("[data-apply-quote]").addEventListener("click", function () {
         closeProfileModal();
         preSelectLeadDestino(q.destinoNome);
+        preSelectLeadPessoas(q.viajantes);
         var msgField = document.getElementById("leadMensagem");
         if (msgField) {
-          msgField.value = "Gostaria de contratar minha simulação salva: " + q.destinoNome + " para " + q.viajantes + " pessoa(s) no valor de " + q.total + ".";
+          msgField.value = "Gostaria de contratar minha simulação salva: " + q.destinoNome + " para " + q.viajantes + " pessoa(s), hospedagem " + q.hotel + ", no valor de " + q.total + ".";
         }
-        var contatoSec = document.getElementById("contato");
-        if (contatoSec) contatoSec.scrollIntoView({ behavior: "smooth" });
+        goToLeadForm();
       });
 
       card.querySelector("[data-delete-quote]").addEventListener("click", function () {
@@ -2021,17 +2084,39 @@
       restartTimer();
     }, { passive: true });
 
+    var reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
     function restartTimer() {
       clearInterval(depoTimer);
+      // Sem troca automática para quem prefere menos movimento ou com a aba em segundo plano
+      if (reduceMotion || document.hidden) return;
       depoTimer = setInterval(function () {
         goToSlide(depoIndex + 1);
       }, 6500);
     }
 
-    if (sliderEl) {
-      sliderEl.addEventListener("mouseenter", function () { clearInterval(depoTimer); });
-      sliderEl.addEventListener("mouseleave", restartTimer);
+    function pauseTimer() {
+      clearInterval(depoTimer);
     }
+
+    if (sliderEl) {
+      sliderEl.addEventListener("mouseenter", pauseTimer);
+      sliderEl.addEventListener("mouseleave", restartTimer);
+      sliderEl.addEventListener("focusin", pauseTimer);
+      sliderEl.addEventListener("focusout", function (e) {
+        if (!sliderEl.contains(e.relatedTarget)) restartTimer();
+      });
+      sliderEl.addEventListener("keydown", function (e) {
+        if (e.defaultPrevented) return; // já tratado pela navegação dos pontos (tablist)
+        if (e.key === "ArrowLeft") goToSlide(depoIndex - 1);
+        else if (e.key === "ArrowRight") goToSlide(depoIndex + 1);
+      });
+    }
+
+    document.addEventListener("visibilitychange", function () {
+      if (document.hidden) pauseTimer();
+      else restartTimer();
+    });
 
     restartTimer();
   }
@@ -2097,14 +2182,27 @@
         searchFeedback.textContent = "Buscando as melhores opções para " + (destino || "seu destino") + "...";
       }
 
+      // Leva as escolhas da busca para o formulário de contato
+      if (destino) preSelectLeadDestino(destino);
+      var viajantesSel = document.getElementById("buscaViajantes");
+      var leadPessoasSel = document.getElementById("leadPessoas");
+      if (viajantesSel && leadPessoasSel) leadPessoasSel.selectedIndex = viajantesSel.selectedIndex;
+      var msgField = document.getElementById("leadMensagem");
+      if (quando && msgField && !msgField.value) {
+        var partes = quando.split("-");
+        var mesAno = new Date(+partes[0], +partes[1] - 1, 1).toLocaleDateString("pt-BR", { month: "long", year: "numeric" });
+        msgField.value = "Pretendo viajar em " + mesAno + ".";
+      }
+
       setTimeout(function () {
         var destinosSec = document.getElementById("destinos");
         if (destinosSec) {
           destinosSec.scrollIntoView({ behavior: "smooth" });
         }
-        if (destino && destinosSearchInput) {
-          destinosSearchInput.value = destino.split(" — ")[0];
-          searchQuery = destino.split(" — ")[0];
+        if (destinosSearchInput) {
+          var termo = destino ? destino.split(" — ")[0] : "";
+          destinosSearchInput.value = termo;
+          searchQuery = termo;
           renderDestinos();
         }
         if (searchFeedback) searchFeedback.textContent = "";
@@ -2131,6 +2229,20 @@
 
   var leadForm = document.getElementById("leadForm");
   var leadStatus = document.getElementById("leadStatus");
+
+  // Some com a mensagem de erro assim que o campo é corrigido (vale para todos os formulários)
+  document.addEventListener("input", clearOwnError);
+  document.addEventListener("change", clearOwnError);
+
+  function clearOwnError(e) {
+    var el = e.target;
+    if (!el || !el.id) return;
+    var errorEl = document.querySelector('[data-error-for="' + el.id + '"]');
+    if (!errorEl || !errorEl.textContent) return;
+    errorEl.textContent = "";
+    var wrapper = el.closest(".field");
+    if (wrapper) wrapper.classList.remove("has-error");
+  }
 
   if (leadForm) {
     leadForm.addEventListener("submit", function (e) {
@@ -2167,7 +2279,17 @@
         valid = false;
       }
 
-      if (!valid) return;
+      if (!valid) {
+        var firstError = leadForm.querySelector(".field.has-error input, .field.has-error select, .field.has-error textarea");
+        if (firstError) firstError.focus();
+        return;
+      }
+
+      var submitBtn = leadForm.querySelector('button[type="submit"]');
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.setAttribute("aria-busy", "true");
+      }
 
       if (leadStatus) {
         leadStatus.className = "form-status";
@@ -2177,6 +2299,10 @@
       setTimeout(function () {
         if (leadStatus) {
           leadStatus.textContent = "✓ Solicitação recebida! Em até 1 dia útil nosso especialista entrará em contato.";
+        }
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.removeAttribute("aria-busy");
         }
         leadForm.reset();
         showToast("Roteiros solicitados com sucesso! Verifique seu e-mail e WhatsApp.", "success", "Tudo pronto!");
@@ -2188,11 +2314,72 @@
      16. INICIALIZAÇÃO GERAL
      --------------------------------------------------------- */
 
+  // Animação de entrada suave dos blocos conforme aparecem na tela
+  function initReveal() {
+    if (!("IntersectionObserver" in window)) return;
+    var targets = document.querySelectorAll(
+      ".section__head, .feature-grid, .split__visual, .split__content, .slider, .faq-list, .contact__copy, .contact__form"
+    );
+    var observer = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("is-visible");
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { rootMargin: "0px 0px -8% 0px", threshold: 0.08 });
+
+    targets.forEach(function (el) {
+      el.classList.add("reveal");
+      observer.observe(el);
+    });
+  }
+
+  // Destaca no menu a seção que está visível
+  function initScrollSpy() {
+    if (!("IntersectionObserver" in window)) return;
+    var links = document.querySelectorAll(".site-nav a[href^='#'], .nav-drawer__list a[href^='#']");
+    var sections = [];
+    links.forEach(function (a) {
+      var sec = document.querySelector(a.getAttribute("href"));
+      if (sec && sections.indexOf(sec) < 0) sections.push(sec);
+    });
+
+    var observer = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (!entry.isIntersecting) return;
+        var id = "#" + entry.target.id;
+        links.forEach(function (a) {
+          if (a.getAttribute("href") === id) a.setAttribute("aria-current", "true");
+          else a.removeAttribute("aria-current");
+        });
+      });
+    }, { rootMargin: "-45% 0px -50% 0px" });
+
+    sections.forEach(function (s) { observer.observe(s); });
+  }
+
+  // Abre direto os detalhes quando a página é acessada por um link compartilhado (#roteiro-id)
+  function openFromHash() {
+    var match = /^#roteiro-([\w-]+)$/.exec(window.location.hash);
+    if (!match) return;
+    var destinosSec = document.getElementById("destinos");
+    if (destinosSec) destinosSec.scrollIntoView();
+    openDestinationModal(match[1]);
+  }
+
   function init() {
     initTheme();
 
     var anoEl = document.getElementById("anoAtual");
     if (anoEl) anoEl.textContent = new Date().getFullYear();
+
+    // Impede escolher um mês que já passou na busca rápida
+    var buscaQuando = document.getElementById("buscaQuando");
+    if (buscaQuando) {
+      var hoje = new Date();
+      buscaQuando.min = hoje.getFullYear() + "-" + String(hoje.getMonth() + 1).padStart(2, "0");
+    }
 
     renderDestinos();
     renderFeatures();
@@ -2201,6 +2388,10 @@
     renderFaq();
 
     updateAuthUI();
+    initReveal();
+    initScrollSpy();
+    openFromHash();
+    window.addEventListener("hashchange", openFromHash);
   }
 
   if (document.readyState === "loading") {
