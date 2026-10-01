@@ -28,6 +28,23 @@
     - Cálculo matemático exato com parcelamento em até 10x sem juros no cartão ou 5% de desconto à vista via PIX;
     - Ação de envio da simulação direto para o formulário de contato com todos os campos pré-preenchidos;
     - Salvamento da simulação na conta do viajante.
+- **🧭 Quiz "Qual viagem combina com você?"**:
+  - 5 perguntas (paisagem, ritmo, orçamento, dias disponíveis e época);
+  - Cálculo de compatibilidade de 0 a 100% com os motivos de cada recomendação;
+  - Destino ideal + 2 alternativas, com atalho para detalhes, simulador e favoritos;
+  - Acessível: avança sozinho com mouse/toque e pelo botão "Próxima" no teclado.
+- **🗺️ Mapa Interativo do Brasil**:
+  - Alternância entre visualização em Grade e Mapa, respeitando os mesmos filtros;
+  - Pinos posicionados pelas coordenadas reais de cada destino sobre um mapa em SVG;
+  - Painel lateral com resumo do roteiro, calendário de temporada e acesso aos detalhes.
+- **📅 Melhor Época para Viajar**:
+  - Filtro "Quando quer ir" que mostra só os destinos com boa época no mês escolhido;
+  - Selo "Boa época para ir agora" nos cards e calendário de 12 meses no modal do roteiro;
+  - A busca do topo usa o mês escolhido e dá dicas de época para o destino selecionado.
+- **🎒 Checklist "O que levar"**:
+  - Lista de mala por destino (itens essenciais, da categoria e específicos do lugar);
+  - Barra de progresso e itens marcados salvos no navegador (`localStorage`).
+- **💡 "Você também pode gostar"**: sugestões de destinos parecidos dentro do modal do roteiro.
 - **⚖️ Comparador Lado a Lado de Roteiros**:
   - Seleção de até 3 destinos para comparar simultaneamente;
   - Barra de ancoragem inferior flutuante (*Dock*) com contagem e chips removíveis;
@@ -43,6 +60,8 @@
   - Dúvidas frequentes sobre logística, cancelamentos, grupos, pagamentos e passagens aéreas.
 - **⚡ Refinamento de Usabilidade & Performance**:
   - Barra de progresso de leitura superior (*Scroll Indicator*);
+  - Números do topo com contagem animada e animações de entrada ao rolar a página;
+  - Links diretos para cada roteiro (`#roteiro-noronha`), prontos para compartilhar;
   - Máscara dinâmica de telefone e WhatsApp `(00) 00000-0000`;
   - Compartilhamento de roteiros via Web Share API com cópia para área de transferência;
   - Notificações Toast contextuais (sucesso, aviso, erro e informação).
@@ -63,9 +82,9 @@
 ├── images/
 │   └── hero.jpg          # Imagem de capa do hero
 ├── js/
-│   ├── data.js           # Dados estruturados de 8 destinos, opcionais, FAQ e depoimentos
-│   ├── main.js           # Interatividade completa: temas, filtros, simulador, comparador e auth
-│   └── scenes.js         # Ilustrações vetoriais autorais em SVG
+│   ├── data.js           # Dados de 8 destinos, opcionais, FAQ, depoimentos, checklist e quiz
+│   ├── main.js           # Interatividade: temas, filtros, mapa, quiz, simulador, comparador e auth
+│   └── scenes.js         # Ilustrações vetoriais autorais em SVG e mapa do Brasil
 ├── .gitignore            # Arquivos e pastas ignorados pelo Git
 ├── index.html            # Estrutura principal da aplicação
 └── README.md             # Documentação do projeto

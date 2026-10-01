@@ -104,6 +104,7 @@
       <nav aria-label="Navegação mobile">
         <ul class="nav-drawer__list">
           <li><a href="#destinos">Destinos</a></li>
+          <li><a href="#quiz">Descubra seu destino</a></li>
           <li><a href="#experiencias">Experiências</a></li>
           <li><a href="#roteiros">Roteiros</a></li>
           <li><a href="#depoimentos">Depoimentos</a></li>
@@ -180,10 +181,14 @@
           <p class="search-bar__feedback" id="searchFeedback" role="status" aria-live="polite"></p>
         </form>
 
+        <p class="hero__quiz-link">
+          Não sabe para onde ir? <a href="#quiz">Faça o quiz de 1 minuto</a>
+        </p>
+
         <ul class="hero__stats">
-          <li><strong>+120</strong><span>destinos mapeados</span></li>
-          <li><strong>4,9</strong><span>nota média (1.842 avaliações)</span></li>
-          <li><strong>38 mil</strong><span>viajantes desde 2014</span></li>
+          <li><strong data-count="120" data-prefix="+">+120</strong><span>destinos mapeados</span></li>
+          <li><strong data-count="4.9" data-decimals="1">4,9</strong><span>nota média (1.842 avaliações)</span></li>
+          <li><strong data-count="38" data-suffix=" mil">38 mil</strong><span>viajantes desde 2014</span></li>
         </ul>
       </div>
     </section>
@@ -194,7 +199,7 @@
           <p class="eyebrow">Destinos em destaque</p>
           <h2 class="section__title" id="destinosTitulo">Escolha o cenário, a gente cuida do resto</h2>
           <p class="section__lead">
-            Cada roteiro é montado com quem mora no lugar. Filtre por palavra-chave, preço, ritmo ou ordene como preferir.
+            Cada roteiro é montado com quem mora no lugar. Filtre por palavra-chave, preço ou mês da viagem, ou explore tudo pelo mapa.
           </p>
         </header>
 
@@ -212,6 +217,25 @@
                 <span class="filter-price-badge" id="destinosPriceValue">Até R$ 6.000</span>
               </div>
               <input type="range" class="filter-price-slider" id="destinosPriceSlider" min="2000" max="6000" step="100" value="6000" aria-label="Filtrar por preço máximo por pessoa" />
+            </div>
+
+            <div class="filter-sort-wrap">
+              <label class="filter-sort-label" for="destinosMonthSelect">Quando quer ir</label>
+              <select class="filter-sort-select" id="destinosMonthSelect">
+                <option value="">Qualquer mês</option>
+                <option value="1">Janeiro</option>
+                <option value="2">Fevereiro</option>
+                <option value="3">Março</option>
+                <option value="4">Abril</option>
+                <option value="5">Maio</option>
+                <option value="6">Junho</option>
+                <option value="7">Julho</option>
+                <option value="8">Agosto</option>
+                <option value="9">Setembro</option>
+                <option value="10">Outubro</option>
+                <option value="11">Novembro</option>
+                <option value="12">Dezembro</option>
+              </select>
             </div>
 
             <div class="filter-sort-wrap">
@@ -237,15 +261,54 @@
             <div class="destinos-status-info">
               <span role="status" aria-live="polite">Exibindo <strong id="destinosCount">8</strong> de <span id="destinosTotal">8</span> roteiros</span>
               <button class="btn-reset-filters" id="btnResetFilters" type="button">Limpar filtros</button>
+              <div class="view-toggle" role="group" aria-label="Modo de visualização">
+                <button class="view-toggle__btn is-active" type="button" data-view="grade" aria-pressed="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+                  Grade
+                </button>
+                <button class="view-toggle__btn" type="button" data-view="mapa" aria-pressed="false">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M9 4 3 6.5v13.5l6-2.5 6 2.5 6-2.5V4l-6 2.5L9 4Z"/><path d="M9 4v13.5M15 6.5V20"/></svg>
+                  Mapa
+                </button>
+              </div>
             </div>
           </div>
         </div>
 
         <ul class="card-grid" id="destinosGrid"></ul>
+
+        <!-- Mapa interativo: os pinos seguem os mesmos filtros da grade -->
+        <div class="destinos-map" id="destinosMap" hidden>
+          <div class="destinos-map__canvas" id="destinosMapCanvas"></div>
+          <div class="destinos-map__panel" id="destinosMapPanel"></div>
+        </div>
+
         <div class="empty-state" id="destinosEmpty" hidden>
           <p style="font-weight: 600; margin-bottom: 0.5rem;">Nenhum roteiro encontrado para esses critérios.</p>
-          <p style="font-size: var(--fs-sm); color: var(--ink-500); margin-bottom: var(--sp-4);">Tente aumentar o limite de preço, mudar a categoria ou usar outros termos na busca.</p>
+          <p style="font-size: var(--fs-sm); color: var(--ink-500); margin-bottom: var(--sp-4);">Tente aumentar o limite de preço, mudar a categoria ou o mês, ou usar outros termos na busca. Ainda em dúvida? <a href="#quiz">Faça o quiz</a>.</p>
           <button class="btn btn--primary btn--sm" id="emptyResetBtn" type="button">Ver todos os roteiros</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="section quiz-section" id="quiz" aria-labelledby="quizTitulo">
+      <div class="container">
+        <div class="quiz">
+          <div class="quiz__intro">
+            <p class="eyebrow eyebrow--light">Quiz de 1 minuto</p>
+            <h2 class="section__title" id="quizTitulo">Qual viagem combina com você?</h2>
+            <p class="section__lead">
+              Responda 5 perguntas rápidas e descubra quais roteiros têm mais a ver com o seu jeito de viajar.
+            </p>
+            <ul class="quiz__perks">
+              <li>5 perguntas</li>
+              <li>Resultado na hora</li>
+              <li>Sem cadastro</li>
+            </ul>
+          </div>
+
+          <!-- Conteúdo (perguntas e resultado) montado pelo main.js -->
+          <div class="quiz__card" id="quizCard"></div>
         </div>
       </div>
     </section>
@@ -705,6 +768,7 @@
         <button class="detail-tab is-active" id="tabDetailOverview" type="button" role="tab" aria-selected="true" data-tab="overview">Visão Geral</button>
         <button class="detail-tab" id="tabDetailItinerary" type="button" role="tab" aria-selected="false" data-tab="itinerary">Itinerário Completo</button>
         <button class="detail-tab" id="tabDetailSimulator" type="button" role="tab" aria-selected="false" data-tab="simulator">Simulador de Orçamento</button>
+        <button class="detail-tab" id="tabDetailChecklist" type="button" role="tab" aria-selected="false" data-tab="checklist">O que levar</button>
       </div>
 
       <div class="detail-body">
@@ -729,9 +793,12 @@
               <div class="detail-box">
                 <h4>Melhor época para ir</h4>
                 <p id="detailMelhorEpoca" style="font-size: var(--fs-sm); color: var(--ink-700);"></p>
+                <div id="detailSeasonStrip"></div>
               </div>
             </div>
           </div>
+
+          <div class="related" id="detailRelated"></div>
         </div>
 
         <!-- Tab Itinerário -->
@@ -822,6 +889,21 @@
               </button>
             </div>
           </div>
+        </div>
+
+        <!-- Tab O que levar (checklist salvo no navegador) -->
+        <div class="detail-panel" id="panelDetailChecklist">
+          <div class="checklist-head">
+            <p class="checklist-head__text" id="checklistIntro"></p>
+            <div class="checklist-progress">
+              <div class="checklist-progress__bar" role="progressbar" aria-label="Itens separados" aria-valuemin="0" aria-valuemax="0" aria-valuenow="0" id="checklistBar">
+                <span id="checklistBarFill"></span>
+              </div>
+              <span class="checklist-progress__label" id="checklistLabel">0 de 0 itens</span>
+              <button class="btn-reset-filters" id="checklistResetBtn" type="button">Desmarcar tudo</button>
+            </div>
+          </div>
+          <div class="checklist-groups" id="checklistGroups"></div>
         </div>
       </div>
     </div>

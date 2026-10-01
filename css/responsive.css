@@ -419,3 +419,65 @@
   }
 }
 
+/* ---------- Quiz, mapa, checklist e destinos relacionados ---------- */
+@media (max-width: 1080px) {
+  /* Busca ocupa a linha toda; os outros filtros ficam em duas colunas */
+  .destinos-controls__top {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .filter-search-wrap {
+    grid-column: 1 / -1;
+  }
+
+  .quiz {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 880px) {
+  .destinos-map {
+    grid-template-columns: 1fr;
+  }
+
+  .related__list {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  /* Bottom sheets ocupam a largura toda (antes o conteúdo de 100vw era cortado pelo limite de 95vw) */
+  .detail-dialog,
+  .compare-dialog,
+  .profile-dialog {
+    width: 100vw;
+    max-width: 100vw;
+    margin-inline: 0;
+  }
+
+  .destinos-controls__top {
+    grid-template-columns: 1fr;
+  }
+
+  .quiz__options {
+    grid-template-columns: 1fr;
+  }
+
+  .quiz-result__top,
+  .quiz-result__more {
+    grid-template-columns: 1fr;
+  }
+
+  .quiz-option__box {
+    padding: var(--sp-3) var(--sp-4);
+  }
+
+  .map-pin__label {
+    font-size: 0.66rem;
+  }
+
+  .destinos-map__panel {
+    padding: var(--sp-4);
+  }
+}
+

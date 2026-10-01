@@ -165,6 +165,29 @@
   min-height: 1.6rem;
 }
 
+/* Atalho para o quiz logo abaixo da busca */
+.hero__quiz-link {
+  margin-top: var(--sp-4);
+  font-size: var(--fs-sm);
+  color: rgba(255, 253, 248, 0.86);
+}
+
+.hero__quiz-link a {
+  color: var(--on-photo);
+  font-weight: 600;
+  text-decoration: underline;
+  text-decoration-color: var(--clay-300);
+  text-underline-offset: 3px;
+}
+
+.hero__quiz-link a::after {
+  content: " →";
+}
+
+.hero__quiz-link a:hover {
+  text-decoration-color: var(--on-photo);
+}
+
 /* ---------------------------------------------------------
    Indicadores
    --------------------------------------------------------- */
@@ -173,7 +196,7 @@
   display: flex;
   flex-wrap: wrap;
   gap: clamp(1.5rem, 5vw, 3.75rem);
-  margin-top: clamp(2rem, 5vw, 3rem);
+  margin-top: clamp(1.5rem, 4vw, 2.25rem);
   padding-top: var(--sp-5);
   border-top: 1px solid rgba(255, 253, 248, 0.22);
   max-width: 1000px;
@@ -181,6 +204,7 @@
 
 .hero__stats strong {
   display: block;
+  font-variant-numeric: tabular-nums; /* números não "pulam" durante a contagem animada */
   font-family: var(--font-display);
   font-size: clamp(1.5rem, 3vw, 1.95rem);
   font-weight: 600;

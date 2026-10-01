@@ -4,12 +4,13 @@
 
 .site-footer {
   --nav-fg: rgba(255, 253, 248, 0.78);
-  --nav-fg-strong: var(--cream);
+  --nav-fg-strong: var(--on-photo);
   --mark-bg: rgba(255, 253, 248, 0.12);
   --mark-border: rgba(255, 253, 248, 0.32);
 
   padding-top: clamp(3rem, 6vw, 4.5rem);
-  background-color: var(--ink-900);
+  /* Cores fixas: o rodapé é escuro nos dois temas (antes ficava claro com texto branco no modo escuro) */
+  background-color: #291f18;
   background-image: radial-gradient(ellipse at 12% 0%, rgba(124, 56, 32, 0.42), transparent 58%);
   color: rgba(255, 253, 248, 0.72);
   font-size: 0.92rem;
@@ -35,11 +36,20 @@
   font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--cream);
+  color: var(--on-photo);
 }
 
 .site-footer__col ul li + li {
   margin-top: 0.55rem;
+}
+
+/* Os ícones sociais ficam lado a lado: sem o espaçamento vertical das listas de links */
+.site-footer__col .social li + li {
+  margin-top: 0;
+}
+
+.site-footer .social a {
+  color: #eadcc6;
 }
 
 .site-footer__col a {
@@ -49,7 +59,7 @@
 }
 
 .site-footer__col a:hover {
-  color: var(--cream);
+  color: var(--on-photo);
   text-decoration: underline;
 }
 
@@ -80,6 +90,6 @@
 }
 
 .site-footer__bottom a:hover {
-  color: var(--cream);
+  color: var(--on-photo);
   text-decoration: underline;
 }

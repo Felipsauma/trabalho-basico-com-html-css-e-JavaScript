@@ -123,3 +123,65 @@
 .section--clay .slider__viewport {
   box-shadow: 0 30px 60px -30px rgba(41, 31, 24, 0.6);
 }
+
+/* ---------------------------------------------------------
+   Quiz "Qual viagem combina com você?"
+   Painel escuro com cores fixas (fica igual nos temas claro e escuro)
+   --------------------------------------------------------- */
+
+.quiz-section {
+  padding-top: 0;
+}
+
+.quiz {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+  align-items: start; /* o texto não "pula" quando o cartão muda de altura entre as perguntas */
+  gap: clamp(1.5rem, 4vw, 3.5rem);
+  padding: clamp(1.5rem, 4vw, 3.25rem);
+  border-radius: var(--r-xl);
+  background:
+    radial-gradient(circle at 12% 0%, rgba(224, 161, 129, 0.35), transparent 55%),
+    linear-gradient(150deg, #3a2d24 0%, #5c3a24 55%, #7c3820 100%);
+  color: var(--on-photo);
+  box-shadow: var(--shadow-lg);
+}
+
+.quiz__intro {
+  padding-top: clamp(0rem, 3vw, 2.5rem);
+}
+
+.quiz__intro .section__title {
+  color: var(--on-photo);
+}
+
+.quiz__intro .section__lead {
+  color: rgba(255, 253, 248, 0.82);
+}
+
+.quiz__perks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-2);
+  margin-top: var(--sp-5);
+  padding: 0;
+  list-style: none;
+}
+
+.quiz__perks li {
+  padding: 0.35rem 0.85rem;
+  border: 1px solid rgba(255, 253, 248, 0.3);
+  border-radius: var(--r-pill);
+  background: rgba(255, 253, 248, 0.08);
+  font-size: var(--fs-xs);
+  font-weight: 600;
+}
+
+.quiz__card {
+  padding: clamp(1.25rem, 3vw, 2rem);
+  border-radius: var(--r-lg);
+  background: var(--cream);
+  color: var(--ink-700);
+  box-shadow: var(--shadow-lg);
+}

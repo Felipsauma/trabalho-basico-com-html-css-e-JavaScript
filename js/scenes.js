@@ -189,7 +189,88 @@ var SCENES = (function () {
     );
   }
 
+  /* ---------------------------------------------------------
+     Mapa do Brasil (contorno simplificado) para o mapa interativo
+     Projeção simples: 1 grau de longitude/latitude = 10 unidades do viewBox.
+     --------------------------------------------------------- */
+
+  // largura com folga à direita para Fernando de Noronha não ficar colado na borda
+  var MAPA = { minLon: -74.5, maxLat: 5.8, largura: 445, altura: 400, escala: 10 };
+
+  // Pontos aproximados do contorno [longitude, latitude], no sentido horário a partir do Oiapoque
+  var CONTORNO_BRASIL = [
+    // Litoral, do Oiapoque ao Chuí
+    [-51.6, 4.4], [-51.0, 3.6], [-50.6, 2.4], [-49.9, 1.7], [-50.4, 0.6], [-49.6, -0.1], [-48.4, -0.3],
+    [-48.3, -1.0], [-47.4, -0.6], [-46.5, -1.0], [-45.3, -1.5], [-44.6, -2.3], [-44.1, -2.5], [-43.3, -2.4],
+    [-42.2, -2.7], [-41.4, -2.9], [-40.5, -2.8], [-39.5, -3.0], [-38.5, -3.7], [-37.4, -4.6], [-36.3, -5.0],
+    [-35.3, -5.2], [-35.0, -6.3], [-34.8, -7.2], [-34.9, -8.1], [-35.3, -9.1], [-35.8, -9.7], [-36.4, -10.5],
+    [-37.1, -11.0], [-37.8, -12.1], [-38.5, -13.0], [-39.0, -14.0], [-39.0, -15.0], [-39.1, -16.4], [-39.3, -17.7],
+    [-39.7, -18.9], [-40.2, -20.0], [-40.9, -21.2], [-41.0, -22.0], [-42.0, -22.95], [-43.2, -23.0], [-44.6, -23.3],
+    [-45.5, -23.85], [-46.4, -24.05], [-47.3, -24.6], [-48.0, -25.2], [-48.5, -25.9], [-48.6, -26.8], [-48.5, -27.6],
+    [-48.8, -28.6], [-49.7, -29.3], [-50.4, -30.3], [-51.2, -31.2], [-52.1, -32.2], [-52.8, -33.1], [-53.4, -33.75],
+    // Fronteira com o Uruguai
+    [-53.5, -33.1], [-53.4, -32.6], [-54.2, -31.9], [-55.0, -31.3], [-55.6, -30.85], [-56.4, -30.4], [-57.6, -30.2],
+    // Argentina
+    [-57.1, -29.75], [-56.0, -28.6], [-55.1, -27.8], [-54.1, -27.2], [-53.7, -26.3], [-53.9, -25.6], [-54.6, -25.6],
+    // Paraguai
+    [-54.3, -24.1], [-55.3, -23.9], [-55.7, -22.6], [-56.6, -22.2], [-57.9, -22.1], [-58.15, -20.2],
+    // Bolívia
+    [-57.75, -19.0], [-57.9, -18.0], [-58.4, -16.3], [-60.2, -16.3], [-60.2, -15.1], [-60.4, -13.6], [-61.5, -13.5],
+    [-63.0, -12.7], [-64.3, -12.4], [-65.1, -11.9], [-65.35, -10.8], [-65.4, -9.7], [-66.6, -9.8], [-67.2, -10.3],
+    [-68.7, -11.0], [-69.6, -10.95],
+    // Peru
+    [-70.6, -9.6], [-72.2, -10.0], [-73.2, -9.2], [-73.0, -8.3], [-74.0, -7.4], [-73.4, -6.3], [-72.9, -5.2],
+    [-71.4, -4.4], [-69.95, -4.25],
+    // Colômbia
+    [-69.4, -1.15], [-69.6, -0.2], [-70.05, 0.6], [-69.2, 1.1], [-67.9, 1.8], [-66.85, 1.22],
+    // Venezuela
+    [-66.0, 0.8], [-65.0, 1.0], [-64.1, 1.6], [-64.6, 2.6], [-64.4, 3.8], [-63.0, 4.1], [-61.2, 4.5], [-60.73, 5.2],
+    // Guiana, Suriname e Guiana Francesa
+    [-60.2, 5.27], [-59.98, 4.5], [-59.6, 3.9], [-59.8, 3.4], [-59.95, 2.6], [-59.6, 1.8], [-59.2, 1.4], [-58.0, 1.5],
+    [-56.5, 1.9], [-55.8, 2.1], [-55.0, 2.45], [-54.0, 2.2], [-52.9, 2.2], [-52.5, 2.6], [-51.9, 3.7]
+  ];
+
+  function pontoMapa(lon, lat) {
+    return {
+      x: (lon - MAPA.minLon) * MAPA.escala,
+      y: (MAPA.maxLat - lat) * MAPA.escala
+    };
+  }
+
+  // Posição em % dentro do mapa, usada para colocar os pinos (botões HTML) sobre o SVG
+  function projetarMapa(lat, lon) {
+    var p = pontoMapa(lon, lat);
+    return { x: (p.x / MAPA.largura) * 100, y: (p.y / MAPA.altura) * 100 };
+  }
+
+  function mapaBrasil() {
+    var d = CONTORNO_BRASIL.map(function (c, i) {
+      var p = pontoMapa(c[0], c[1]);
+      return (i === 0 ? "M" : "L") + p.x.toFixed(1) + " " + p.y.toFixed(1);
+    }).join("") + "Z";
+
+    var equador = pontoMapa(0, 0).y;
+    var tropico = pontoMapa(0, -23.44).y;
+    var ilha = pontoMapa(-32.42, -3.85);
+
+    return (
+      '<svg class="mapa" viewBox="0 0 ' + MAPA.largura + " " + MAPA.altura + '" aria-hidden="true" focusable="false">' +
+      '<line class="mapa__linha" x1="0" y1="' + equador + '" x2="' + MAPA.largura + '" y2="' + equador + '"/>' +
+      '<line class="mapa__linha" x1="0" y1="' + tropico + '" x2="' + MAPA.largura + '" y2="' + tropico + '"/>' +
+      // Legendas posicionadas onde não há território (equador à direita, no oceano; trópico à esquerda)
+      '<text class="mapa__legenda" x="' + (MAPA.largura - 6) + '" y="' + (equador - 5) + '" text-anchor="end">Linha do Equador</text>' +
+      '<text class="mapa__legenda" x="6" y="' + (tropico - 5) + '">Trópico de Capricórnio</text>' +
+      '<path class="mapa__pais" d="' + d + '"/>' +
+      '<circle class="mapa__pais" cx="' + ilha.x.toFixed(1) + '" cy="' + ilha.y.toFixed(1) + '" r="2.4"/>' +
+      '<text class="mapa__oceano" x="388" y="330" text-anchor="middle">OCEANO</text>' +
+      '<text class="mapa__oceano" x="388" y="342" text-anchor="middle">ATLÂNTICO</text>' +
+      "</svg>"
+    );
+  }
+
   return {
+    mapaBrasil: mapaBrasil,
+    projetarMapa: projetarMapa,
     noronha: noronha,
     jeri: jeri,
     chapada: chapada,

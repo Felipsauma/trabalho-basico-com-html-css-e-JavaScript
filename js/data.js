@@ -113,6 +113,13 @@ var DATA = (function () {
       avaliacoes: 124,
       esforco: "Moderado",
       melhorEpoca: "Agosto a Fevereiro",
+      mesesIdeais: [1, 2, 8, 9, 10, 11, 12],
+      coordenadas: { lat: -3.85, lon: -32.42 },
+      levar: [
+        "Máscara e snorkel próprios",
+        "Bolsa estanque para o celular",
+        "Comprovante de pagamento da TPA no celular"
+      ],
       tags: ["Preservação", "Mergulho", "Pôr do Sol"],
       descricao: "Um santuário ecológico de águas cristalinas, lar de golfinhos e tartarugas marinhas. Praias eleitas as mais belas do planeta com controle diário de visitantes.",
       inclusos: [
@@ -157,6 +164,13 @@ var DATA = (function () {
       avaliacoes: 98,
       esforco: "Intenso",
       melhorEpoca: "Maio a Outubro",
+      mesesIdeais: [5, 6, 7, 8, 9, 10],
+      coordenadas: { lat: -12.56, lon: -41.39 },
+      levar: [
+        "Bastão de caminhada para a trilha da Fumaça",
+        "Roupas de secagem rápida",
+        "Saco estanque para os banhos de cachoeira"
+      ],
       tags: ["Trilhas", "Cachoeiras", "Grutas"],
       descricao: "O paraíso nacional das trilhas e ecoturismo. Cachoeiras gigantescas de água avermelhada, grutas subterrâneas fascinantes e o pôr do sol inesquecível no Pai Inácio.",
       inclusos: [
@@ -201,6 +215,13 @@ var DATA = (function () {
       avaliacoes: 85,
       esforco: "Leve",
       melhorEpoca: "Julho a Dezembro",
+      mesesIdeais: [7, 8, 9, 10, 11, 12],
+      coordenadas: { lat: -2.79, lon: -40.51 },
+      levar: [
+        "Corta-vento leve (venta muito no segundo semestre)",
+        "Sandália que possa molhar nas lagoas",
+        "Lenço ou bandana para o vento com areia"
+      ],
       tags: ["Kitesurf", "Dunas", "Vila de Charme"],
       descricao: "Uma charmosa vila de pescadores pé na areia cercada por dunas móveis e lagoas ideais para relaxar nas redes flutuantes. Paraíso dos ventos e do kitesurf.",
       inclusos: [
@@ -242,6 +263,13 @@ var DATA = (function () {
       avaliacoes: 112,
       esforco: "Moderado",
       melhorEpoca: "Junho a Setembro",
+      mesesIdeais: [6, 7, 8, 9],
+      coordenadas: { lat: -2.75, lon: -42.82 },
+      levar: [
+        "Sandália tipo papete para as dunas quentes",
+        "Bolsa estanque para celular e documentos",
+        "Boné com proteção para a nuca"
+      ],
       tags: ["Lagoas", "Dunas Alvas", "Ecoturismo"],
       descricao: "Um impressionante deserto de areias branquíssimas pontilhado por milhares de lagoas sazonais de água doce e azulada formadas pelas chuvas do primeiro semestre.",
       inclusos: [
@@ -283,6 +311,13 @@ var DATA = (function () {
       avaliacoes: 142,
       esforco: "Leve",
       melhorEpoca: "Abril a Outubro (frio/vindima) ou Dezembro",
+      mesesIdeais: [4, 5, 6, 7, 8, 9, 10, 12],
+      coordenadas: { lat: -29.38, lon: -50.87 },
+      levar: [
+        "Espaço na mala para vinhos, queijos e chocolates",
+        "Guarda-chuva compacto",
+        "Calçado de sola firme para os cânions"
+      ],
       tags: ["Gastronomia", "Enoturismo", "Clima de Serra"],
       descricao: "Charme, cultura e o melhor da gastronomia de herança italiana e alemã. Rotas vinícolas repletas de vinícolas premiadas, flores exuberantes e hospedagens coloniais.",
       inclusos: [
@@ -323,6 +358,13 @@ var DATA = (function () {
       avaliacoes: 215,
       esforco: "Leve",
       melhorEpoca: "Ano inteiro (especial de Maio a Novembro)",
+      mesesIdeais: [5, 6, 7, 8, 9, 10, 11],
+      coordenadas: { lat: -22.91, lon: -43.2 },
+      levar: [
+        "Canga e roupa de banho para Ipanema e o Arpoador",
+        "Cópia digital dos documentos no celular",
+        "Roupa leve para a roda de samba"
+      ],
       tags: ["Samba & Bossa", "História", "Praias Urbanas"],
       descricao: "A espetacular fusão entre mata atlântica, praias icônicas e vida cultural vibrante. Vivencie a herança histórica do centro antigo ao samba de raiz da Lapa.",
       inclusos: [
@@ -362,6 +404,13 @@ var DATA = (function () {
       avaliacoes: 76,
       esforco: "Moderado",
       melhorEpoca: "Julho a Dezembro (praias fluviais) ou Março a Junho (cheia)",
+      mesesIdeais: [3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+      coordenadas: { lat: -2.9, lon: -60.6 },
+      levar: [
+        "Roupas de manga longa em cores claras",
+        "Comprovante de vacina contra febre amarela",
+        "Binóculo para observar aves e botos"
+      ],
       tags: ["Floresta Tropical", "Botos Cor-de-Rosa", "Ecolodge de Selva"],
       descricao: "Uma imersão sensorial na maior floresta do planeta. Hospedagem em ecolodge sustentável no Rio Negro, canoagem em igapós espelhados, contemplação de botos e vivência comunitária.",
       inclusos: [
@@ -405,6 +454,13 @@ var DATA = (function () {
       avaliacoes: 163,
       esforco: "Leve",
       melhorEpoca: "Março a Maio ou Setembro a Novembro",
+      mesesIdeais: [3, 4, 5, 9, 10, 11],
+      coordenadas: { lat: -25.54, lon: -54.58 },
+      levar: [
+        "Capa de chuva para a passarela da Garganta do Diabo",
+        "RG em bom estado ou passaporte, caso vá ao lado argentino",
+        "Roupa extra para o Macuco Safari (você vai se molhar!)"
+      ],
       tags: ["Cataratas Monumentais", "Biodiversidade", "Tríplice Fronteira"],
       descricao: "A força majestosa das Cataratas do Iguaçu, uma das Novas 7 Maravilhas da Natureza. Passarelas sobre as quedas, safari de barco nas correntezas do cânion e imersão no Parque das Aves.",
       inclusos: [
@@ -554,11 +610,106 @@ var DATA = (function () {
     }
   ];
 
+  // Itens sugeridos para a mala ("O que levar"): base comum + itens por categoria.
+  // Cada destino ainda tem a sua própria lista em "levar".
+  var CHECKLIST = {
+    essenciais: [
+      "Documento oficial com foto",
+      "Cartão de crédito e um pouco de dinheiro em espécie",
+      "Carregador de celular e bateria portátil",
+      "Remédios de uso pessoal",
+      "Garrafa de água reutilizável"
+    ],
+    praia: [
+      "Protetor solar (de preferência biodegradável)",
+      "Roupas de banho",
+      "Chapéu ou boné e óculos de sol",
+      "Chinelo e canga",
+      "Camiseta com proteção UV"
+    ],
+    aventura: [
+      "Tênis ou bota de trilha já amaciados",
+      "Mochila pequena para os passeios (20 a 30 litros)",
+      "Repelente de insetos",
+      "Capa de chuva leve",
+      "Lanterna de cabeça"
+    ],
+    serra: [
+      "Casaco pesado e segunda pele",
+      "Cachecol, luvas e gorro",
+      "Calçado fechado e confortável",
+      "Hidratante labial e para a pele"
+    ],
+    cultura: [
+      "Tênis confortável para caminhar",
+      "Uma roupa mais arrumada para a noite",
+      "Bolsa transversal ou pochete antifurto",
+      "Protetor solar e óculos de sol"
+    ]
+  };
+
+  // Perguntas do quiz "Qual viagem combina com você?"
+  // Os valores de cada opção são usados no cálculo de compatibilidade (main.js, seção do quiz).
+  var QUIZ = [
+    {
+      id: "cenario",
+      pergunta: "Que paisagem faz seu coração bater mais forte?",
+      opcoes: [
+        { valor: "praia", titulo: "Praia e mar", desc: "Águas cristalinas e pé na areia" },
+        { valor: "serra", titulo: "Serra e friozinho", desc: "Lareira, vinho e montanhas" },
+        { valor: "aventura", titulo: "Natureza selvagem", desc: "Trilhas, cachoeiras e bichos" },
+        { valor: "cultura", titulo: "Cidade e cultura", desc: "História, música e boa comida" }
+      ]
+    },
+    {
+      id: "ritmo",
+      pergunta: "Qual ritmo de viagem combina com você?",
+      opcoes: [
+        { valor: "Leve", titulo: "Tranquilo", desc: "Descansar também é programa" },
+        { valor: "Moderado", titulo: "Equilibrado", desc: "Passeio de manhã, tarde livre" },
+        { valor: "Intenso", titulo: "Intenso", desc: "Quero aproveitar cada minuto" }
+      ]
+    },
+    {
+      id: "orcamento",
+      pergunta: "Quanto você quer investir por pessoa?",
+      ajuda: "Valor do roteiro em terra, sem as passagens aéreas.",
+      opcoes: [
+        { valor: "0-3000", titulo: "Até R$ 3.000", desc: "Viagem econômica e bem planejada" },
+        { valor: "3000-4500", titulo: "De R$ 3.000 a R$ 4.500", desc: "Conforto na medida certa" },
+        { valor: "4500-99999", titulo: "Acima de R$ 4.500", desc: "Uma experiência especial" },
+        { valor: "", titulo: "Tanto faz", desc: "O destino importa mais que o preço" }
+      ]
+    },
+    {
+      id: "dias",
+      pergunta: "Quantos dias você tem para viajar?",
+      opcoes: [
+        { valor: "1-4", titulo: "Até 4 dias", desc: "Um feriado prolongado" },
+        { valor: "5-6", titulo: "5 ou 6 dias", desc: "Quase uma semana" },
+        { valor: "7-30", titulo: "7 dias ou mais", desc: "Uma semana inteira (ou mais!)" }
+      ]
+    },
+    {
+      id: "epoca",
+      pergunta: "Quando você pretende ir?",
+      opcoes: [
+        { valor: "12,1,2,3", titulo: "Dezembro a março", desc: "Verão e férias de começo de ano" },
+        { valor: "4,5,6", titulo: "Abril a junho", desc: "Outono, fora da alta temporada" },
+        { valor: "7,8,9", titulo: "Julho a setembro", desc: "Inverno e férias de julho" },
+        { valor: "10,11", titulo: "Outubro ou novembro", desc: "Primavera e feriados prolongados" },
+        { valor: "", titulo: "Ainda não sei", desc: "Quero ir na melhor época" }
+      ]
+    }
+  ];
+
   return {
     DESTINOS: DESTINOS,
     FEATURE_GRID: FEATURE_GRID,
     ROTEIRO_ACCORDION: ROTEIRO_ACCORDION,
     DEPOIMENTOS: DEPOIMENTOS,
-    FAQ: FAQ
+    FAQ: FAQ,
+    CHECKLIST: CHECKLIST,
+    QUIZ: QUIZ
   };
 })();

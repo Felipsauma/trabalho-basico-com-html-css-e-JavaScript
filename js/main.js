@@ -904,6 +904,13 @@
       btn.setAttribute("aria-label", isFav ? "Remover dos favoritos" : "Salvar nos favoritos");
       btn.setAttribute("title", isFav ? "Salvo nos favoritos" : "Salvar nos favoritos");
     });
+
+    // Botão de favorito do resultado do quiz
+    document.querySelectorAll("[data-quiz-fav]").forEach(function (btn) {
+      var isFav = favs.indexOf(btn.getAttribute("data-quiz-fav")) > -1;
+      btn.textContent = isFav ? "Salvo nos favoritos ✓" : "Salvar nos favoritos";
+      btn.setAttribute("aria-pressed", String(isFav));
+    });
   }
 
   function openFavsDialog() {
@@ -1018,6 +1025,7 @@
   var destinosPriceSlider = document.getElementById("destinosPriceSlider");
   var destinosPriceValue = document.getElementById("destinosPriceValue");
   var destinosSortSelect = document.getElementById("destinosSortSelect");
+  var destinosMonthSelect = document.getElementById("destinosMonthSelect");
   var destinosCount = document.getElementById("destinosCount");
   var btnResetFilters = document.getElementById("btnResetFilters");
 
@@ -1025,24 +1033,25 @@
   var searchQuery = "";
   var maxPrice = 6000;
   var currentSort = "populares";
+  var currentMonth = 0; // 0 = qualquer mês; 1 a 12 = mês escolhido
+
+  var MESES = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
+    "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
+
+  function isBoaEpoca(destino, mes) {
+    return (destino.mesesIdeais || []).indexOf(mes) > -1;
+  }
 
   // Remove acentos e caixa para que "lencois" encontre "Lençóis"
   function normalizeText(str) {
     return String(str || "")
       .normalize("NFD")
-      .replace(/[̀-ͯ]/g, "")
+      .replace(/[\u0300-\u036f]/g, "")
       .toLowerCase();
   }
 
-  function renderDestinos() {
-    if (!destinosGrid) return;
-    destinosGrid.innerHTML = "";
-
-    var destinosTotal = document.getElementById("destinosTotal");
-    if (destinosTotal) destinosTotal.textContent = (DATA.DESTINOS || []).length;
-
-    var user = getCurrentUser();
-
+  // Aplica todos os filtros e a ordenação atuais; usada pela grade e pelo mapa
+  function getFilteredDestinos() {
     var list = (DATA.DESTINOS || []).filter(function (d) {
       // 1. Categoria
       if (currentFilter !== "todos" && d.categoria !== currentFilter) {
@@ -1063,6 +1072,10 @@
           return false;
         }
       }
+      // 4. Mês da viagem: só destinos com boa época no mês escolhido
+      if (currentMonth && !isBoaEpoca(d, currentMonth)) {
+        return false;
+      }
       return true;
     });
 
@@ -1077,15 +1090,34 @@
       return scoreB - scoreA;
     });
 
+    return list;
+  }
+
+  function renderDestinos() {
+    if (!destinosGrid) return;
+    destinosGrid.innerHTML = "";
+
+    var destinosTotal = document.getElementById("destinosTotal");
+    if (destinosTotal) destinosTotal.textContent = (DATA.DESTINOS || []).length;
+
+    var user = getCurrentUser();
+    var list = getFilteredDestinos();
+
     if (destinosCount) {
       destinosCount.textContent = list.length;
     }
+
+    // O mapa usa a mesma lista filtrada da grade
+    if (currentView === "mapa") renderDestinosMap(list);
 
     if (list.length === 0) {
       if (destinosEmpty) destinosEmpty.hidden = false;
       return;
     }
     if (destinosEmpty) destinosEmpty.hidden = true;
+
+    // Selo de "boa época": para o mês escolhido no filtro ou, sem filtro, para o mês atual
+    var mesSelo = currentMonth || new Date().getMonth() + 1;
 
     list.forEach(function (d) {
       var card = document.createElement("li");
@@ -1100,11 +1132,19 @@
 
       var categoryLabel = d.categoria.charAt(0).toUpperCase() + d.categoria.slice(1);
 
+      var seloEpoca = isBoaEpoca(d, mesSelo)
+        ? '<span class="card__season">' +
+          '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4.5" width="18" height="16" rx="2"/><path d="M16 2.5v4M8 2.5v4M3 10h18"/></svg>' +
+          (currentMonth ? "Ótima época em " + MESES[currentMonth - 1].toLowerCase() : "Boa época para ir agora") +
+          "</span>"
+        : "";
+
       card.innerHTML =
         '<div class="card__media">' +
         d.getSvg("card-" + d.id) +
         '<span class="card__tag">' + escapeHtml(categoryLabel) + "</span>" +
         '<span class="card__days">' + escapeHtml(d.dias) + "</span>" +
+        seloEpoca +
         '<button class="card__fav-btn' + (isFav ? " is-favorited" : "") + '" type="button" data-id="' + escapeHtml(d.id) + '" aria-label="' + (isFav ? "Remover dos favoritos" : "Salvar nos favoritos") + '">' +
         '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>' +
         "</button>" +
@@ -1247,11 +1287,24 @@
     });
   }
 
+  function setMonthFilter(mes) {
+    currentMonth = mes || 0;
+    if (destinosMonthSelect) destinosMonthSelect.value = currentMonth ? String(currentMonth) : "";
+  }
+
+  if (destinosMonthSelect) {
+    destinosMonthSelect.addEventListener("change", function (e) {
+      setMonthFilter(parseInt(e.target.value, 10));
+      renderDestinos();
+    });
+  }
+
   function resetAllFilters() {
     currentFilter = "todos";
     searchQuery = "";
     maxPrice = 6000;
     currentSort = "populares";
+    setMonthFilter(0);
 
     if (destinosSearchInput) destinosSearchInput.value = "";
     if (destinosPriceSlider) destinosPriceSlider.value = 6000;
@@ -1431,9 +1484,11 @@
   var tabDetailOverview = document.getElementById("tabDetailOverview");
   var tabDetailItinerary = document.getElementById("tabDetailItinerary");
   var tabDetailSimulator = document.getElementById("tabDetailSimulator");
+  var tabDetailChecklist = document.getElementById("tabDetailChecklist");
   var panelDetailOverview = document.getElementById("panelDetailOverview");
   var panelDetailItinerary = document.getElementById("panelDetailItinerary");
   var panelDetailSimulator = document.getElementById("panelDetailSimulator");
+  var panelDetailChecklist = document.getElementById("panelDetailChecklist");
 
   var activeDestino = null;
   var simTravelers = 2;
@@ -1493,6 +1548,11 @@
     var melhorEpocaEl = document.getElementById("detailMelhorEpoca");
     if (melhorEpocaEl) melhorEpocaEl.textContent = dest.melhorEpoca || "Ano inteiro, com excelentes condições.";
 
+    var seasonEl = document.getElementById("detailSeasonStrip");
+    if (seasonEl) seasonEl.innerHTML = seasonStripHtml(dest);
+
+    renderRelated(dest);
+
     // Tab 2: Itinerário
     var timeline = document.getElementById("detailItineraryTimeline");
     if (timeline) {
@@ -1551,10 +1611,198 @@
     var travelersCountEl = document.getElementById("simTravelersCount");
     if (travelersCountEl) travelersCountEl.textContent = simTravelers;
 
+    // Tab 4: O que levar
+    renderChecklist(dest);
+
     switchDetailTab("overview");
     updateSimulationTotal();
 
+    // Ao trocar de destino com o modal aberto (ex.: "Você também pode gostar"), volta ao topo
+    var detailBody = destinationModal.querySelector(".detail-body");
+    if (detailBody) detailBody.scrollTop = 0;
+
+    // A URL passa a apontar para este roteiro, pronta para ser copiada e compartilhada
+    if (window.history.replaceState) {
+      window.history.replaceState(null, "", window.location.pathname + window.location.search + "#roteiro-" + dest.id);
+    }
+
     showDialog(destinationModal);
+  }
+
+  // Calendário de 12 meses destacando a melhor época (usado no modal e no mapa)
+  function seasonStripHtml(d) {
+    var mesAtual = new Date().getMonth() + 1;
+    return (
+      '<ol class="season-strip" aria-label="Calendário de temporada">' +
+      MESES.map(function (nome, i) {
+        var mes = i + 1;
+        var ideal = isBoaEpoca(d, mes);
+        var descricao = nome + (ideal ? ": boa época" : ": fora da melhor época") + (mes === mesAtual ? " (mês atual)" : "");
+        return (
+          '<li class="season-strip__month' + (ideal ? " is-ideal" : "") + (mes === mesAtual ? " is-current" : "") + '" title="' + descricao + '">' +
+          '<span aria-hidden="true">' + nome.charAt(0) + "</span>" +
+          '<span class="visually-hidden">' + descricao + "</span>" +
+          "</li>"
+        );
+      }).join("") +
+      "</ol>" +
+      '<p class="season-strip__legend" aria-hidden="true">' +
+      '<span><i class="season-strip__key is-ideal"></i>Boa época</span>' +
+      '<span><i class="season-strip__key is-current"></i>Mês atual</span>' +
+      "</p>"
+    );
+  }
+
+  // "Você também pode gostar": destinos parecidos em categoria, preço e ritmo
+  function renderRelated(dest) {
+    var box = document.getElementById("detailRelated");
+    if (!box) return;
+
+    var sugestoes = (DATA.DESTINOS || [])
+      .filter(function (d) { return d.id !== dest.id; })
+      .map(function (d) {
+        var pontos = parseFloat(d.nota) / 10; // desempate pela nota
+        if (d.categoria === dest.categoria) pontos += 3;
+        if (Math.abs(d.precoNum - dest.precoNum) <= 1000) pontos += 2;
+        if (d.esforco === dest.esforco) pontos += 1;
+        return { destino: d, pontos: pontos };
+      })
+      .sort(function (a, b) { return b.pontos - a.pontos; })
+      .slice(0, 3);
+
+    box.innerHTML =
+      '<h4 class="related__title">Você também pode gostar</h4>' +
+      '<ul class="related__list">' +
+      sugestoes.map(function (s) {
+        var d = s.destino;
+        return (
+          "<li>" +
+          '<button class="related-card" type="button" data-related="' + escapeHtml(d.id) + '">' +
+          '<span class="related-card__media" aria-hidden="true">' + d.getSvg("related-" + d.id) + "</span>" +
+          '<span class="related-card__info">' +
+          "<strong>" + escapeHtml(d.nome) + "</strong>" +
+          "<small>" + escapeHtml(d.estado) + " · " + escapeHtml(d.dias) + " · R$&nbsp;" + escapeHtml(d.preco) + "</small>" +
+          "</span>" +
+          "</button>" +
+          "</li>"
+        );
+      }).join("") +
+      "</ul>";
+
+    box.querySelectorAll("[data-related]").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        openDestinationModal(btn.getAttribute("data-related"));
+      });
+    });
+  }
+
+  /* Checklist "O que levar": base comum + itens da categoria + itens do destino.
+     O que foi marcado fica salvo no localStorage, separado por destino. */
+  var CHECKLIST_STORAGE_KEY = "penaestrada_checklist";
+  var checklistGroups = document.getElementById("checklistGroups");
+
+  function getChecklistState() {
+    try {
+      return JSON.parse(localStorage.getItem(CHECKLIST_STORAGE_KEY)) || {};
+    } catch (e) {
+      return {};
+    }
+  }
+
+  function saveChecklistState(state) {
+    try {
+      localStorage.setItem(CHECKLIST_STORAGE_KEY, JSON.stringify(state));
+    } catch (e) {}
+  }
+
+  function getChecklistGroups(dest) {
+    var base = DATA.CHECKLIST || {};
+    var tituloCategoria = {
+      praia: "Para curtir a praia",
+      aventura: "Para trilhas e natureza",
+      serra: "Para o frio da serra",
+      cultura: "Para explorar a cidade"
+    };
+    return [
+      { titulo: "Essenciais", itens: base.essenciais || [] },
+      { titulo: tituloCategoria[dest.categoria] || "Para o roteiro", itens: base[dest.categoria] || [] },
+      { titulo: "Especial para " + dest.nome, itens: dest.levar || [] }
+    ].filter(function (g) { return g.itens.length > 0; });
+  }
+
+  function renderChecklist(dest) {
+    if (!checklistGroups) return;
+    var marcados = getChecklistState()[dest.id] || [];
+
+    var intro = document.getElementById("checklistIntro");
+    if (intro) intro.textContent = "Lista sugerida para " + dest.nome + ". Marque o que já separou: fica salvo neste navegador.";
+
+    checklistGroups.innerHTML = getChecklistGroups(dest).map(function (g) {
+      return (
+        '<fieldset class="checklist-group">' +
+        "<legend>" + escapeHtml(g.titulo) + "</legend>" +
+        "<ul>" +
+        g.itens.map(function (item) {
+          return (
+            "<li>" +
+            '<label class="checklist-item">' +
+            '<input type="checkbox" value="' + escapeHtml(item) + '"' + (marcados.indexOf(item) > -1 ? " checked" : "") + " />" +
+            "<span>" + escapeHtml(item) + "</span>" +
+            "</label>" +
+            "</li>"
+          );
+        }).join("") +
+        "</ul>" +
+        "</fieldset>"
+      );
+    }).join("");
+
+    updateChecklistProgress();
+  }
+
+  function updateChecklistProgress() {
+    if (!checklistGroups) return;
+    var caixas = checklistGroups.querySelectorAll('input[type="checkbox"]');
+    var total = caixas.length;
+    var feitos = checklistGroups.querySelectorAll('input[type="checkbox"]:checked').length;
+
+    var bar = document.getElementById("checklistBar");
+    var fill = document.getElementById("checklistBarFill");
+    var label = document.getElementById("checklistLabel");
+    if (bar) {
+      bar.setAttribute("aria-valuemax", String(total));
+      bar.setAttribute("aria-valuenow", String(feitos));
+    }
+    if (fill) fill.style.width = (total ? (feitos / total) * 100 : 0) + "%";
+    if (label) {
+      label.textContent = total && feitos === total
+        ? "Mala pronta! Boa viagem."
+        : feitos + " de " + total + " itens separados";
+    }
+  }
+
+  if (checklistGroups) {
+    checklistGroups.addEventListener("change", function () {
+      if (!activeDestino) return;
+      var state = getChecklistState();
+      state[activeDestino.id] = Array.prototype.map.call(
+        checklistGroups.querySelectorAll('input[type="checkbox"]:checked'),
+        function (c) { return c.value; }
+      );
+      saveChecklistState(state);
+      updateChecklistProgress();
+    });
+  }
+
+  var checklistResetBtn = document.getElementById("checklistResetBtn");
+  if (checklistResetBtn) {
+    checklistResetBtn.addEventListener("click", function () {
+      if (!activeDestino) return;
+      var state = getChecklistState();
+      delete state[activeDestino.id];
+      saveChecklistState(state);
+      renderChecklist(activeDestino);
+    });
   }
 
   function closeDestinationModal() {
@@ -1586,7 +1834,7 @@
   }
 
   function switchDetailTab(tabName) {
-    var tabs = [tabDetailOverview, tabDetailItinerary, tabDetailSimulator];
+    var tabs = [tabDetailOverview, tabDetailItinerary, tabDetailSimulator, tabDetailChecklist];
 
     tabs.forEach(function (t) {
       if (!t) return;
@@ -1598,11 +1846,13 @@
     if (panelDetailOverview) panelDetailOverview.classList.toggle("is-active", tabName === "overview");
     if (panelDetailItinerary) panelDetailItinerary.classList.toggle("is-active", tabName === "itinerary");
     if (panelDetailSimulator) panelDetailSimulator.classList.toggle("is-active", tabName === "simulator");
+    if (panelDetailChecklist) panelDetailChecklist.classList.toggle("is-active", tabName === "checklist");
   }
 
   if (tabDetailOverview) tabDetailOverview.addEventListener("click", function () { switchDetailTab("overview"); });
   if (tabDetailItinerary) tabDetailItinerary.addEventListener("click", function () { switchDetailTab("itinerary"); });
   if (tabDetailSimulator) tabDetailSimulator.addEventListener("click", function () { switchDetailTab("simulator"); });
+  if (tabDetailChecklist) tabDetailChecklist.addEventListener("click", function () { switchDetailTab("checklist"); });
 
   // Navegação entre abas pelas setas do teclado (padrão ARIA de tablist)
   document.querySelectorAll('[role="tablist"]').forEach(function (list) {
@@ -2194,20 +2444,38 @@
         msgField.value = "Pretendo viajar em " + mesAno + ".";
       }
 
+      var mesBusca = quando ? parseInt(quando.split("-")[1], 10) : 0;
+
       setTimeout(function () {
         var destinosSec = document.getElementById("destinos");
         if (destinosSec) {
           destinosSec.scrollIntoView({ behavior: "smooth" });
         }
-        if (destinosSearchInput) {
-          var termo = destino ? destino.split(" — ")[0] : "";
-          destinosSearchInput.value = termo;
-          searchQuery = termo;
-          renderDestinos();
-        }
+        var termo = destino ? destino.split(" — ")[0] : "";
+        if (destinosSearchInput) destinosSearchInput.value = termo;
+        searchQuery = termo;
+        // Sem destino, o mês filtra os roteiros com boa época; com destino, o mês vira
+        // uma dica de época (assim o destino escolhido nunca some da lista)
+        setMonthFilter(destino ? 0 : mesBusca);
+        renderDestinos();
+        if (destino && mesBusca) dicaDeEpoca(termo, mesBusca);
         if (searchFeedback) searchFeedback.textContent = "";
       }, 350);
     });
+  }
+
+  function dicaDeEpoca(nomeDestino, mes) {
+    var d = (DATA.DESTINOS || []).find(function (x) { return x.nome === nomeDestino; });
+    if (!d) return;
+    if (isBoaEpoca(d, mes)) {
+      showToast(MESES[mes - 1] + " é uma ótima época para conhecer " + d.nome + "!", "success", "Boa escolha");
+    } else {
+      showToast(
+        "Melhor época para " + d.nome + ": " + d.melhorEpoca.toLowerCase() + ". Um consultor ajuda você a aproveitar " + MESES[mes - 1].toLowerCase() + " também.",
+        "info",
+        "Dica de época"
+      );
+    }
   }
 
   // Máscara dinâmica de telefone
@@ -2311,14 +2579,465 @@
   }
 
   /* ---------------------------------------------------------
-     16. INICIALIZAÇÃO GERAL
+     16. MAPA INTERATIVO DOS DESTINOS
+     --------------------------------------------------------- */
+
+  var destinosMap = document.getElementById("destinosMap");
+  var destinosMapCanvas = document.getElementById("destinosMapCanvas");
+  var destinosMapPanel = document.getElementById("destinosMapPanel");
+  var viewButtons = document.querySelectorAll("[data-view]");
+  var currentView = "grade"; // "grade" ou "mapa"
+  var selectedMapId = null;
+
+  function setView(view) {
+    currentView = view === "mapa" ? "mapa" : "grade";
+    viewButtons.forEach(function (btn) {
+      var ativo = btn.getAttribute("data-view") === currentView;
+      btn.classList.toggle("is-active", ativo);
+      btn.setAttribute("aria-pressed", String(ativo));
+    });
+    if (destinosGrid) destinosGrid.hidden = currentView === "mapa";
+    if (destinosMap) destinosMap.hidden = currentView !== "mapa";
+    renderDestinos();
+  }
+
+  viewButtons.forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      setView(btn.getAttribute("data-view"));
+    });
+  });
+
+  function renderDestinosMap(list) {
+    if (!destinosMapCanvas || typeof SCENES === "undefined" || !SCENES.mapaBrasil) return;
+
+    // O contorno é desenhado uma vez só; os pinos são refeitos a cada mudança de filtro
+    if (!destinosMapCanvas.querySelector("svg")) {
+      destinosMapCanvas.innerHTML = SCENES.mapaBrasil();
+    }
+    destinosMapCanvas.querySelectorAll(".map-pin").forEach(function (pin) {
+      pin.parentNode.removeChild(pin);
+    });
+
+    // Se o destino selecionado saiu do filtro, volta para a lista
+    if (selectedMapId && !list.some(function (d) { return d.id === selectedMapId; })) {
+      selectedMapId = null;
+    }
+
+    list.forEach(function (d) {
+      if (!d.coordenadas) return;
+      var pos = SCENES.projetarMapa(d.coordenadas.lat, d.coordenadas.lon);
+      var ativo = d.id === selectedMapId;
+
+      var pin = document.createElement("button");
+      pin.type = "button";
+      // Pinos perto da borda direita mostram o nome à esquerda para não sair do mapa
+      pin.className = "map-pin" + (ativo ? " is-selected" : "") + (pos.x > 70 ? " map-pin--left" : "");
+      pin.style.left = pos.x + "%";
+      pin.style.top = pos.y + "%";
+      pin.setAttribute("data-id", d.id);
+      pin.setAttribute("aria-pressed", String(ativo));
+      pin.setAttribute("aria-label", d.nome + ", " + d.estado + ": a partir de R$ " + d.preco);
+      pin.innerHTML =
+        '<span class="map-pin__dot" aria-hidden="true"></span>' +
+        '<span class="map-pin__label" aria-hidden="true">' + escapeHtml(d.nome) + "</span>";
+      pin.addEventListener("click", function () {
+        selectMapDestino(selectedMapId === d.id ? null : d.id);
+      });
+      destinosMapCanvas.appendChild(pin);
+    });
+
+    renderMapPanel(list);
+  }
+
+  // Seleciona um pino sem recriar os botões (assim o foco do teclado não se perde)
+  function selectMapDestino(id) {
+    selectedMapId = id;
+    if (destinosMapCanvas) {
+      destinosMapCanvas.querySelectorAll(".map-pin").forEach(function (pin) {
+        var ativo = pin.getAttribute("data-id") === id;
+        pin.classList.toggle("is-selected", ativo);
+        pin.setAttribute("aria-pressed", String(ativo));
+      });
+    }
+    renderMapPanel(getFilteredDestinos());
+
+    // No celular o painel fica abaixo do mapa: rola até ele para mostrar o resultado
+    if (id && destinosMapPanel && window.matchMedia && window.matchMedia("(max-width: 880px)").matches) {
+      destinosMapPanel.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    }
+  }
+
+  function renderMapPanel(list) {
+    if (!destinosMapPanel) return;
+    var d = selectedMapId && (DATA.DESTINOS || []).find(function (x) { return x.id === selectedMapId; });
+
+    if (!d) {
+      destinosMapPanel.innerHTML =
+        '<h3 class="map-panel__title" tabindex="-1">Explore pelo mapa</h3>' +
+        '<p class="map-panel__text">' +
+        (list.length
+          ? "Toque em um pino para conhecer o roteiro. Os filtros acima também valem para o mapa."
+          : "Nenhum roteiro com esses filtros. Que tal limpar a busca?") +
+        "</p>" +
+        '<ul class="map-panel__list">' +
+        list.map(function (x) {
+          return (
+            "<li>" +
+            '<button class="map-panel__item" type="button" data-map-select="' + escapeHtml(x.id) + '">' +
+            "<span>" + escapeHtml(x.nome) + "</span>" +
+            "<small>" + escapeHtml(x.estado) + " · R$&nbsp;" + escapeHtml(x.preco) + "</small>" +
+            "</button>" +
+            "</li>"
+          );
+        }).join("") +
+        "</ul>";
+      return;
+    }
+
+    destinosMapPanel.innerHTML =
+      '<div class="map-panel__media" aria-hidden="true">' + d.getSvg("map-" + d.id) + "</div>" +
+      '<h3 class="map-panel__title" tabindex="-1">' + escapeHtml(d.nome) + "</h3>" +
+      '<p class="map-panel__meta">' + escapeHtml(d.estado) + ", Brasil · " + escapeHtml(d.dias) + " · ★ " + escapeHtml(d.nota) + "</p>" +
+      '<p class="map-panel__text">' + escapeHtml(d.descricao) + "</p>" +
+      '<p class="map-panel__season">Melhor época: <strong>' + escapeHtml(d.melhorEpoca) + "</strong></p>" +
+      seasonStripHtml(d) +
+      '<div class="map-panel__foot">' +
+      '<div class="card__price"><small>a partir de</small><strong>R$ ' + escapeHtml(d.preco) + "</strong></div>" +
+      '<div class="map-panel__actions">' +
+      '<button class="btn btn--ghost btn--sm" type="button" data-map-back>Ver todos</button>' +
+      '<button class="btn btn--primary btn--sm" type="button" data-map-detail="' + escapeHtml(d.id) + '">Ver detalhes & simular</button>' +
+      "</div>" +
+      "</div>";
+  }
+
+  if (destinosMapPanel) {
+    destinosMapPanel.addEventListener("click", function (e) {
+      var alvo = e.target.closest("button");
+      if (!alvo) return;
+      if (alvo.hasAttribute("data-map-detail")) {
+        openDestinationModal(alvo.getAttribute("data-map-detail"));
+        return;
+      }
+      if (alvo.hasAttribute("data-map-select")) {
+        selectMapDestino(alvo.getAttribute("data-map-select"));
+      } else if (alvo.hasAttribute("data-map-back")) {
+        selectMapDestino(null);
+      } else {
+        return;
+      }
+      // O botão clicado foi substituído: o foco vai para o título do painel
+      var titulo = destinosMapPanel.querySelector(".map-panel__title");
+      if (titulo) titulo.focus({ preventScroll: true });
+    });
+  }
+
+  /* ---------------------------------------------------------
+     17. QUIZ — QUAL VIAGEM COMBINA COM VOCÊ?
+     --------------------------------------------------------- */
+
+  var quizCard = document.getElementById("quizCard");
+  var quizStep = 0;
+  var quizAnswers = {};
+  var quizUsouPonteiro = false; // com mouse/toque o quiz avança sozinho; pelo teclado, no botão "Próxima"
+  var quizAutoTimer = null;
+
+  // Paisagens "vizinhas" ganham alguns pontos (quem ama praia pode curtir os Lençóis, por exemplo)
+  var AFINIDADE_CENARIO = {
+    praia: { aventura: 12 },
+    serra: { cultura: 12, aventura: 8 },
+    aventura: { praia: 10, serra: 8 },
+    cultura: { serra: 12, praia: 6 }
+  };
+  var NIVEIS_RITMO = ["Leve", "Moderado", "Intenso"];
+
+  // "3000-4500" vira [3000, 4500]
+  function faixaNumerica(valor) {
+    var partes = String(valor).split("-");
+    return [parseFloat(partes[0]), parseFloat(partes[1])];
+  }
+
+  // Quanto um número ficou fora de uma faixa (0 = dentro dela)
+  function distanciaDaFaixa(n, faixa) {
+    if (n < faixa[0]) return faixa[0] - n;
+    if (n > faixa[1]) return n - faixa[1];
+    return 0;
+  }
+
+  // Compatibilidade de 0 a 100 entre um destino e as respostas, com os motivos para exibir
+  function pontuarDestino(d, r) {
+    var pontos = 0;
+    var motivos = [];
+
+    // Paisagem: até 35 pontos
+    if (d.categoria === r.cenario) {
+      pontos += 35;
+      motivos.push("Tem a paisagem que você procura");
+    } else {
+      pontos += (AFINIDADE_CENARIO[r.cenario] || {})[d.categoria] || 0;
+    }
+
+    // Ritmo: até 20 pontos (nível vizinho vale metade)
+    var diferencaRitmo = Math.abs(NIVEIS_RITMO.indexOf(d.esforco) - NIVEIS_RITMO.indexOf(r.ritmo));
+    if (diferencaRitmo === 0) {
+      pontos += 20;
+      motivos.push("Ritmo " + d.esforco.toLowerCase() + ", do jeito que você gosta");
+    } else if (diferencaRitmo === 1) {
+      pontos += 10;
+    }
+
+    // Orçamento: até 20 pontos, perdendo 1 ponto a cada R$ 50 fora da faixa
+    if (!r.orcamento) {
+      pontos += 20;
+    } else {
+      var foraPreco = distanciaDaFaixa(d.precoNum, faixaNumerica(r.orcamento));
+      pontos += Math.max(0, 20 - foraPreco / 50);
+      if (foraPreco === 0) motivos.push("Cabe no seu orçamento: a partir de R$ " + d.preco);
+    }
+
+    // Duração: até 10 pontos (1 ou 2 dias de diferença ainda contam um pouco)
+    var foraDias = distanciaDaFaixa(d.duracaoDias, faixaNumerica(r.dias));
+    pontos += [10, 6, 3][foraDias] || 0;
+    if (foraDias === 0) motivos.push("Roteiro de " + d.dias + ", no tempo que você tem");
+
+    // Época: até 15 pontos, proporcional aos meses escolhidos que são boa época
+    if (!r.epoca) {
+      pontos += 15;
+    } else {
+      var meses = r.epoca.split(",").map(Number);
+      var bons = meses.filter(function (m) { return isBoaEpoca(d, m); }).length;
+      pontos += 15 * (bons / meses.length);
+      if (bons === meses.length) motivos.push("Ótima época no período que você escolheu");
+    }
+
+    return { destino: d, pct: Math.round(pontos), motivos: motivos };
+  }
+
+  function renderQuizStep(focar) {
+    if (!quizCard || !DATA.QUIZ) return;
+    var total = DATA.QUIZ.length;
+    var q = DATA.QUIZ[quizStep];
+    var escolhida = quizAnswers[q.id];
+
+    quizCard.innerHTML =
+      '<div class="quiz__progress">' +
+      '<span class="quiz__step-label">Pergunta ' + (quizStep + 1) + " de " + total + "</span>" +
+      '<div class="quiz__bar" aria-hidden="true"><span style="width: ' + ((quizStep + 1) / total) * 100 + '%"></span></div>' +
+      "</div>" +
+      '<fieldset class="quiz__fieldset">' +
+      '<legend class="quiz__question" tabindex="-1">' + escapeHtml(q.pergunta) + "</legend>" +
+      (q.ajuda ? '<p class="quiz__help">' + escapeHtml(q.ajuda) + "</p>" : "") +
+      '<div class="quiz__options">' +
+      q.opcoes.map(function (o, i) {
+        var id = "quiz-" + q.id + "-" + i;
+        return (
+          '<label class="quiz-option" for="' + id + '">' +
+          '<input type="radio" name="quiz-' + q.id + '" id="' + id + '" value="' + escapeHtml(o.valor) + '"' + (escolhida === o.valor ? " checked" : "") + " />" +
+          '<span class="quiz-option__box">' +
+          "<strong>" + escapeHtml(o.titulo) + "</strong>" +
+          "<small>" + escapeHtml(o.desc) + "</small>" +
+          "</span>" +
+          "</label>"
+        );
+      }).join("") +
+      "</div>" +
+      "</fieldset>" +
+      '<div class="quiz__nav">' +
+      (quizStep > 0 ? '<button class="btn btn--ghost btn--sm" type="button" data-quiz-back>Voltar</button>' : "<span></span>") +
+      '<button class="btn btn--primary" type="button" data-quiz-next' + (escolhida === undefined ? " disabled" : "") + ">" +
+      (quizStep === total - 1 ? "Ver meu resultado" : "Próxima") +
+      "</button>" +
+      "</div>";
+
+    if (focar) {
+      var pergunta = quizCard.querySelector(".quiz__question");
+      if (pergunta) pergunta.focus({ preventScroll: true });
+      trazerQuizParaTela();
+    }
+  }
+
+  // No celular o topo do cartão pode ficar fora da tela ao trocar de pergunta: rola até ele
+  function trazerQuizParaTela() {
+    var topo = quizCard.getBoundingClientRect().top;
+    var alturaCabecalho = siteHeader ? siteHeader.offsetHeight : 0;
+    if (topo < alturaCabecalho) {
+      quizCard.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  }
+
+  function avancarQuiz() {
+    clearTimeout(quizAutoTimer);
+    var q = DATA.QUIZ[quizStep];
+    if (quizAnswers[q.id] === undefined) return;
+    if (quizStep < DATA.QUIZ.length - 1) {
+      quizStep++;
+      renderQuizStep(true);
+    } else {
+      renderQuizResult();
+    }
+  }
+
+  function renderQuizResult() {
+    var ranking = (DATA.DESTINOS || [])
+      .map(function (d) { return pontuarDestino(d, quizAnswers); })
+      .sort(function (a, b) {
+        return b.pct - a.pct || parseFloat(b.destino.nota) - parseFloat(a.destino.nota);
+      });
+
+    var top = ranking[0];
+    var d = top.destino;
+
+    quizCard.innerHTML =
+      '<div class="quiz-result">' +
+      '<p class="quiz-result__eyebrow">Seu resultado</p>' +
+      '<h3 class="quiz-result__title" tabindex="-1">Você combina com <em>' + escapeHtml(d.nome) + "</em></h3>" +
+      '<div class="quiz-result__top">' +
+      '<div class="quiz-result__media">' +
+      d.getSvg("quiz-top-" + d.id) +
+      '<span class="quiz-result__match">' + top.pct + "% compatível</span>" +
+      "</div>" +
+      '<div class="quiz-result__info">' +
+      '<p class="quiz-result__meta">' + escapeHtml(d.estado) + ", Brasil · " + escapeHtml(d.dias) + " · a partir de R$ " + escapeHtml(d.preco) + "</p>" +
+      (top.motivos.length
+        ? '<ul class="quiz-result__reasons">' + top.motivos.map(function (m) { return "<li>" + escapeHtml(m) + "</li>"; }).join("") + "</ul>"
+        : "") +
+      '<div class="quiz-result__actions">' +
+      '<button class="btn btn--primary btn--sm" type="button" data-quiz-detail="' + escapeHtml(d.id) + '">Ver detalhes & simular</button>' +
+      '<button class="btn btn--ghost btn--sm" type="button" data-quiz-fav="' + escapeHtml(d.id) + '">Salvar nos favoritos</button>' +
+      "</div>" +
+      "</div>" +
+      "</div>" +
+      '<p class="quiz-result__more-title">Também combinam com você</p>' +
+      '<ul class="quiz-result__more">' +
+      ranking.slice(1, 3).map(function (r) {
+        return (
+          "<li>" +
+          '<button class="quiz-mini" type="button" data-quiz-detail="' + escapeHtml(r.destino.id) + '">' +
+          '<span class="quiz-mini__media" aria-hidden="true">' + r.destino.getSvg("quiz-mini-" + r.destino.id) + "</span>" +
+          '<span class="quiz-mini__info">' +
+          "<strong>" + escapeHtml(r.destino.nome) + "</strong>" +
+          "<small>" + r.pct + "% compatível · R$&nbsp;" + escapeHtml(r.destino.preco) + "</small>" +
+          "</span>" +
+          "</button>" +
+          "</li>"
+        );
+      }).join("") +
+      "</ul>" +
+      '<button class="quiz-result__restart" type="button" data-quiz-restart>' +
+      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/></svg>' +
+      "Refazer o quiz" +
+      "</button>" +
+      "</div>";
+
+    updateCardFavoritesUI(); // ajusta o texto do botão de favorito se o destino já estiver salvo
+
+    var titulo = quizCard.querySelector(".quiz-result__title");
+    if (titulo) titulo.focus({ preventScroll: true });
+    trazerQuizParaTela();
+  }
+
+  if (quizCard) {
+    quizCard.addEventListener("pointerdown", function () { quizUsouPonteiro = true; });
+    quizCard.addEventListener("keydown", function () { quizUsouPonteiro = false; });
+
+    quizCard.addEventListener("change", function (e) {
+      if (!e.target.matches('input[type="radio"]')) return;
+      quizAnswers[DATA.QUIZ[quizStep].id] = e.target.value;
+      var nextBtn = quizCard.querySelector("[data-quiz-next]");
+      if (nextBtn) nextBtn.disabled = false;
+
+      if (quizUsouPonteiro) {
+        clearTimeout(quizAutoTimer);
+        var passo = quizStep;
+        quizAutoTimer = setTimeout(function () {
+          if (passo === quizStep) avancarQuiz();
+        }, 320);
+      }
+    });
+
+    quizCard.addEventListener("click", function (e) {
+      var alvo = e.target.closest("button");
+      if (!alvo) return;
+      if (alvo.hasAttribute("data-quiz-next")) {
+        avancarQuiz();
+      } else if (alvo.hasAttribute("data-quiz-back")) {
+        clearTimeout(quizAutoTimer);
+        quizStep = Math.max(0, quizStep - 1);
+        renderQuizStep(true);
+      } else if (alvo.hasAttribute("data-quiz-restart")) {
+        quizStep = 0;
+        quizAnswers = {};
+        renderQuizStep(true);
+      } else if (alvo.hasAttribute("data-quiz-detail")) {
+        openDestinationModal(alvo.getAttribute("data-quiz-detail"));
+      } else if (alvo.hasAttribute("data-quiz-fav")) {
+        toggleFavorite(alvo.getAttribute("data-quiz-fav"));
+      }
+    });
+  }
+
+  /* ---------------------------------------------------------
+     18. CONTADOR ANIMADO DOS NÚMEROS DO HERO
+     --------------------------------------------------------- */
+
+  function initCounters() {
+    var numeros = document.querySelectorAll("[data-count]");
+    if (!numeros.length || !("IntersectionObserver" in window)) return;
+    if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+    function formatar(el, valor) {
+      var casas = parseInt(el.getAttribute("data-decimals"), 10) || 0;
+      return (
+        (el.getAttribute("data-prefix") || "") +
+        valor.toLocaleString("pt-BR", { minimumFractionDigits: casas, maximumFractionDigits: casas }) +
+        (el.getAttribute("data-suffix") || "")
+      );
+    }
+
+    function animar(el) {
+      var alvo = parseFloat(el.getAttribute("data-count"));
+      var inicio = null;
+      var duracao = 1400;
+      var terminou = false;
+
+      function quadro(agora) {
+        if (terminou) return;
+        if (inicio === null) inicio = agora;
+        var progresso = Math.min(1, (agora - inicio) / duracao);
+        var suave = 1 - Math.pow(1 - progresso, 3); // desacelera no final
+        el.textContent = formatar(el, alvo * suave);
+        if (progresso < 1) requestAnimationFrame(quadro);
+        else terminou = true;
+      }
+      requestAnimationFrame(quadro);
+
+      // Garantia: se o navegador pausar a animação (ex.: aba em segundo plano), o valor final aparece mesmo assim
+      setTimeout(function () {
+        terminou = true;
+        el.textContent = formatar(el, alvo);
+      }, duracao + 150);
+    }
+
+    var observer = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          animar(entry.target);
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.6 });
+
+    numeros.forEach(function (el) { observer.observe(el); });
+  }
+
+  /* ---------------------------------------------------------
+     19. INICIALIZAÇÃO GERAL
      --------------------------------------------------------- */
 
   // Animação de entrada suave dos blocos conforme aparecem na tela
   function initReveal() {
     if (!("IntersectionObserver" in window)) return;
     var targets = document.querySelectorAll(
-      ".section__head, .feature-grid, .split__visual, .split__content, .slider, .faq-list, .contact__copy, .contact__form"
+      ".section__head, .quiz, .feature-grid, .split__visual, .split__content, .slider, .faq-list, .contact__copy, .contact__form"
     );
     var observer = new IntersectionObserver(function (entries) {
       entries.forEach(function (entry) {
@@ -2386,8 +3105,10 @@
     renderRoteiro();
     initSlider();
     renderFaq();
+    renderQuizStep(false);
 
     updateAuthUI();
+    initCounters();
     initReveal();
     initScrollSpy();
     openFromHash();
