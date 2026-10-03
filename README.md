@@ -45,6 +45,22 @@
   - Lista de mala por destino (itens essenciais, da categoria e específicos do lugar);
   - Barra de progresso e itens marcados salvos no navegador (`localStorage`).
 - **💡 "Você também pode gostar"**: sugestões de destinos parecidos dentro do modal do roteiro.
+- **🔥 Ofertas da Temporada**:
+  - Grade em estilo *bento* com destaque principal, preço riscado, economia e vagas restantes;
+  - Contagem regressiva ao vivo até o fim do mês;
+  - "Garantir desconto" preenche o formulário de contato com a oferta escolhida.
+- **🪜 Como Funciona**: linha do tempo em 4 passos (horizontal no desktop, vertical no celular).
+- **📰 Diário de Bordo (blog)**:
+  - Artigos com filtro por tema e destaque editorial do mais recente;
+  - Leitor em modal com barra de progresso de leitura, dica do consultor e atalho para o roteiro.
+- **⌘ Busca Global (Ctrl + K ou /)**:
+  - Procura em destinos, artigos, dúvidas frequentes e seções do site, ignorando acentos;
+  - Navegação completa pelo teclado (↑ ↓ Enter Esc).
+- **🕘 Vistos Recentemente**: os últimos roteiros abertos ficam salvos no navegador para voltar com 1 clique.
+- **📬 Newsletter, Políticas e Cookies**:
+  - Inscrição na newsletter no rodapé, com validação e aviso de e-mail repetido;
+  - Política de privacidade, termos de uso e cancelamento em modais;
+  - Aviso de cookies (LGPD) com opção "Só o essencial".
 - **⚖️ Comparador Lado a Lado de Roteiros**:
   - Seleção de até 3 destinos para comparar simultaneamente;
   - Barra de ancoragem inferior flutuante (*Dock*) com contagem e chips removíveis;
@@ -74,6 +90,7 @@
 ├── css/
 │   ├── base.css          # Reset, tokens de cores (Light/Dark mode), tipografia e utilitários
 │   ├── components.css    # Botões, simulador, comparador, chips, cards, modais e formulários
+│   ├── extras.css        # Ofertas, como funciona, diário de bordo, busca global, cookies e newsletter
 │   ├── footer.css        # Estilos do rodapé
 │   ├── header.css        # Cabeçalho fixo, navegação e drawer mobile
 │   ├── hero.css          # Seção hero e barra de busca rápida
@@ -82,8 +99,8 @@
 ├── images/
 │   └── hero.jpg          # Imagem de capa do hero
 ├── js/
-│   ├── data.js           # Dados de 8 destinos, opcionais, FAQ, depoimentos, checklist e quiz
-│   ├── main.js           # Interatividade: temas, filtros, mapa, quiz, simulador, comparador e auth
+│   ├── data.js           # Dados de 8 destinos, ofertas, artigos, políticas, FAQ, depoimentos, checklist e quiz
+│   ├── main.js           # Interatividade: temas, filtros, mapa, quiz, simulador, comparador, busca, blog e auth
 │   └── scenes.js         # Ilustrações vetoriais autorais em SVG e mapa do Brasil
 ├── .gitignore            # Arquivos e pastas ignorados pelo Git
 ├── index.html            # Estrutura principal da aplicação

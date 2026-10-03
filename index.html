@@ -38,6 +38,7 @@
   
   <link rel="stylesheet" href="css/sections.css" />
   <link rel="stylesheet" href="css/footer.css" />
+  <link rel="stylesheet" href="css/extras.css" />
   <link rel="stylesheet" href="css/responsive.css" />
 </head>
 <body>
@@ -63,21 +64,23 @@
         <nav class="site-nav" aria-label="Navegação principal">
           <ul class="site-nav__list">
             <li><a href="#destinos">Destinos</a></li>
-            <li><a href="#experiencias">Experiências</a></li>
+            <li><a href="#ofertas">Ofertas</a></li>
             <li><a href="#roteiros">Roteiros</a></li>
-            <li><a href="#depoimentos">Depoimentos</a></li>
+            <li><a href="#diario">Diário</a></li>
             <li><a href="#faq">Dúvidas</a></li>
           </ul>
         </nav>
 
         <div class="site-header__actions">
+          <button class="theme-toggle search-trigger" id="searchOpenBtn" type="button" aria-label="Buscar no site (Ctrl + K)" aria-keyshortcuts="Control+K">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+          </button>
           <button class="theme-toggle" id="themeToggleBtn" type="button" aria-label="Alternar tema claro e escuro">
             <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
             <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
           </button>
           <div class="user-menu-wrapper" id="userMenuWrapper"></div>
-          <a class="btn btn--ghost btn--sm" href="#contato">Falar com consultor</a>
-          <a class="btn btn--primary btn--sm" href="#destinos">Planejar viagem</a>
+          <a class="btn btn--primary btn--sm" href="#contato">Falar com consultor</a>
           <button class="nav-toggle" id="navToggle" type="button" aria-expanded="false" aria-controls="navDrawer" aria-label="Abrir menu de navegação">
             <span class="nav-toggle__bars" aria-hidden="true"><i></i><i></i><i></i></span>
           </button>
@@ -104,10 +107,13 @@
       <nav aria-label="Navegação mobile">
         <ul class="nav-drawer__list">
           <li><a href="#destinos">Destinos</a></li>
+          <li><a href="#ofertas">Ofertas da temporada</a></li>
           <li><a href="#quiz">Descubra seu destino</a></li>
           <li><a href="#experiencias">Experiências</a></li>
+          <li><a href="#como-funciona">Como funciona</a></li>
           <li><a href="#roteiros">Roteiros</a></li>
           <li><a href="#depoimentos">Depoimentos</a></li>
+          <li><a href="#diario">Diário de bordo</a></li>
           <li><a href="#faq">Dúvidas Frequentes</a></li>
           <li><a href="#contato">Contato</a></li>
         </ul>
@@ -288,6 +294,41 @@
           <p style="font-size: var(--fs-sm); color: var(--ink-500); margin-bottom: var(--sp-4);">Tente aumentar o limite de preço, mudar a categoria ou o mês, ou usar outros termos na busca. Ainda em dúvida? <a href="#quiz">Faça o quiz</a>.</p>
           <button class="btn btn--primary btn--sm" id="emptyResetBtn" type="button">Ver todos os roteiros</button>
         </div>
+
+        <!-- Últimos roteiros abertos (salvos no navegador) -->
+        <div class="recent" id="recentStrip" hidden>
+          <div class="recent__head">
+            <h3 class="recent__title">Vistos recentemente</h3>
+            <button class="btn-reset-filters" id="recentClearBtn" type="button">Limpar histórico</button>
+          </div>
+          <ul class="recent__list" id="recentList"></ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section--sand ofertas-section" id="ofertas" aria-labelledby="ofertasTitulo">
+      <div class="container">
+        <div class="ofertas-head">
+          <header class="section__head">
+            <p class="eyebrow">Ofertas da temporada</p>
+            <h2 class="section__title" id="ofertasTitulo">Vagas com desconto, por pouco tempo</h2>
+            <p class="section__lead">
+              Grupos que já estão quase fechados e pousadas parceiras com noites livres. O desconto entra direto no orçamento do consultor.
+            </p>
+          </header>
+
+          <div class="countdown" id="ofertasCountdown" role="timer" aria-live="off" aria-label="Tempo restante das ofertas">
+            <span class="countdown__label">Acaba em</span>
+            <div class="countdown__units">
+              <span class="countdown__unit"><strong data-unit="dias">00</strong><small>dias</small></span>
+              <span class="countdown__unit"><strong data-unit="horas">00</strong><small>horas</small></span>
+              <span class="countdown__unit"><strong data-unit="min">00</strong><small>min</small></span>
+              <span class="countdown__unit"><strong data-unit="seg">00</strong><small>seg</small></span>
+            </div>
+          </div>
+        </div>
+
+        <ul class="bento" id="ofertasGrid"></ul>
       </div>
     </section>
 
@@ -320,6 +361,55 @@
           <h2 class="section__title" id="expTitulo">Viagem organizada, mas nunca engessada</h2>
         </header>
         <ul class="feature-grid" id="featureGrid"></ul>
+      </div>
+    </section>
+
+    <section class="section" id="como-funciona" aria-labelledby="passosTitulo">
+      <div class="container">
+        <header class="section__head section__head--center">
+          <p class="eyebrow">Como funciona</p>
+          <h2 class="section__title" id="passosTitulo">Da primeira conversa ao check-in, em 4 passos</h2>
+          <p class="section__lead">Você não preenche formulário gigante nem fala com robô. Cada etapa tem uma pessoa responsável.</p>
+        </header>
+
+        <ol class="steps">
+          <li class="step">
+            <span class="step__num" aria-hidden="true">1</span>
+            <div class="step__icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            </div>
+            <h3>Conte como você viaja</h3>
+            <p>Pelo formulário, pelo quiz ou pelo WhatsApp. Ritmo, orçamento e o que não pode faltar.</p>
+            <span class="step__time">5 minutos</span>
+          </li>
+          <li class="step">
+            <span class="step__num" aria-hidden="true">2</span>
+            <div class="step__icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 4 3 6.5v13.5l6-2.5 6 2.5 6-2.5V4l-6 2.5L9 4Z"/><path d="M9 4v13.5M15 6.5V20"/></svg>
+            </div>
+            <h3>Receba 3 roteiros</h3>
+            <p>Um consultor que já esteve no destino monta três opções com valores finais e sem taxa escondida.</p>
+            <span class="step__time">Até 1 dia útil</span>
+          </li>
+          <li class="step">
+            <span class="step__num" aria-hidden="true">3</span>
+            <div class="step__icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
+            </div>
+            <h3>Ajuste até ficar do seu jeito</h3>
+            <p>Troque a pousada, tire um passeio, acrescente um dia. Quantas rodadas forem precisas.</p>
+            <span class="step__time">No seu tempo</span>
+          </li>
+          <li class="step">
+            <span class="step__num" aria-hidden="true">4</span>
+            <div class="step__icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z"/></svg>
+            </div>
+            <h3>Embarque com suporte</h3>
+            <p>Vouchers no celular e um grupo no WhatsApp com quem montou a viagem, 7 dias por semana.</p>
+            <span class="step__time">Da ida à volta</span>
+          </li>
+        </ol>
       </div>
     </section>
 
@@ -375,6 +465,21 @@
             </button>
           </div>
         </div>
+      </div>
+    </section>
+
+    <section class="section" id="diario" aria-labelledby="diarioTitulo">
+      <div class="container">
+        <div class="diario-head">
+          <header class="section__head">
+            <p class="eyebrow">Diário de bordo</p>
+            <h2 class="section__title" id="diarioTitulo">Dicas de quem já foi (e voltou)</h2>
+            <p class="section__lead">Guias práticos escritos pelos nossos consultores depois de cada viagem de reconhecimento.</p>
+          </header>
+          <div class="filters" role="group" aria-label="Filtrar artigos por tema" id="diarioFilters"></div>
+        </div>
+
+        <ul class="diario-grid" id="diarioGrid"></ul>
       </div>
     </section>
 
@@ -492,6 +597,15 @@
             <span class="brand__text"><strong>Pé na Estrada</strong><small>viagens autorais</small></span>
           </a>
           <p>Agência de viagens brasileira focada em roteiros autorais e turismo de base comunitária desde 2014.</p>
+
+          <form class="newsletter" id="newsletterForm" novalidate>
+            <label class="newsletter__label" for="newsletterEmail">Uma carta por mês com ofertas e roteiros novos</label>
+            <div class="newsletter__row">
+              <input type="email" id="newsletterEmail" name="email" autocomplete="email" placeholder="seu@email.com" />
+              <button class="btn btn--primary btn--sm" type="submit">Assinar</button>
+            </div>
+            <p class="newsletter__status" id="newsletterStatus" role="status" aria-live="polite"></p>
+          </form>
         </div>
 
         <nav class="site-footer__col" aria-label="Destinos">
@@ -507,8 +621,9 @@
         <nav class="site-footer__col" aria-label="A agência">
           <h3>A agência</h3>
           <ul>
-            <li><a href="#experiencias">Como trabalhamos</a></li>
-            <li><a href="#roteiros">Roteiros prontos</a></li>
+            <li><a href="#como-funciona">Como trabalhamos</a></li>
+            <li><a href="#ofertas">Ofertas da temporada</a></li>
+            <li><a href="#diario">Diário de bordo</a></li>
             <li><a href="#depoimentos">Depoimentos</a></li>
             <li><a href="#contato">Contato</a></li>
           </ul>
@@ -538,9 +653,10 @@
       <div class="site-footer__bottom">
         <p>© <span id="anoAtual">2026</span> Pé na Estrada Viagens LTDA · CNPJ 00.000.000/0001-00</p>
         <ul>
-          <li><a href="#contato">Política de privacidade</a></li>
-          <li><a href="#contato">Termos de uso</a></li>
-          <li><a href="#contato">Cancelamento</a></li>
+          <li><button class="footer-link" type="button" data-policy="privacidade">Política de privacidade</button></li>
+          <li><button class="footer-link" type="button" data-policy="termos">Termos de uso</button></li>
+          <li><button class="footer-link" type="button" data-policy="cancelamento">Cancelamento</button></li>
+          <li><button class="footer-link" type="button" id="cookiePrefsBtn">Cookies</button></li>
         </ul>
       </div>
     </div>
@@ -987,6 +1103,68 @@
       </form>
     </div>
   </dialog>
+
+  <!-- Busca global (Ctrl + K) -->
+  <dialog class="search-dialog" id="searchDialog" aria-label="Buscar no site">
+    <div class="search-modal">
+      <div class="search-modal__field">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+        <input type="search" id="globalSearchInput" placeholder="Busque destinos, artigos, dúvidas..." autocomplete="off"
+          role="combobox" aria-expanded="true" aria-controls="globalSearchResults" aria-autocomplete="list" aria-label="Buscar no site" />
+        <kbd class="search-modal__kbd">Esc</kbd>
+      </div>
+      <ul class="search-results" id="globalSearchResults" role="listbox" aria-label="Resultados da busca"></ul>
+      <p class="search-modal__foot">
+        <span><kbd>↑</kbd><kbd>↓</kbd> navegar</span>
+        <span><kbd>Enter</kbd> abrir</span>
+        <span><kbd>Ctrl</kbd><kbd>K</kbd> abre de qualquer lugar</span>
+      </p>
+    </div>
+  </dialog>
+
+  <!-- Leitura de artigo do Diário de bordo -->
+  <dialog class="detail-dialog article-dialog" id="articleDialog" aria-labelledby="articleTitle">
+    <div class="detail-modal">
+      <button class="icon-btn modal-close-btn" id="articleCloseBtn" type="button" aria-label="Fechar artigo">
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      </button>
+      <div class="article-progress" aria-hidden="true"><span id="articleProgressFill"></span></div>
+      <div class="article-scroll" id="articleScroll">
+        <div class="article-banner" id="articleBanner"></div>
+        <article class="article">
+          <p class="article__meta" id="articleMeta"></p>
+          <h2 class="article__title" id="articleTitle"></h2>
+          <div class="article__body" id="articleBody"></div>
+          <div class="article__cta" id="articleCta"></div>
+        </article>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- Políticas (privacidade, termos, cancelamento) -->
+  <dialog class="favs-dialog" id="policyDialog" aria-labelledby="policyTitle">
+    <div class="favs-modal policy-modal">
+      <div class="favs-header">
+        <h2 id="policyTitle">Política</h2>
+        <button class="icon-btn" id="policyCloseBtn" type="button" aria-label="Fechar">
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        </button>
+      </div>
+      <div class="policy-body" id="policyBody"></div>
+    </div>
+  </dialog>
+
+  <!-- Aviso de cookies (LGPD) -->
+  <div class="cookie-banner" id="cookieBanner" role="region" aria-label="Aviso de cookies" hidden>
+    <p>
+      Usamos o armazenamento do navegador para lembrar seus favoritos, tema e simulações.
+      <button class="cookie-banner__link" type="button" data-policy="privacidade">Saiba mais</button>
+    </p>
+    <div class="cookie-banner__actions">
+      <button class="btn btn--ghost btn--sm" id="cookieRejectBtn" type="button">Só o essencial</button>
+      <button class="btn btn--primary btn--sm" id="cookieAcceptBtn" type="button">Aceitar</button>
+    </div>
+  </div>
 
   <!-- Contêiner de Notificações Toast -->
   <div class="toast-container" id="toastContainer" aria-live="polite"></div>

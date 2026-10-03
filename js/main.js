@@ -1500,6 +1500,7 @@
     if (!dest || !destinationModal) return;
 
     activeDestino = dest;
+    addRecent(dest.id);
     simTravelers = 2;
     simHotelTier = "standard";
     simSelectedAddonIds = [];
@@ -3030,6 +3031,515 @@
   }
 
   /* ---------------------------------------------------------
+     18.1 VISTOS RECENTEMENTE
+     --------------------------------------------------------- */
+
+  var RECENT_KEY = "penaestrada_recent";
+  var RECENT_MAX = 6;
+
+  function getRecent() {
+    try {
+      var list = JSON.parse(localStorage.getItem(RECENT_KEY) || "[]");
+      return Array.isArray(list) ? list : [];
+    } catch (e) {
+      return [];
+    }
+  }
+
+  function saveRecent(list) {
+    try { localStorage.setItem(RECENT_KEY, JSON.stringify(list)); } catch (e) {}
+  }
+
+  function addRecent(id) {
+    var list = getRecent().filter(function (x) { return x !== id; });
+    list.unshift(id);
+    saveRecent(list.slice(0, RECENT_MAX));
+    renderRecent();
+  }
+
+  function findDestino(id) {
+    return (DATA.DESTINOS || []).find(function (d) { return d.id === id; });
+  }
+
+  function renderRecent() {
+    var strip = document.getElementById("recentStrip");
+    var listEl = document.getElementById("recentList");
+    if (!strip || !listEl) return;
+
+    var destinos = getRecent().map(findDestino).filter(Boolean);
+    strip.hidden = destinos.length === 0;
+    listEl.innerHTML = "";
+
+    destinos.forEach(function (d) {
+      var li = document.createElement("li");
+      li.innerHTML =
+        '<button class="recent__item" type="button">' +
+        '<span class="recent__thumb" aria-hidden="true">' + d.getSvg("recent-" + d.id) + "</span>" +
+        '<span class="recent__text"><strong>' + escapeHtml(d.nome) + "</strong>" +
+        "<small>" + escapeHtml(d.dias) + " · R$ " + escapeHtml(d.preco) + "</small></span>" +
+        "</button>";
+      li.querySelector("button").addEventListener("click", function () {
+        openDestinationModal(d.id);
+      });
+      listEl.appendChild(li);
+    });
+  }
+
+  var recentClearBtn = document.getElementById("recentClearBtn");
+  if (recentClearBtn) {
+    recentClearBtn.addEventListener("click", function () {
+      saveRecent([]);
+      renderRecent();
+      showToast("Histórico de roteiros vistos apagado.", "info");
+    });
+  }
+
+  /* ---------------------------------------------------------
+     18.2 OFERTAS DA TEMPORADA & CONTAGEM REGRESSIVA
+     --------------------------------------------------------- */
+
+  function precoComDesconto(dest, desconto) {
+    return Math.round((dest.precoNum * (1 - desconto / 100)) / 10) * 10;
+  }
+
+  function renderOfertas() {
+    var grid = document.getElementById("ofertasGrid");
+    if (!grid || !DATA.OFERTAS) return;
+    grid.innerHTML = "";
+
+    DATA.OFERTAS.forEach(function (o, index) {
+      var d = findDestino(o.destinoId);
+      if (!d) return;
+
+      var novoPreco = precoComDesconto(d, o.desconto);
+      var economia = d.precoNum - novoPreco;
+      var li = document.createElement("li");
+      li.className = "oferta" + (index === 0 ? " oferta--destaque" : "");
+
+      li.innerHTML =
+        '<div class="oferta__media" aria-hidden="true">' + d.getSvg("oferta-" + d.id) + "</div>" +
+        '<div class="oferta__scrim" aria-hidden="true"></div>' +
+        '<span class="oferta__off">-' + o.desconto + "%</span>" +
+        (o.selo ? '<span class="oferta__selo">' + escapeHtml(o.selo) + "</span>" : "") +
+        '<div class="oferta__body">' +
+        '<p class="oferta__saida">' + escapeHtml(o.saida) + " · " + escapeHtml(d.dias) + "</p>" +
+        '<h3 class="oferta__title">' + escapeHtml(d.nome) + " <small>" + escapeHtml(d.estado) + "</small></h3>" +
+        '<p class="oferta__price"><s>R$ ' + escapeHtml(d.preco) + "</s> <strong>R$ " + novoPreco.toLocaleString("pt-BR") + "</strong> <small>/ pessoa</small></p>" +
+        '<p class="oferta__vagas"><span class="oferta__dot" aria-hidden="true"></span>Restam ' + o.vagas + " vagas · economia de R$ " + economia.toLocaleString("pt-BR") + "</p>" +
+        '<div class="oferta__actions">' +
+        '<button class="btn btn--primary btn--sm" type="button" data-oferta-reservar>Garantir desconto</button>' +
+        '<button class="btn btn--light btn--sm" type="button" data-oferta-detalhes>Ver roteiro</button>' +
+        "</div>" +
+        "</div>";
+
+      li.querySelector("[data-oferta-detalhes]").addEventListener("click", function () {
+        openDestinationModal(d.id);
+      });
+      li.querySelector("[data-oferta-reservar]").addEventListener("click", function () {
+        preSelectLeadDestino(d.nome + " — " + d.estado);
+        var msg = document.getElementById("leadMensagem");
+        if (msg) msg.value = "Quero garantir a oferta de " + d.nome + " com " + o.desconto + "% de desconto (R$ " + novoPreco.toLocaleString("pt-BR") + " por pessoa).";
+        goToLeadForm();
+        showToast("Preenchemos o formulário com a oferta de " + d.nome + ".", "success", "Oferta reservada");
+      });
+
+      grid.appendChild(li);
+    });
+  }
+
+  // As ofertas valem até o último segundo do mês corrente
+  function initCountdown() {
+    var box = document.getElementById("ofertasCountdown");
+    if (!box) return;
+    var units = {};
+    box.querySelectorAll("[data-unit]").forEach(function (el) { units[el.getAttribute("data-unit")] = el; });
+
+    var agora = new Date();
+    var fim = new Date(agora.getFullYear(), agora.getMonth() + 1, 1, 0, 0, 0);
+
+    function pad(n) { return String(n).padStart(2, "0"); }
+
+    function tick() {
+      var resto = Math.max(0, fim - new Date());
+      var s = Math.floor(resto / 1000);
+      units.dias.textContent = pad(Math.floor(s / 86400));
+      units.horas.textContent = pad(Math.floor((s % 86400) / 3600));
+      units.min.textContent = pad(Math.floor((s % 3600) / 60));
+      units.seg.textContent = pad(s % 60);
+    }
+
+    tick();
+    setInterval(tick, 1000);
+  }
+
+  /* ---------------------------------------------------------
+     18.3 DIÁRIO DE BORDO (BLOG) & LEITOR DE ARTIGOS
+     --------------------------------------------------------- */
+
+  var diarioFiltro = "Todos";
+  var articleDialog = document.getElementById("articleDialog");
+  var articleScroll = document.getElementById("articleScroll");
+  var articleProgressFill = document.getElementById("articleProgressFill");
+
+  function findArtigo(id) {
+    return (DATA.ARTIGOS || []).find(function (a) { return a.id === id; });
+  }
+
+  function renderDiario() {
+    var grid = document.getElementById("diarioGrid");
+    var filtersEl = document.getElementById("diarioFilters");
+    if (!grid || !DATA.ARTIGOS) return;
+
+    if (filtersEl && !filtersEl.children.length) {
+      var cats = ["Todos"];
+      DATA.ARTIGOS.forEach(function (a) { if (cats.indexOf(a.categoria) < 0) cats.push(a.categoria); });
+      cats.forEach(function (c) {
+        var b = document.createElement("button");
+        b.type = "button";
+        b.className = "chip" + (c === diarioFiltro ? " is-active" : "");
+        b.setAttribute("aria-pressed", String(c === diarioFiltro));
+        b.textContent = c;
+        b.addEventListener("click", function () {
+          diarioFiltro = c;
+          filtersEl.querySelectorAll(".chip").forEach(function (x) {
+            var on = x === b;
+            x.classList.toggle("is-active", on);
+            x.setAttribute("aria-pressed", String(on));
+          });
+          renderDiario();
+        });
+        filtersEl.appendChild(b);
+      });
+    }
+
+    grid.innerHTML = "";
+    DATA.ARTIGOS
+      .filter(function (a) { return diarioFiltro === "Todos" || a.categoria === diarioFiltro; })
+      .forEach(function (a, index) {
+        var d = findDestino(a.destinoId);
+        var li = document.createElement("li");
+        li.className = "post" + (index === 0 && diarioFiltro === "Todos" ? " post--wide" : "");
+        li.innerHTML =
+          '<button class="post__link" type="button">' +
+          '<span class="post__media" aria-hidden="true">' + (d ? d.getSvg("post-" + a.id) : "") + "</span>" +
+          '<span class="post__body">' +
+          '<span class="post__meta"><span class="post__cat">' + escapeHtml(a.categoria) + "</span>" + escapeHtml(a.leitura) + " min de leitura</span>" +
+          '<strong class="post__title">' + escapeHtml(a.titulo) + "</strong>" +
+          '<span class="post__resumo">' + escapeHtml(a.resumo) + "</span>" +
+          '<span class="post__autor">Por ' + escapeHtml(a.autor) + " · " + escapeHtml(a.data) + "</span>" +
+          "</span>" +
+          "</button>";
+        li.querySelector("button").addEventListener("click", function () { openArticle(a.id); });
+        grid.appendChild(li);
+      });
+  }
+
+  function openArticle(id) {
+    var a = findArtigo(id);
+    if (!a || !articleDialog) return;
+    var d = findDestino(a.destinoId);
+
+    document.getElementById("articleBanner").innerHTML = d ? d.getSvg("article-" + a.id) : "";
+    document.getElementById("articleMeta").innerHTML =
+      '<span class="post__cat">' + escapeHtml(a.categoria) + "</span>" +
+      escapeHtml(a.autor) + " · " + escapeHtml(a.data) + " · " + a.leitura + " min de leitura";
+    document.getElementById("articleTitle").textContent = a.titulo;
+
+    document.getElementById("articleBody").innerHTML = a.corpo.map(function (bloco) {
+      if (bloco.h) return "<h3>" + escapeHtml(bloco.h) + "</h3>";
+      if (bloco.dica) return '<aside class="article__tip"><strong>Dica de consultor</strong>' + escapeHtml(bloco.dica) + "</aside>";
+      return "<p>" + escapeHtml(bloco.p) + "</p>";
+    }).join("");
+
+    var cta = document.getElementById("articleCta");
+    cta.innerHTML = "";
+    if (d) {
+      cta.innerHTML =
+        "<div><strong>Ficou com vontade de ir?</strong><span>" + escapeHtml(d.nome) + " · " + escapeHtml(d.dias) + " a partir de R$ " + escapeHtml(d.preco) + "</span></div>" +
+        '<button class="btn btn--primary btn--sm" type="button">Ver roteiro completo</button>';
+      cta.querySelector("button").addEventListener("click", function () {
+        articleDialog.close();
+        openDestinationModal(d.id);
+      });
+    }
+
+    if (articleScroll) articleScroll.scrollTop = 0;
+    updateArticleProgress();
+    showDialog(articleDialog);
+  }
+
+  function updateArticleProgress() {
+    if (!articleScroll || !articleProgressFill) return;
+    var max = articleScroll.scrollHeight - articleScroll.clientHeight;
+    var pct = max > 0 ? (articleScroll.scrollTop / max) * 100 : 0;
+    articleProgressFill.style.width = pct + "%";
+  }
+
+  if (articleScroll) articleScroll.addEventListener("scroll", updateArticleProgress, { passive: true });
+  var articleCloseBtn = document.getElementById("articleCloseBtn");
+  if (articleCloseBtn) articleCloseBtn.addEventListener("click", function () { articleDialog.close(); });
+
+  /* ---------------------------------------------------------
+     18.4 POLÍTICAS, AVISO DE COOKIES E NEWSLETTER
+     --------------------------------------------------------- */
+
+  var policyDialog = document.getElementById("policyDialog");
+
+  function openPolicy(key) {
+    var pol = DATA.POLITICAS && DATA.POLITICAS[key];
+    if (!pol || !policyDialog) return;
+    document.getElementById("policyTitle").textContent = pol.titulo;
+    document.getElementById("policyBody").innerHTML = pol.secoes.map(function (s) {
+      return "<h3>" + escapeHtml(s.h) + "</h3><p>" + escapeHtml(s.p) + "</p>";
+    }).join("");
+    showDialog(policyDialog);
+  }
+
+  document.addEventListener("click", function (e) {
+    var btn = e.target.closest("[data-policy]");
+    if (btn) openPolicy(btn.getAttribute("data-policy"));
+  });
+
+  var policyCloseBtn = document.getElementById("policyCloseBtn");
+  if (policyCloseBtn) policyCloseBtn.addEventListener("click", function () { policyDialog.close(); });
+
+  var COOKIE_KEY = "penaestrada_cookies";
+  var cookieBanner = document.getElementById("cookieBanner");
+
+  function setCookieChoice(choice) {
+    try { localStorage.setItem(COOKIE_KEY, choice); } catch (e) {}
+    if (cookieBanner) cookieBanner.hidden = true;
+    showToast(choice === "all" ? "Preferências salvas. Obrigado!" : "Ok, vamos guardar só o essencial.", "success", "Cookies");
+  }
+
+  function initCookieBanner() {
+    if (!cookieBanner) return;
+    var escolha = null;
+    try { escolha = localStorage.getItem(COOKIE_KEY); } catch (e) {}
+    // Aparece com um pequeno atraso para não competir com o hero
+    if (!escolha) setTimeout(function () { cookieBanner.hidden = false; }, 1200);
+
+    document.getElementById("cookieAcceptBtn").addEventListener("click", function () { setCookieChoice("all"); });
+    document.getElementById("cookieRejectBtn").addEventListener("click", function () { setCookieChoice("essential"); });
+    var prefsBtn = document.getElementById("cookiePrefsBtn");
+    if (prefsBtn) prefsBtn.addEventListener("click", function () { cookieBanner.hidden = false; });
+  }
+
+  var newsletterForm = document.getElementById("newsletterForm");
+  if (newsletterForm) {
+    newsletterForm.addEventListener("submit", function (e) {
+      e.preventDefault();
+      var input = document.getElementById("newsletterEmail");
+      var status = document.getElementById("newsletterStatus");
+      var email = (input.value || "").trim().toLowerCase();
+
+      if (!/\S+@\S+\.\S+/.test(email)) {
+        status.textContent = "Digite um e-mail válido.";
+        status.className = "newsletter__status is-error";
+        input.focus();
+        return;
+      }
+
+      var lista = [];
+      try { lista = JSON.parse(localStorage.getItem("penaestrada_newsletter") || "[]"); } catch (err) {}
+      if (lista.indexOf(email) > -1) {
+        status.textContent = "Esse e-mail já recebe a nossa carta mensal.";
+        status.className = "newsletter__status";
+        return;
+      }
+      lista.push(email);
+      try { localStorage.setItem("penaestrada_newsletter", JSON.stringify(lista)); } catch (err) {}
+
+      input.value = "";
+      status.textContent = "Pronto! A próxima carta chega no início do mês.";
+      status.className = "newsletter__status is-success";
+      showToast("Inscrição confirmada para " + email + ".", "success", "Newsletter");
+    });
+  }
+
+  /* ---------------------------------------------------------
+     18.5 BUSCA GLOBAL (CTRL + K)
+     --------------------------------------------------------- */
+
+  var searchDialog = document.getElementById("searchDialog");
+  var globalSearchInput = document.getElementById("globalSearchInput");
+  var globalSearchResults = document.getElementById("globalSearchResults");
+  var searchItems = [];
+  var searchActive = 0;
+
+  var ICON_PIN = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>';
+  var ICON_DOC = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9Z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>';
+  var ICON_HELP = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.1 9a3 3 0 0 1 5.8 1c0 2-3 3-3 3M12 17h.01"/></svg>';
+  var ICON_HASH = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 9h16M4 15h16M10 3 8 21M16 3l-2 18"/></svg>';
+
+  var SECOES_BUSCA = [
+    { titulo: "Destinos", sub: "Todos os roteiros com filtros e mapa", alvo: "#destinos" },
+    { titulo: "Ofertas da temporada", sub: "Descontos por tempo limitado", alvo: "#ofertas" },
+    { titulo: "Quiz: qual viagem combina com você?", sub: "5 perguntas, resultado na hora", alvo: "#quiz" },
+    { titulo: "Como funciona", sub: "Do primeiro contato ao embarque", alvo: "#como-funciona" },
+    { titulo: "Diário de bordo", sub: "Dicas e guias dos consultores", alvo: "#diario" },
+    { titulo: "Falar com um consultor", sub: "Receba 3 roteiros sob medida", alvo: "#contato" }
+  ];
+
+  function buildSearchIndex() {
+    var idx = [];
+    (DATA.DESTINOS || []).forEach(function (d) {
+      idx.push({
+        grupo: "Destinos", icon: ICON_PIN, titulo: d.nome, sub: d.estado + " · " + d.dias + " · R$ " + d.preco,
+        texto: [d.nome, d.estado, d.categoria, d.descricao, (d.tags || []).join(" ")].join(" "),
+        acao: function () { openDestinationModal(d.id); }
+      });
+    });
+    (DATA.ARTIGOS || []).forEach(function (a) {
+      idx.push({
+        grupo: "Diário de bordo", icon: ICON_DOC, titulo: a.titulo, sub: a.categoria + " · " + a.leitura + " min",
+        texto: [a.titulo, a.resumo, a.categoria].join(" "),
+        acao: function () { openArticle(a.id); }
+      });
+    });
+    (DATA.FAQ || []).forEach(function (f, i) {
+      idx.push({
+        grupo: "Dúvidas", icon: ICON_HELP, titulo: f.pergunta, sub: "Perguntas frequentes",
+        texto: f.pergunta + " " + f.resposta,
+        acao: function () { abrirFaq(i); }
+      });
+    });
+    SECOES_BUSCA.forEach(function (s) {
+      idx.push({
+        grupo: "Ir para", icon: ICON_HASH, titulo: s.titulo, sub: s.sub, texto: s.titulo + " " + s.sub,
+        acao: function () {
+          var el = document.querySelector(s.alvo);
+          if (el) el.scrollIntoView({ behavior: "smooth" });
+        }
+      });
+    });
+    return idx;
+  }
+
+  var searchIndex = null;
+
+  function abrirFaq(i) {
+    var sec = document.getElementById("faq");
+    if (sec) sec.scrollIntoView({ behavior: "smooth" });
+    var panel = document.getElementById("faq-panel-" + i);
+    var trigger = document.querySelector('[aria-controls="faq-panel-' + i + '"]');
+    if (panel && trigger) {
+      trigger.setAttribute("aria-expanded", "true");
+      panel.classList.add("is-open");
+      setTimeout(function () { trigger.focus({ preventScroll: true }); }, 500);
+    }
+  }
+
+  function renderSearchResults() {
+    if (!globalSearchResults) return;
+    if (!searchIndex) searchIndex = buildSearchIndex();
+
+    var termos = normalizeText(globalSearchInput.value).split(/\s+/).filter(Boolean);
+    searchItems = termos.length
+      ? searchIndex.filter(function (it) {
+          var alvo = normalizeText(it.texto);
+          return termos.every(function (t) { return alvo.indexOf(t) > -1; });
+        })
+      : searchIndex.filter(function (it) { return it.grupo === "Destinos" || it.grupo === "Ir para"; });
+
+    searchItems = searchItems.slice(0, 14);
+    searchActive = 0;
+    globalSearchResults.innerHTML = "";
+
+    if (!searchItems.length) {
+      globalSearchResults.innerHTML = '<li class="search-results__empty">Nada encontrado para "' + escapeHtml(globalSearchInput.value) + '". Tente "praia", "trilha" ou "cancelamento".</li>';
+      globalSearchInput.removeAttribute("aria-activedescendant");
+      return;
+    }
+
+    var grupoAtual = "";
+    searchItems.forEach(function (it, i) {
+      if (it.grupo !== grupoAtual) {
+        grupoAtual = it.grupo;
+        var g = document.createElement("li");
+        g.className = "search-results__group";
+        g.setAttribute("role", "presentation");
+        g.textContent = it.grupo;
+        globalSearchResults.appendChild(g);
+      }
+      var li = document.createElement("li");
+      li.className = "search-result";
+      li.id = "search-opt-" + i;
+      li.setAttribute("role", "option");
+      li.innerHTML =
+        '<span class="search-result__icon" aria-hidden="true">' + it.icon + "</span>" +
+        '<span class="search-result__text"><strong>' + escapeHtml(it.titulo) + "</strong><small>" + escapeHtml(it.sub) + "</small></span>";
+      li.addEventListener("mousemove", function () { if (searchActive !== i) setSearchActive(i); });
+      li.addEventListener("click", function () { runSearchItem(i); });
+      globalSearchResults.appendChild(li);
+    });
+    setSearchActive(0);
+  }
+
+  function setSearchActive(i) {
+    searchActive = i;
+    globalSearchResults.querySelectorAll(".search-result").forEach(function (el) {
+      var on = el.id === "search-opt-" + i;
+      el.classList.toggle("is-active", on);
+      el.setAttribute("aria-selected", String(on));
+      if (on) el.scrollIntoView({ block: "nearest" });
+    });
+    globalSearchInput.setAttribute("aria-activedescendant", "search-opt-" + i);
+  }
+
+  function runSearchItem(i) {
+    var it = searchItems[i];
+    if (!it) return;
+    searchDialog.close();
+    it.acao();
+  }
+
+  function openSearch() {
+    if (!searchDialog) return;
+    closeDrawer();
+    document.querySelectorAll("dialog[open]").forEach(function (d) { if (d !== searchDialog) d.close(); });
+    globalSearchInput.value = "";
+    renderSearchResults();
+    showDialog(searchDialog);
+    globalSearchInput.focus();
+  }
+
+  if (globalSearchInput) {
+    globalSearchInput.addEventListener("input", renderSearchResults);
+    globalSearchInput.addEventListener("keydown", function (e) {
+      if (e.key === "ArrowDown" || e.key === "ArrowUp") {
+        e.preventDefault();
+        if (!searchItems.length) return;
+        var delta = e.key === "ArrowDown" ? 1 : -1;
+        setSearchActive((searchActive + delta + searchItems.length) % searchItems.length);
+      } else if (e.key === "Enter") {
+        e.preventDefault();
+        runSearchItem(searchActive);
+      } else if (e.key === "Escape") {
+        // Num input type="search" com texto, o Esc só limparia o campo: aqui ele fecha a busca
+        e.preventDefault();
+        searchDialog.close();
+      }
+    });
+  }
+
+  var searchOpenBtn = document.getElementById("searchOpenBtn");
+  if (searchOpenBtn) searchOpenBtn.addEventListener("click", openSearch);
+
+  document.addEventListener("keydown", function (e) {
+    var tag = (e.target.tagName || "").toLowerCase();
+    var digitando = tag === "input" || tag === "textarea" || tag === "select" || e.target.isContentEditable;
+    if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "k") {
+      e.preventDefault();
+      if (searchDialog && searchDialog.open) searchDialog.close();
+      else openSearch();
+    } else if (e.key === "/" && !digitando && !document.querySelector("dialog[open]")) {
+      e.preventDefault();
+      openSearch();
+    }
+  });
+
+  /* ---------------------------------------------------------
      19. INICIALIZAÇÃO GERAL
      --------------------------------------------------------- */
 
@@ -3037,7 +3547,7 @@
   function initReveal() {
     if (!("IntersectionObserver" in window)) return;
     var targets = document.querySelectorAll(
-      ".section__head, .quiz, .feature-grid, .split__visual, .split__content, .slider, .faq-list, .contact__copy, .contact__form"
+      ".section__head, .quiz, .feature-grid, .countdown, .bento, .steps, .diario-grid, .split__visual, .split__content, .slider, .faq-list, .contact__copy, .contact__form"
     );
     var observer = new IntersectionObserver(function (entries) {
       entries.forEach(function (entry) {
@@ -3106,6 +3616,11 @@
     initSlider();
     renderFaq();
     renderQuizStep(false);
+    renderOfertas();
+    initCountdown();
+    renderDiario();
+    renderRecent();
+    initCookieBanner();
 
     updateAuthUI();
     initCounters();

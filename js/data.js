@@ -703,7 +703,125 @@ var DATA = (function () {
     }
   ];
 
+  // Ofertas da temporada: o desconto vale até o fim do mês corrente (contagem regressiva na página)
+  var OFERTAS = [
+    { destinoId: "lencois", desconto: 18, vagas: 4, saida: "Saídas em novembro", selo: "Mais procurada" },
+    { destinoId: "serra", desconto: 12, vagas: 6, saida: "Temporada de vinhos" },
+    { destinoId: "foz", desconto: 10, vagas: 3, saida: "Feriados prolongados" }
+  ];
+
+  // Artigos do "Diário de bordo" (blog da agência)
+  var ARTIGOS = [
+    {
+      id: "noronha-primeira-vez",
+      destinoId: "noronha",
+      categoria: "Guia",
+      titulo: "Noronha pela primeira vez: o que ninguém te conta",
+      resumo: "Taxas, melhor época para mergulho e como escolher a pousada certa sem estourar o orçamento.",
+      leitura: 6,
+      data: "18 set 2026",
+      autor: "Lívia Prado",
+      corpo: [
+        { h: "As taxas vêm antes da praia" },
+        { p: "Quem vai a Noronha paga duas contas que não aparecem no preço da passagem: a Taxa de Preservação Ambiental (TPA), cobrada por dia de permanência, e o ingresso do Parque Nacional Marinho, válido por 10 dias. Vale pagar as duas antes do embarque para não perder tempo na fila do aeroporto." },
+        { h: "Agosto a fevereiro: mar de piscina" },
+        { p: "É a janela de água mais calma e transparente, com visibilidade que passa dos 30 metros. Entre março e julho chove mais e o mar de fora fica agitado, mas a ilha fica mais vazia e as pousadas, mais baratas." },
+        { h: "Pousada: localização vale mais que luxo" },
+        { p: "Ficar perto da Vila dos Remédios ou do Boldró resolve metade da logística. A ilha é pequena, mas o buggy alugado custa caro e o ônibus passa de 30 em 30 minutos." },
+        { dica: "Reserve o Sancho para o fim da tarde: a escadaria fica livre e a luz é a mais bonita do dia." }
+      ]
+    },
+    {
+      id: "chapada-trilhas",
+      destinoId: "chapada",
+      categoria: "Aventura",
+      titulo: "5 trilhas da Chapada Diamantina para todos os níveis",
+      resumo: "Do Poço Azul ao Vale do Pati: um guia honesto de esforço, duração e quando contratar guia.",
+      leitura: 8,
+      data: "02 set 2026",
+      autor: "Caio Nunes",
+      corpo: [
+        { p: "A Chapada tem trilha para quem nunca calçou uma bota e para quem quer passar três dias sem sinal de celular. O segredo é escolher pelo esforço, não pela foto mais bonita do Instagram." },
+        { h: "Leves (até 2 horas)" },
+        { p: "Poço do Diabo, Ribeirão do Meio e a subida do Morro do Pai Inácio. Caminhos bem marcados, com sombra e ótimos para o primeiro dia de adaptação." },
+        { h: "Moderadas (meio dia)" },
+        { p: "Cachoeira do Sossego e Gruta da Lapa Doce. Exigem pedras escorregadias e alguma subida, então guia local é obrigatório e muito bem-vindo." },
+        { h: "Intensas (dia inteiro ou mais)" },
+        { p: "Cachoeira da Fumaça por baixo e a travessia do Vale do Pati. São experiências marcantes, mas pedem preparo físico e planejamento de água e comida." },
+        { dica: "Leve meia de trilha extra: atravessar rio é parte do caminho e pé molhado o dia inteiro dá bolha." }
+      ]
+    },
+    {
+      id: "serra-inverno",
+      destinoId: "serra",
+      categoria: "Gastronomia",
+      titulo: "Serra Gaúcha no inverno: roteiro de vinhos, fondue e lareira",
+      resumo: "Como dividir os dias entre Gramado, Canela e o Vale dos Vinhedos sem passar o tempo na estrada.",
+      leitura: 5,
+      data: "21 ago 2026",
+      autor: "Lívia Prado",
+      corpo: [
+        { p: "Julho é alta temporada e as filas do Snowland ou do Lago Negro provam isso. Ainda assim dá para fugir da multidão com um roteiro que começa cedo e aproveita as vinícolas no meio da semana." },
+        { h: "Base em Gramado, passeios em Bento" },
+        { p: "Gramado tem as melhores pousadas e restaurantes, mas o Vale dos Vinhedos fica a 1h30. Reserve um dia inteiro para ele, com motorista, e escolha duas vinícolas de porte diferente: uma grande e uma familiar." },
+        { h: "Fondue sem armadilha" },
+        { p: "As sequências de fondue são tradição, mas os rodízios de beira de avenida são caros e mornos. Prefira as casas em ruas laterais, com reserva antecipada." },
+        { dica: "Setembro e outubro têm as mesmas paisagens, metade das filas e as hortênsias começando a florir." }
+      ]
+    },
+    {
+      id: "amazonia-rio-negro",
+      destinoId: "amazonia",
+      categoria: "Natureza",
+      titulo: "Amazônia sem clichê: como é dormir num lodge no Rio Negro",
+      resumo: "Rotina na selva, o que levar e por que o Rio Negro tem menos mosquitos do que você imagina.",
+      leitura: 7,
+      data: "05 ago 2026",
+      autor: "Caio Nunes",
+      corpo: [
+        { p: "A primeira surpresa é o silêncio: a 3 horas de barco de Manaus, o barulho que domina é o da floresta. A segunda é a água escura do Rio Negro, ácida o bastante para afastar boa parte dos mosquitos." },
+        { h: "Um dia típico no lodge" },
+        { p: "Acordar às 5h para ver os botos, café regional, caminhada com guia ribeirinho, almoço com peixe do dia, descanso na rede e focagem de jacarés depois do anoitecer." },
+        { h: "Cheia ou seca?" },
+        { p: "Na cheia (maio a julho) a canoa entra pela floresta alagada, os igapós. Na seca (setembro a dezembro) surgem praias de areia branca no meio do rio. As duas épocas valem a viagem." },
+        { dica: "Roupa de manga comprida e clara protege do sol e dos insetos melhor que qualquer repelente." }
+      ]
+    }
+  ];
+
+  // Textos das políticas abertas pelos links do rodapé
+  var POLITICAS = {
+    privacidade: {
+      titulo: "Política de privacidade",
+      secoes: [
+        { h: "Quais dados coletamos", p: "Nome, e-mail, telefone e as preferências de viagem que você informa nos formulários. Não pedimos documentos nem dados de cartão pelo site." },
+        { h: "Para que usamos", p: "Para montar e enviar os roteiros que você pediu, responder às suas dúvidas e, se você autorizar, mandar a nossa newsletter mensal." },
+        { h: "Onde ficam guardados", p: "Nesta versão de demonstração, tudo fica apenas no seu navegador (localStorage). Você pode apagar a qualquer momento limpando os dados do site." },
+        { h: "Seus direitos (LGPD)", p: "Você pode pedir acesso, correção ou exclusão dos seus dados escrevendo para oi@penaestrada.com.br. Respondemos em até 15 dias." }
+      ]
+    },
+    termos: {
+      titulo: "Termos de uso",
+      secoes: [
+        { h: "Sobre os valores", p: "Os preços exibidos são por pessoa, em acomodação dupla, sem passagens aéreas. O valor final é confirmado pelo consultor no orçamento." },
+        { h: "Disponibilidade", p: "Roteiros, hospedagens e passeios dependem de disponibilidade no momento da reserva e podem mudar por condições climáticas ou decisões dos órgãos ambientais." },
+        { h: "Conteúdo do site", p: "Textos, ilustrações e roteiros são autorais da Pé na Estrada. Compartilhar é bem-vindo; copiar para uso comercial, não." }
+      ]
+    },
+    cancelamento: {
+      titulo: "Política de cancelamento",
+      secoes: [
+        { h: "Remarcação gratuita", p: "Você pode remarcar sem custo até 15 dias antes do embarque, uma vez por reserva, para qualquer data dentro de 12 meses." },
+        { h: "Cancelamento com reembolso", p: "Até 30 dias antes: reembolso de 90%. De 29 a 15 dias: 70%. Com menos de 15 dias, o valor vira crédito para uma nova viagem." },
+        { h: "Quando nós cancelamos", p: "Se o roteiro for cancelado por clima ou por decisão da agência, você escolhe entre reembolso integral ou remarcação com prioridade." }
+      ]
+    }
+  };
+
   return {
+    OFERTAS: OFERTAS,
+    ARTIGOS: ARTIGOS,
+    POLITICAS: POLITICAS,
     DESTINOS: DESTINOS,
     FEATURE_GRID: FEATURE_GRID,
     ROTEIRO_ACCORDION: ROTEIRO_ACCORDION,
