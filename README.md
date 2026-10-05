@@ -8,9 +8,20 @@
 
 ## ✨ Destaques & Recursos Avançados
 
+- **🛣️ Identidade de sinalização rodoviária**:
+  - Verde de placa indicativa, azul de serviço, marrom turístico, amarelo de faixa e asfalto;
+  - Tipografia *Overpass*, derivada da fonte usada em placas de estrada;
+  - Painel no topo com a distância real da sua cidade até os destinos mais próximos, com setas no rumo certo.
+- **📍 Cidade de partida e distâncias**:
+  - Escolha de onde você sai (13 capitais) e veja a distância em cada roteiro, no mapa e no comparador;
+  - Ordenação "Mais perto de você"; a escolha fica salva no navegador.
+- **🧭 Monte sua rota**:
+  - Junte vários destinos numa viagem só: a ordem das paradas, os trechos em km, os dias e o valor total aparecem na hora;
+  - A rota fica salva no navegador e vai para o formulário de contato com um clique.
+- **📝 Rascunho do formulário de contato**: o que foi digitado é salvo e recuperado se a página for fechada antes do envio.
 - **🌓 Suporte Nativo a Modo Escuro & Claro (Dark / Light Mode)**:
   - Alternador fluido no cabeçalho e menu lateral (drawer mobile);
-  - Paleta noturna terrosa desenhada especialmente para contraste visual e conforto;
+  - Paleta noturna de asfalto desenhada especialmente para contraste visual e conforto;
   - Persistência no `localStorage` e detecção automática de `prefers-color-scheme`.
 - **🔍 Busca Multidimensional, Filtros & Ordenação em Tempo Real**:
   - Busca instantânea por texto (nome, atrações, estado ou bioma);
@@ -60,7 +71,6 @@
   - Dúvidas frequentes sobre logística, cancelamentos, grupos, pagamentos e passagens aéreas.
 - **⚡ Refinamento de Usabilidade & Performance**:
   - Barra de progresso de leitura superior (*Scroll Indicator*);
-  - Números do topo com contagem animada e animações de entrada ao rolar a página;
   - Links diretos para cada roteiro (`#roteiro-noronha`), prontos para compartilhar;
   - Máscara dinâmica de telefone e WhatsApp `(00) 00000-0000`;
   - Compartilhamento de roteiros via Web Share API com cópia para área de transferência;
@@ -76,9 +86,9 @@
 │   ├── components.css    # Botões, simulador, comparador, chips, cards, modais e formulários
 │   ├── footer.css        # Estilos do rodapé
 │   ├── header.css        # Cabeçalho fixo, navegação e drawer mobile
-│   ├── hero.css          # Seção hero e barra de busca rápida
+│   ├── hero.css          # Seção hero, painel de distâncias e barra de busca rápida
 │   ├── responsive.css    # Breakpoints para tablets, celulares e bottom sheets
-│   └── sections.css      # Ajustes de seções split, FAQ e formulário de contato
+│   └── sections.css      # Rota, quiz, diferenciais, roteiro em destaque e contato
 ├── images/
 │   └── hero.jpg          # Imagem de capa do hero
 ├── js/
@@ -113,7 +123,7 @@ Como o projeto utiliza tecnologias web nativas, não é necessário instalar dep
 - **HTML5**: Semântica estrita, ARIA accessibility, elementos nativos `<dialog>`, `<aside>`, Open Graph.
 - **CSS3**: CSS Custom Properties (Design Tokens para temas Claro e Escuro), CSS Grid, Flexbox, Keyframe animations, Backdrop-filter.
 - **JavaScript (ES6+)**: LocalStorage API, Dialog API, Web Share API, Clipboard API, Touch gestures, DOM reactive state.
-- **Tipografia**: Google Fonts (*Fraunces* e *Inter*).
+- **Tipografia**: Google Fonts (*Overpass*).
 
 ---
 

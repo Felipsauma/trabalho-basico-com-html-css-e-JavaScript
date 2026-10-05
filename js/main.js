@@ -60,7 +60,7 @@
     });
 
     var metaTheme = document.querySelector('meta[name="theme-color"]');
-    if (metaTheme) metaTheme.setAttribute("content", isDark ? "#14100c" : "#C4633F");
+    if (metaTheme) metaTheme.setAttribute("content", isDark ? "#11171a" : "#0B6B4D");
 
     if (persist) {
       try {
@@ -219,6 +219,125 @@
       .replace(/>/g, "&gt;")
       .replace(/"/g, "&quot;")
       .replace(/'/g, "&#039;");
+  }
+
+  /* ---------------------------------------------------------
+     2.1 CIDADE DE PARTIDA E DISTÂNCIAS
+     --------------------------------------------------------- */
+
+  var ORIGEM_STORAGE_KEY = "penaestrada_origem";
+  var origemId = "sao-paulo";
+
+  function getOrigem() {
+    var lista = DATA.ORIGENS || [];
+    return lista.find(function (o) { return o.id === origemId; }) || lista[0];
+  }
+
+  // Distância em linha reta entre dois pontos { lat, lon }, em km (fórmula de haversine)
+  function distanciaKm(a, b) {
+    var rad = Math.PI / 180;
+    var dLat = (b.lat - a.lat) * rad;
+    var dLon = (b.lon - a.lon) * rad;
+    var h =
+      Math.pow(Math.sin(dLat / 2), 2) +
+      Math.cos(a.lat * rad) * Math.cos(b.lat * rad) * Math.pow(Math.sin(dLon / 2), 2);
+    return 6371 * 2 * Math.asin(Math.sqrt(h));
+  }
+
+  // Rumo de a até b em graus (0 = norte, 90 = leste), para girar a seta da placa
+  function rumo(a, b) {
+    var rad = Math.PI / 180;
+    var dLon = (b.lon - a.lon) * rad;
+    var y = Math.sin(dLon) * Math.cos(b.lat * rad);
+    var x =
+      Math.cos(a.lat * rad) * Math.sin(b.lat * rad) -
+      Math.sin(a.lat * rad) * Math.cos(b.lat * rad) * Math.cos(dLon);
+    return (Math.atan2(y, x) / rad + 360) % 360;
+  }
+
+  function kmDaOrigem(d) {
+    return d.coordenadas ? distanciaKm(getOrigem(), d.coordenadas) : 0;
+  }
+
+  // Arredonda para a dezena, como nas placas de estrada
+  function formatKm(km) {
+    return (Math.round(km / 10) * 10).toLocaleString("pt-BR") + " km";
+  }
+
+  function textoDistancia(d) {
+    var km = kmDaOrigem(d);
+    return km < 30 ? "Em " + getOrigem().nome : formatKm(km) + " de " + getOrigem().nome;
+  }
+
+  function setOrigem(id) {
+    origemId = id;
+    try {
+      localStorage.setItem(ORIGEM_STORAGE_KEY, id);
+    } catch (e) {}
+    document.querySelectorAll("[data-origem-select]").forEach(function (sel) {
+      sel.value = getOrigem().id;
+    });
+    renderPlaca();
+    renderDestinos();
+    renderRota();
+  }
+
+  function initOrigem() {
+    try {
+      origemId = localStorage.getItem(ORIGEM_STORAGE_KEY) || origemId;
+    } catch (e) {}
+
+    var opcoes = (DATA.ORIGENS || []).map(function (o) {
+      return '<option value="' + escapeHtml(o.id) + '">' + escapeHtml(o.nome) + "</option>";
+    }).join("");
+
+    document.querySelectorAll("[data-origem-select]").forEach(function (sel) {
+      sel.innerHTML = opcoes;
+      sel.value = getOrigem().id;
+      sel.addEventListener("change", function () {
+        setOrigem(sel.value);
+      });
+    });
+  }
+
+  // Placa do hero: os 4 destinos mais próximos da cidade de partida, com seta no rumo real
+  var placaLista = document.getElementById("placaLista");
+
+  function renderPlaca() {
+    if (!placaLista) return;
+    var origem = getOrigem();
+
+    placaLista.innerHTML = (DATA.DESTINOS || [])
+      .filter(function (d) { return d.coordenadas; })
+      .sort(function (a, b) { return kmDaOrigem(a) - kmDaOrigem(b); })
+      .slice(0, 4)
+      .map(function (d) {
+        var km = kmDaOrigem(d);
+        var perto = km < 30;
+        // As placas só têm setas de 45 em 45 graus
+        var giro = Math.round(rumo(origem, d.coordenadas) / 45) * 45;
+        return (
+          "<li>" +
+          '<button class="placa__row" type="button" data-placa="' + escapeHtml(d.id) + '" aria-label="' +
+          escapeHtml(d.nome + (perto ? ", na sua cidade" : ", a " + formatKm(km)) + ". Ver roteiro") + '">' +
+          '<svg class="placa__seta" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true"' +
+          (perto ? "" : ' style="transform: rotate(' + giro + 'deg)"') + ">" +
+          (perto ? '<circle cx="12" cy="12" r="5" fill="currentColor"/>' : '<path d="M12 20V5M5.5 11.5 12 5l6.5 6.5"/>') +
+          "</svg>" +
+          '<span class="placa__nome">' + escapeHtml(d.nome) + "</span>" +
+          '<span class="placa__km">' + (perto ? "aqui" : formatKm(km)) + "</span>" +
+          "</button>" +
+          "</li>"
+        );
+      })
+      .join("");
+  }
+
+  if (placaLista) {
+    placaLista.addEventListener("click", function (e) {
+      var alvo = e.target.closest("[data-placa]");
+      if (alvo) openDestinationModal(alvo.getAttribute("data-placa"));
+    });
   }
 
   /* ---------------------------------------------------------
@@ -962,7 +1081,7 @@
         "</div>" +
         '<div class="favs-item__info">' +
         "<h4>" + escapeHtml(d.nome) + " (" + escapeHtml(d.estado) + ")</h4>" +
-        "<p>" + escapeHtml(d.dias) + " · R$ " + escapeHtml(d.preco) + " / pessoa</p>" +
+        "<p>" + escapeHtml(d.dias) + ", R$ " + escapeHtml(d.preco) + " / pessoa</p>" +
         "</div>" +
         '<div class="favs-item__actions">' +
         '<a class="btn btn--primary btn--sm" href="#contato" data-dest="' + escapeHtml(d.nome + " — " + d.estado) + '">Planejar</a>' +
@@ -1005,6 +1124,7 @@
 
   // Leva o usuário até o formulário de contato e foca o primeiro campo vazio
   function goToLeadForm() {
+    saveLeadDraft(); // os campos preenchidos pelo site também entram no rascunho
     var contatoSec = document.getElementById("contato");
     if (contatoSec) contatoSec.scrollIntoView({ behavior: "smooth" });
     var nomeInp = document.getElementById("leadNome");
@@ -1084,6 +1204,7 @@
       if (currentSort === "preco-asc") return (a.precoNum || 0) - (b.precoNum || 0);
       if (currentSort === "preco-desc") return (b.precoNum || 0) - (a.precoNum || 0);
       if (currentSort === "duracao-asc") return (a.duracaoDias || 0) - (b.duracaoDias || 0);
+      if (currentSort === "distancia-asc") return kmDaOrigem(a) - kmDaOrigem(b);
       // Padrão: mais populares (nota e avaliações)
       var scoreA = parseFloat(a.nota) * 1000 + (a.avaliacoes || 0);
       var scoreB = parseFloat(b.nota) * 1000 + (b.avaliacoes || 0);
@@ -1125,6 +1246,7 @@
 
       var isFav = user && user.favoritos && user.favoritos.indexOf(d.id) > -1;
       var isCompared = comparedDestinos.indexOf(d.id) > -1;
+      var naRota = rotaIds.indexOf(d.id) > -1;
 
       var tagsHtml = (d.tags || [])
         .map(function (t) { return "<li>" + escapeHtml(t) + "</li>"; })
@@ -1143,7 +1265,7 @@
         '<div class="card__media">' +
         d.getSvg("card-" + d.id) +
         '<span class="card__tag">' + escapeHtml(categoryLabel) + "</span>" +
-        '<span class="card__days">' + escapeHtml(d.dias) + "</span>" +
+        '<span class="card__nota" aria-label="Nota ' + escapeHtml(d.nota) + " de 5, " + d.avaliacoes + ' avaliações">★ ' + escapeHtml(d.nota) + " (" + d.avaliacoes + ")</span>" +
         seloEpoca +
         '<button class="card__fav-btn' + (isFav ? " is-favorited" : "") + '" type="button" data-id="' + escapeHtml(d.id) + '" aria-label="' + (isFav ? "Remover dos favoritos" : "Salvar nos favoritos") + '">' +
         '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>' +
@@ -1151,42 +1273,42 @@
         "</div>" +
         '<div class="card__body">' +
         '<h3 class="card__title">' + escapeHtml(d.nome) + "</h3>" +
-        '<p class="card__place">' +
-        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>' +
-        escapeHtml(d.estado) + ", Brasil" +
+        '<p class="card__meta">' +
+        "<span>" + escapeHtml(d.estado) + "</span>" +
+        "<span>" + escapeHtml(d.dias) + "</span>" +
+        "<span>" + escapeHtml(textoDistancia(d)) + "</span>" +
         "</p>" +
         '<p class="card__text">' + escapeHtml(d.descricao) + "</p>" +
         '<ul class="card__highlights">' + tagsHtml + "</ul>" +
         '<div class="card__foot">' +
-        '<div class="card__rating">' +
-        '<span class="stars" aria-hidden="true">' +
-        '<svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>' +
-        "</span>" +
-        "<strong>" + escapeHtml(d.nota) + "</strong>" +
-        "<small>(" + d.avaliacoes + ")</small>" +
-        "</div>" +
         '<div class="card__price">' +
         "<small>a partir de</small>" +
         "<strong>R$ " + escapeHtml(d.preco) + "</strong>" +
         "</div>" +
-        "</div>" +
-        '<div style="margin-top: var(--sp-3); display: flex; gap: var(--sp-2);">' +
-        '<button class="btn btn--ghost btn--sm card__btn-detail" type="button" data-detail="' + escapeHtml(d.id) + '">' +
-        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>' +
-        "Ver detalhes & simular" +
+        '<div class="card__tools">' +
+        '<button class="card__tool" type="button" data-rota="' + escapeHtml(d.id) + '" aria-pressed="' + (naRota ? "true" : "false") + '" title="Adicionar à rota" aria-label="Adicionar ' + escapeHtml(d.nome) + ' à rota">' +
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="6" cy="19" r="2.5"/><circle cx="18" cy="5" r="2.5"/><path d="M8.5 19H15a3.5 3.5 0 0 0 0-7H9a3.5 3.5 0 0 1 0-7h6.5"/></svg>' +
         "</button>" +
-        '<button class="card__btn-compare' + (isCompared ? " is-compared" : "") + '" type="button" data-compare="' + escapeHtml(d.id) + '" aria-label="Comparar ' + escapeHtml(d.nome) + '">' +
-        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 3h5v5M4 20L20.2 3.8M21 16v5h-5M15 15l5.1 5.1M4 4l5 5"/></svg>' +
-        "<span>" + (isCompared ? "Comparando" : "Comparar") + "</span>" +
+        '<button class="card__tool" type="button" data-compare="' + escapeHtml(d.id) + '" aria-pressed="' + (isCompared ? "true" : "false") + '" title="Comparar" aria-label="Comparar ' + escapeHtml(d.nome) + '">' +
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 3 4 7l4 4M4 7h16M16 21l4-4-4-4M20 17H4"/></svg>' +
         "</button>" +
-        '<button class="card__btn-share" type="button" data-share="' + escapeHtml(d.id) + '" aria-label="Compartilhar roteiro ' + escapeHtml(d.nome) + '">' +
-        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>' +
+        '<button class="card__tool" type="button" data-share="' + escapeHtml(d.id) + '" title="Compartilhar" aria-label="Compartilhar roteiro ' + escapeHtml(d.nome) + '">' +
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>' +
         "</button>" +
         "</div>" +
-        '<div style="margin-top: var(--sp-2);">' +
-        '<a class="btn btn--primary btn--sm btn--block" href="#contato" data-lead-target="' + escapeHtml(d.nome + " — " + d.estado) + '">Quero esse roteiro</a>' +
+        "</div>" +
+        '<div class="card__actions">' +
+        '<button class="btn btn--dark btn--sm" type="button" data-detail="' + escapeHtml(d.id) + '">Ver detalhes e simular</button>' +
+        '<a class="btn btn--ghost btn--sm" href="#contato" data-lead-target="' + escapeHtml(d.nome + " — " + d.estado) + '">Quero esse roteiro</a>' +
         "</div>" +
         "</div>";
+
+      var rotaBtn = card.querySelector("[data-rota]");
+      if (rotaBtn) {
+        rotaBtn.addEventListener("click", function () {
+          toggleRota(d.id, true);
+        });
+      }
 
       var favBtn = card.querySelector(".card__fav-btn");
       if (favBtn) {
@@ -1325,6 +1447,179 @@
   if (emptyResetBtn) emptyResetBtn.addEventListener("click", resetAllFilters);
 
   /* ---------------------------------------------------------
+     7.1 MONTE SUA ROTA — VÁRIAS PARADAS NUMA VIAGEM SÓ
+     --------------------------------------------------------- */
+
+  var ROTA_STORAGE_KEY = "penaestrada_rota";
+  var rotaIds = [];
+  var rotaChips = document.getElementById("rotaChips");
+  var rotaEstrada = document.getElementById("rotaEstrada");
+  var rotaResumo = document.getElementById("rotaResumo");
+  var rotaTotais = document.getElementById("rotaTotais");
+  var rotaLimpar = document.getElementById("rotaLimpar");
+  var rotaPedir = document.getElementById("rotaPedir");
+
+  function salvarRota() {
+    try {
+      localStorage.setItem(ROTA_STORAGE_KEY, JSON.stringify(rotaIds));
+    } catch (e) {}
+  }
+
+  // A rota segue sempre para a parada mais próxima, a partir da cidade de partida
+  function ordenarRota() {
+    var restantes = (DATA.DESTINOS || []).filter(function (d) {
+      return d.coordenadas && rotaIds.indexOf(d.id) > -1;
+    });
+    var atual = getOrigem();
+    var ordem = [];
+
+    while (restantes.length) {
+      var melhor = 0;
+      var menor = Infinity;
+      restantes.forEach(function (d, i) {
+        var km = distanciaKm(atual, d.coordenadas);
+        if (km < menor) {
+          menor = km;
+          melhor = i;
+        }
+      });
+      var proxima = restantes.splice(melhor, 1)[0];
+      ordem.push({ destino: proxima, km: menor });
+      atual = proxima.coordenadas;
+    }
+    return ordem;
+  }
+
+  function totaisDaRota(ordem) {
+    return ordem.reduce(function (t, p) {
+      t.dias += p.destino.duracaoDias || 0;
+      t.km += p.km;
+      t.preco += p.destino.precoNum || 0;
+      return t;
+    }, { dias: 0, km: 0, preco: 0 });
+  }
+
+  function toggleRota(id, avisar) {
+    var idx = rotaIds.indexOf(id);
+    if (idx > -1) rotaIds.splice(idx, 1);
+    else rotaIds.push(id);
+    salvarRota();
+    renderRota();
+
+    if (avisar) {
+      var d = (DATA.DESTINOS || []).find(function (x) { return x.id === id; });
+      showToast(
+        d.nome + (idx > -1 ? " saiu da sua rota." : " entrou na sua rota. Veja o trajeto em Monte sua rota."),
+        "info",
+        idx > -1 ? "Parada removida" : "Parada adicionada"
+      );
+    }
+  }
+
+  function renderRota() {
+    if (!rotaEstrada) return;
+
+    // Mantém em sincronia os botões de parada da seção e dos cards
+    document.querySelectorAll("[data-rota]").forEach(function (btn) {
+      btn.setAttribute("aria-pressed", String(rotaIds.indexOf(btn.getAttribute("data-rota")) > -1));
+    });
+
+    var ordem = ordenarRota();
+    if (rotaResumo) rotaResumo.hidden = ordem.length === 0;
+
+    if (ordem.length === 0) {
+      rotaEstrada.innerHTML = '<p class="rota__vazia">Escolha pelo menos uma parada para traçar a rota.</p>';
+      return;
+    }
+
+    rotaEstrada.innerHTML =
+      '<ol class="rota__paradas">' +
+      '<li class="rota__parada rota__parada--saida">' +
+      '<span class="rota__marco" aria-hidden="true"></span>' +
+      '<span class="rota__trecho">Saída</span>' +
+      '<span class="rota__nome">' + escapeHtml(getOrigem().nome) + "</span>" +
+      "</li>" +
+      ordem.map(function (p) {
+        return (
+          '<li class="rota__parada">' +
+          '<span class="rota__marco" aria-hidden="true"></span>' +
+          '<span class="rota__trecho">+ ' + formatKm(p.km) + "</span>" +
+          '<span class="rota__nome">' + escapeHtml(p.destino.nome) + "</span>" +
+          '<span class="rota__meta">' + escapeHtml(p.destino.dias) + ", R$ " + escapeHtml(p.destino.preco) + "</span>" +
+          "</li>"
+        );
+      }).join("") +
+      "</ol>";
+
+    var t = totaisDaRota(ordem);
+    if (rotaTotais) {
+      rotaTotais.innerHTML =
+        "<div><dt>" + (ordem.length === 1 ? "parada" : "paradas") + "</dt><dd>" + ordem.length + "</dd></div>" +
+        "<div><dt>dias de viagem</dt><dd>" + t.dias + "</dd></div>" +
+        "<div><dt>de estrada, só a ida</dt><dd>" + formatKm(t.km) + "</dd></div>" +
+        "<div><dt>por pessoa, a partir de</dt><dd>R$ " + t.preco.toLocaleString("pt-BR") + "</dd></div>";
+    }
+  }
+
+  function initRota() {
+    try {
+      var salva = JSON.parse(localStorage.getItem(ROTA_STORAGE_KEY));
+      if (Array.isArray(salva)) {
+        rotaIds = salva.filter(function (id) {
+          return (DATA.DESTINOS || []).some(function (d) { return d.id === id; });
+        });
+      }
+    } catch (e) {}
+
+    if (rotaChips) {
+      (DATA.DESTINOS || []).forEach(function (d) {
+        var chip = document.createElement("button");
+        chip.type = "button";
+        chip.className = "chip";
+        chip.setAttribute("data-rota", d.id);
+        chip.setAttribute("aria-pressed", "false");
+        chip.textContent = d.nome;
+        chip.addEventListener("click", function () {
+          toggleRota(d.id, false);
+        });
+        rotaChips.appendChild(chip);
+      });
+    }
+
+    renderRota();
+  }
+
+  if (rotaLimpar) {
+    rotaLimpar.addEventListener("click", function () {
+      rotaIds = [];
+      salvarRota();
+      renderRota();
+    });
+  }
+
+  if (rotaPedir) {
+    rotaPedir.addEventListener("click", function () {
+      var ordem = ordenarRota();
+      if (!ordem.length) return;
+      var t = totaisDaRota(ordem);
+
+      var msg =
+        "Olá! Montei uma rota saindo de " + getOrigem().nome + ":\n" +
+        ordem.map(function (p, i) {
+          return (i + 1) + ". " + p.destino.nome + " — " + p.destino.estado + " (" + p.destino.dias + ")";
+        }).join("\n") +
+        "\nTotal: " + t.dias + " dias, " + formatKm(t.km) + " de estrada e a partir de R$ " +
+        t.preco.toLocaleString("pt-BR") + " por pessoa.\nPodem montar essa viagem para mim?";
+
+      preSelectLeadDestino(ordem[0].destino.nome + " — " + ordem[0].destino.estado);
+      var msgField = document.getElementById("leadMensagem");
+      if (msgField) msgField.value = msg;
+      goToLeadForm();
+      showToast("Sua rota foi para o formulário de contato. Falta só dizer quem é você.", "success", "Rota pronta");
+    });
+  }
+
+  /* ---------------------------------------------------------
      8. SISTEMA DE COMPARAÇÃO DE ROTEIROS
      --------------------------------------------------------- */
 
@@ -1439,11 +1734,15 @@
         "<strong>" + escapeHtml(d.melhorEpoca || "Ano todo") + "</strong>" +
         "</div>" +
         '<div class="compare-row-item">' +
+        "<span>Distância</span>" +
+        "<strong>" + escapeHtml(textoDistancia(d)) + "</strong>" +
+        "</div>" +
+        '<div class="compare-row-item">' +
         "<span>Avaliação Média</span>" +
         "<strong>★ " + escapeHtml(d.nota) + " (" + d.avaliacoes + " relatos)</strong>" +
         "</div>" +
         '<div style="margin-top: auto; display: flex; flex-direction: column; gap: var(--sp-2);">' +
-        '<button class="btn btn--primary btn--sm btn--block" type="button" data-sim-from-compare="' + escapeHtml(d.id) + '">Ver detalhes & simular</button>' +
+        '<button class="btn btn--primary btn--sm btn--block" type="button" data-sim-from-compare="' + escapeHtml(d.id) + '">Ver detalhes e simular</button>' +
         '<a class="btn btn--ghost btn--sm btn--block" href="#contato" data-lead-from-compare="' + escapeHtml(d.nome + " — " + d.estado) + '">Quero esse roteiro</a>' +
         "</div>";
 
@@ -1681,7 +1980,7 @@
           '<span class="related-card__media" aria-hidden="true">' + d.getSvg("related-" + d.id) + "</span>" +
           '<span class="related-card__info">' +
           "<strong>" + escapeHtml(d.nome) + "</strong>" +
-          "<small>" + escapeHtml(d.estado) + " · " + escapeHtml(d.dias) + " · R$&nbsp;" + escapeHtml(d.preco) + "</small>" +
+          "<small>" + escapeHtml(d.estado) + ", " + escapeHtml(d.dias) + ", R$&nbsp;" + escapeHtml(d.preco) + "</small>" +
           "</span>" +
           "</button>" +
           "</li>"
@@ -2118,8 +2417,8 @@
       card.innerHTML =
         '<div class="profile-card__info">' +
         "<h4>" + escapeHtml(q.destinoNome) + "</h4>" +
-        "<p>" + escapeHtml(q.viajantes) + " pessoa(s) · " + escapeHtml(q.hotel) + " · Salvo em " + escapeHtml(q.data) + "</p>" +
-        '<strong style="color: var(--clay-600); font-size: var(--fs-md);">' + escapeHtml(q.total) + "</strong>" +
+        "<p>" + escapeHtml(q.viajantes) + " pessoa(s), " + escapeHtml(q.hotel) + ", Salvo em " + escapeHtml(q.data) + "</p>" +
+        '<strong style="color: var(--verde-600); font-size: var(--fs-md);">' + escapeHtml(q.total) + "</strong>" +
         "</div>" +
         '<div style="display: flex; gap: var(--sp-2); align-items: center;">' +
         '<button class="btn btn--primary btn--sm" type="button" data-apply-quote="' + q.id + '">Pedir Roteiro</button>' +
@@ -2512,6 +2811,61 @@
     if (wrapper) wrapper.classList.remove("has-error");
   }
 
+  /* Rascunho do formulário: o que foi digitado fica salvo neste navegador
+     e volta se a página for fechada antes do envio. */
+  var LEAD_DRAFT_KEY = "penaestrada_contato_rascunho";
+  var LEAD_DRAFT_FIELDS = ["leadNome", "leadEmail", "leadTel", "leadDestino", "leadPessoas", "leadMensagem"];
+  var leadDraftNote = document.getElementById("leadDraftNote");
+  var leadDraftClear = document.getElementById("leadDraftClear");
+
+  function saveLeadDraft() {
+    var rascunho = {};
+    var temTexto = false;
+    LEAD_DRAFT_FIELDS.forEach(function (id) {
+      var el = document.getElementById(id);
+      if (!el) return;
+      rascunho[id] = el.value;
+      if (el.tagName !== "SELECT" && el.value.trim()) temTexto = true;
+    });
+    try {
+      if (temTexto) localStorage.setItem(LEAD_DRAFT_KEY, JSON.stringify(rascunho));
+      else localStorage.removeItem(LEAD_DRAFT_KEY);
+    } catch (e) {}
+  }
+
+  function clearLeadDraft() {
+    try {
+      localStorage.removeItem(LEAD_DRAFT_KEY);
+    } catch (e) {}
+    if (leadDraftNote) leadDraftNote.hidden = true;
+  }
+
+  function restoreLeadDraft() {
+    var rascunho = null;
+    try {
+      rascunho = JSON.parse(localStorage.getItem(LEAD_DRAFT_KEY));
+    } catch (e) {}
+    if (!rascunho) return;
+
+    LEAD_DRAFT_FIELDS.forEach(function (id) {
+      var el = document.getElementById(id);
+      if (el && typeof rascunho[id] === "string") el.value = rascunho[id];
+    });
+    if (leadDraftNote) leadDraftNote.hidden = false;
+  }
+
+  if (leadForm) {
+    leadForm.addEventListener("input", saveLeadDraft);
+    leadForm.addEventListener("change", saveLeadDraft);
+  }
+
+  if (leadDraftClear) {
+    leadDraftClear.addEventListener("click", function () {
+      leadForm.reset();
+      clearLeadDraft();
+    });
+  }
+
   if (leadForm) {
     leadForm.addEventListener("submit", function (e) {
       e.preventDefault();
@@ -2573,6 +2927,7 @@
           submitBtn.removeAttribute("aria-busy");
         }
         leadForm.reset();
+        clearLeadDraft();
         showToast("Roteiros solicitados com sucesso! Verifique seu e-mail e WhatsApp.", "success", "Tudo pronto!");
       }, 900);
     });
@@ -2614,9 +2969,19 @@
     if (!destinosMapCanvas.querySelector("svg")) {
       destinosMapCanvas.innerHTML = SCENES.mapaBrasil();
     }
-    destinosMapCanvas.querySelectorAll(".map-pin").forEach(function (pin) {
+    destinosMapCanvas.querySelectorAll(".map-pin, .map-origem").forEach(function (pin) {
       pin.parentNode.removeChild(pin);
     });
+
+    // Marca a cidade de partida (só informativa, não é clicável)
+    var origem = getOrigem();
+    var posOrigem = SCENES.projetarMapa(origem.lat, origem.lon);
+    var marca = document.createElement("span");
+    marca.className = "map-origem";
+    marca.style.left = posOrigem.x + "%";
+    marca.style.top = posOrigem.y + "%";
+    marca.innerHTML = "<span>Saída: " + escapeHtml(origem.nome) + "</span>";
+    destinosMapCanvas.appendChild(marca);
 
     // Se o destino selecionado saiu do filtro, volta para a lista
     if (selectedMapId && !list.some(function (d) { return d.id === selectedMapId; })) {
@@ -2685,7 +3050,7 @@
             "<li>" +
             '<button class="map-panel__item" type="button" data-map-select="' + escapeHtml(x.id) + '">' +
             "<span>" + escapeHtml(x.nome) + "</span>" +
-            "<small>" + escapeHtml(x.estado) + " · R$&nbsp;" + escapeHtml(x.preco) + "</small>" +
+            "<small>" + escapeHtml(x.estado) + ", R$&nbsp;" + escapeHtml(x.preco) + "</small>" +
             "</button>" +
             "</li>"
           );
@@ -2697,7 +3062,7 @@
     destinosMapPanel.innerHTML =
       '<div class="map-panel__media" aria-hidden="true">' + d.getSvg("map-" + d.id) + "</div>" +
       '<h3 class="map-panel__title" tabindex="-1">' + escapeHtml(d.nome) + "</h3>" +
-      '<p class="map-panel__meta">' + escapeHtml(d.estado) + ", Brasil · " + escapeHtml(d.dias) + " · ★ " + escapeHtml(d.nota) + "</p>" +
+      '<p class="map-panel__meta">' + escapeHtml(d.estado) + ", " + escapeHtml(d.dias) + ", ★ " + escapeHtml(d.nota) + ", " + escapeHtml(textoDistancia(d)) + "</p>" +
       '<p class="map-panel__text">' + escapeHtml(d.descricao) + "</p>" +
       '<p class="map-panel__season">Melhor época: <strong>' + escapeHtml(d.melhorEpoca) + "</strong></p>" +
       seasonStripHtml(d) +
@@ -2705,7 +3070,7 @@
       '<div class="card__price"><small>a partir de</small><strong>R$ ' + escapeHtml(d.preco) + "</strong></div>" +
       '<div class="map-panel__actions">' +
       '<button class="btn btn--ghost btn--sm" type="button" data-map-back>Ver todos</button>' +
-      '<button class="btn btn--primary btn--sm" type="button" data-map-detail="' + escapeHtml(d.id) + '">Ver detalhes & simular</button>' +
+      '<button class="btn btn--dark btn--sm" type="button" data-map-detail="' + escapeHtml(d.id) + '">Ver detalhes e simular</button>' +
       "</div>" +
       "</div>";
   }
@@ -2896,12 +3261,12 @@
       '<span class="quiz-result__match">' + top.pct + "% compatível</span>" +
       "</div>" +
       '<div class="quiz-result__info">' +
-      '<p class="quiz-result__meta">' + escapeHtml(d.estado) + ", Brasil · " + escapeHtml(d.dias) + " · a partir de R$ " + escapeHtml(d.preco) + "</p>" +
+      '<p class="quiz-result__meta">' + escapeHtml(d.estado) + ", Brasil, " + escapeHtml(d.dias) + ", a partir de R$ " + escapeHtml(d.preco) + "</p>" +
       (top.motivos.length
         ? '<ul class="quiz-result__reasons">' + top.motivos.map(function (m) { return "<li>" + escapeHtml(m) + "</li>"; }).join("") + "</ul>"
         : "") +
       '<div class="quiz-result__actions">' +
-      '<button class="btn btn--primary btn--sm" type="button" data-quiz-detail="' + escapeHtml(d.id) + '">Ver detalhes & simular</button>' +
+      '<button class="btn btn--dark btn--sm" type="button" data-quiz-detail="' + escapeHtml(d.id) + '">Ver detalhes e simular</button>' +
       '<button class="btn btn--ghost btn--sm" type="button" data-quiz-fav="' + escapeHtml(d.id) + '">Salvar nos favoritos</button>' +
       "</div>" +
       "</div>" +
@@ -2915,7 +3280,7 @@
           '<span class="quiz-mini__media" aria-hidden="true">' + r.destino.getSvg("quiz-mini-" + r.destino.id) + "</span>" +
           '<span class="quiz-mini__info">' +
           "<strong>" + escapeHtml(r.destino.nome) + "</strong>" +
-          "<small>" + r.pct + "% compatível · R$&nbsp;" + escapeHtml(r.destino.preco) + "</small>" +
+          "<small>" + r.pct + "% compatível, R$&nbsp;" + escapeHtml(r.destino.preco) + "</small>" +
           "</span>" +
           "</button>" +
           "</li>"
@@ -2976,83 +3341,8 @@
   }
 
   /* ---------------------------------------------------------
-     18. CONTADOR ANIMADO DOS NÚMEROS DO HERO
+     18. INICIALIZAÇÃO GERAL
      --------------------------------------------------------- */
-
-  function initCounters() {
-    var numeros = document.querySelectorAll("[data-count]");
-    if (!numeros.length || !("IntersectionObserver" in window)) return;
-    if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-
-    function formatar(el, valor) {
-      var casas = parseInt(el.getAttribute("data-decimals"), 10) || 0;
-      return (
-        (el.getAttribute("data-prefix") || "") +
-        valor.toLocaleString("pt-BR", { minimumFractionDigits: casas, maximumFractionDigits: casas }) +
-        (el.getAttribute("data-suffix") || "")
-      );
-    }
-
-    function animar(el) {
-      var alvo = parseFloat(el.getAttribute("data-count"));
-      var inicio = null;
-      var duracao = 1400;
-      var terminou = false;
-
-      function quadro(agora) {
-        if (terminou) return;
-        if (inicio === null) inicio = agora;
-        var progresso = Math.min(1, (agora - inicio) / duracao);
-        var suave = 1 - Math.pow(1 - progresso, 3); // desacelera no final
-        el.textContent = formatar(el, alvo * suave);
-        if (progresso < 1) requestAnimationFrame(quadro);
-        else terminou = true;
-      }
-      requestAnimationFrame(quadro);
-
-      // Garantia: se o navegador pausar a animação (ex.: aba em segundo plano), o valor final aparece mesmo assim
-      setTimeout(function () {
-        terminou = true;
-        el.textContent = formatar(el, alvo);
-      }, duracao + 150);
-    }
-
-    var observer = new IntersectionObserver(function (entries) {
-      entries.forEach(function (entry) {
-        if (entry.isIntersecting) {
-          animar(entry.target);
-          observer.unobserve(entry.target);
-        }
-      });
-    }, { threshold: 0.6 });
-
-    numeros.forEach(function (el) { observer.observe(el); });
-  }
-
-  /* ---------------------------------------------------------
-     19. INICIALIZAÇÃO GERAL
-     --------------------------------------------------------- */
-
-  // Animação de entrada suave dos blocos conforme aparecem na tela
-  function initReveal() {
-    if (!("IntersectionObserver" in window)) return;
-    var targets = document.querySelectorAll(
-      ".section__head, .quiz, .feature-grid, .split__visual, .split__content, .slider, .faq-list, .contact__copy, .contact__form"
-    );
-    var observer = new IntersectionObserver(function (entries) {
-      entries.forEach(function (entry) {
-        if (entry.isIntersecting) {
-          entry.target.classList.add("is-visible");
-          observer.unobserve(entry.target);
-        }
-      });
-    }, { rootMargin: "0px 0px -8% 0px", threshold: 0.08 });
-
-    targets.forEach(function (el) {
-      el.classList.add("reveal");
-      observer.observe(el);
-    });
-  }
 
   // Destaca no menu a seção que está visível
   function initScrollSpy() {
@@ -3100,16 +3390,18 @@
       buscaQuando.min = hoje.getFullYear() + "-" + String(hoje.getMonth() + 1).padStart(2, "0");
     }
 
+    initOrigem();
+    renderPlaca();
     renderDestinos();
+    initRota();
     renderFeatures();
     renderRoteiro();
     initSlider();
     renderFaq();
     renderQuizStep(false);
+    restoreLeadDraft();
 
     updateAuthUI();
-    initCounters();
-    initReveal();
     initScrollSpy();
     openFromHash();
     window.addEventListener("hashchange", openFromHash);

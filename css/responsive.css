@@ -2,6 +2,13 @@
    responsive.css — ajustes por breakpoint
    ========================================================= */
 
+/* ---------- Cabeçalho: o botão de consultor sai antes do menu apertar ---------- */
+@media (max-width: 1500px) {
+  .site-header__actions > .btn--ghost {
+    display: none;
+  }
+}
+
 /* ---------- Telas médias / laptops pequenos ---------- */
 @media (max-width: 1080px) {
   .site-nav {
@@ -10,6 +17,16 @@
 
   .nav-toggle {
     display: grid;
+  }
+
+  .hero__content,
+  .porque,
+  .rota__controls {
+    grid-template-columns: 1fr;
+  }
+
+  .placa {
+    max-width: 520px;
   }
 
   .split {
@@ -38,8 +55,7 @@
 
   .search-bar .search-bar__field {
     border-left: 0;
-    background: var(--sand-50);
-    border: 1px solid var(--sand-200);
+    border: 1px solid #d8ddd8;
     border-radius: var(--r-md);
     padding: 0.6rem 0.9rem;
   }
@@ -82,28 +98,36 @@
     max-width: none;
   }
 
-  .hero__stats {
-    gap: 1.25rem 2rem;
+  .feature-grid {
+    grid-template-columns: 1fr;
   }
 
-  .site-header__actions > .btn--ghost {
-    display: none;
+  /* A estrada da rota fica em pé: paradas uma embaixo da outra */
+  .rota__paradas {
+    flex-direction: column;
+  }
+
+  .rota__parada {
+    flex: none;
+    padding: 0 0 var(--sp-5) 2.4rem;
+  }
+
+  .rota__parada:last-child {
+    padding-bottom: 0;
+  }
+
+  .rota__parada::before {
+    top: 0;
+    bottom: 0;
+    left: 9px;
+    right: auto;
+    width: 4px;
+    height: auto;
+    background: repeating-linear-gradient(180deg, var(--faixa) 0 16px, transparent 16px 28px);
   }
 
   .split__visual {
     max-width: none;
-  }
-
-  .stamp {
-    position: static;
-    transform: none;
-    max-width: 100%;
-    margin-top: var(--sp-4);
-    flex-direction: row;
-    flex-wrap: wrap;
-    align-items: baseline;
-    justify-content: space-between;
-    gap: var(--sp-3);
   }
 
   .accordion__panel p {
@@ -129,15 +153,6 @@
     gap: var(--sp-4);
   }
 
-  .card__foot {
-    flex-wrap: wrap;
-    align-items: center;
-  }
-
-  .card__price {
-    text-align: left;
-  }
-
   .to-top {
     width: 44px;
     height: 44px;
@@ -159,23 +174,6 @@
   }
 
   .search-bar {
-    grid-template-columns: 1fr;
-  }
-
-  .hero__stats {
-    gap: var(--sp-4);
-  }
-
-  .hero__stats li {
-    flex: 1 1 42%;
-    min-width: 0;
-  }
-
-  .hero__stats span {
-    font-size: 0.76rem;
-  }
-
-  .feature-grid {
     grid-template-columns: 1fr;
   }
 
@@ -204,18 +202,6 @@
 
   .nav-drawer__panel {
     width: min(92vw, 330px);
-  }
-}
-
-/* ---------- Telas muito estreitas ---------- */
-@media (max-width: 360px) {
-  .hero__stats li {
-    flex: 1 1 100%;
-  }
-
-  .stamp {
-    flex-direction: column;
-    align-items: flex-start;
   }
 }
 
@@ -253,7 +239,7 @@
     display: block;
     width: 42px;
     height: 4px;
-    background: var(--sand-300);
+    background: var(--base-300);
     border-radius: var(--r-pill);
     margin: 0 auto var(--sp-4);
   }

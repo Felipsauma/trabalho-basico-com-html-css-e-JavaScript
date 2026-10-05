@@ -1,6 +1,233 @@
 /* =========================================================
-   sections.css — blocos específicos (split do roteiro, contato)
+   sections.css — blocos específicos (rota, quiz, diferenciais,
+   roteiro em destaque e contato)
    ========================================================= */
+
+/* ---------------------------------------------------------
+   Monte sua rota: várias paradas numa viagem só
+   --------------------------------------------------------- */
+
+.rota__controls {
+  display: grid;
+  grid-template-columns: minmax(200px, 260px) minmax(0, 1fr);
+  align-items: end;
+  gap: var(--sp-4) var(--sp-6);
+  margin-bottom: var(--sp-5);
+}
+
+.rota__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-2);
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.rota__chips legend {
+  float: left;
+  width: 100%;
+  margin-bottom: 0.4rem;
+  padding: 0;
+  font-size: var(--fs-sm);
+  font-weight: 700;
+  color: var(--ink-800);
+}
+
+/* A estrada: asfalto fixo nos dois temas, com a faixa amarela ligando as paradas */
+.rota__estrada {
+  padding: clamp(1.25rem, 3vw, 2rem);
+  border-radius: var(--r-xl);
+  background: var(--asfalto);
+  color: rgba(255, 255, 255, 0.78);
+  overflow-x: auto;
+}
+
+[data-theme="dark"] .rota__estrada {
+  border: 1px solid var(--base-300);
+}
+
+.rota__vazia {
+  font-size: var(--fs-md);
+  color: rgba(255, 255, 255, 0.82);
+}
+
+.rota__paradas {
+  display: flex;
+  align-items: stretch;
+}
+
+.rota__parada {
+  position: relative;
+  flex: 1 0 168px;
+  padding: 2.4rem var(--sp-4) 0 0;
+}
+
+/* Trecho de faixa tracejada até a próxima parada */
+.rota__parada::before {
+  content: "";
+  position: absolute;
+  top: 9px;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: repeating-linear-gradient(90deg, var(--faixa) 0 16px, transparent 16px 28px);
+}
+
+.rota__parada:last-child::before {
+  display: none;
+}
+
+.rota__marco {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 22px;
+  height: 22px;
+  border: 4px solid var(--on-photo);
+  border-radius: 50%;
+  background: #0b6b4d;
+}
+
+.rota__parada--saida .rota__marco {
+  border-radius: var(--r-sm);
+  border-color: var(--asfalto);
+  background: var(--faixa);
+  box-shadow: 0 0 0 2px var(--faixa);
+}
+
+.rota__trecho {
+  display: block;
+  font-size: var(--fs-xs);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--faixa);
+}
+
+.rota__nome {
+  display: block;
+  font-size: var(--fs-md);
+  font-weight: 800;
+  line-height: 1.15;
+  color: var(--on-photo);
+}
+
+.rota__meta {
+  display: block;
+  font-size: var(--fs-xs);
+}
+
+.rota__resumo {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-4) var(--sp-6);
+  margin-top: var(--sp-5);
+}
+
+.rota__totais {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-3) var(--sp-7);
+}
+
+.rota__totais div {
+  display: flex;
+  flex-direction: column-reverse;
+}
+
+.rota__totais dt {
+  font-size: var(--fs-xs);
+  color: var(--ink-500);
+}
+
+.rota__totais dd {
+  font-size: var(--fs-lg);
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.15;
+  color: var(--ink-900);
+}
+
+.rota__acoes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-2);
+}
+
+.rota__nota {
+  margin-top: var(--sp-3);
+  font-size: var(--fs-xs);
+  color: var(--ink-500);
+}
+
+/* ---------------------------------------------------------
+   Quiz "Qual viagem combina com você?"
+   Placa azul de serviço, com cores fixas nos dois temas
+   --------------------------------------------------------- */
+
+.quiz {
+  display: grid;
+  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+  align-items: start; /* o texto não "pula" quando o cartão muda de altura entre as perguntas */
+  gap: clamp(1.5rem, 4vw, 3.5rem);
+  padding: clamp(1.25rem, 3.5vw, 3rem);
+  border: 3px solid var(--on-photo);
+  border-radius: var(--r-xl);
+  background: #1b5faa;
+  box-shadow: 0 0 0 5px #1b5faa;
+  color: var(--on-photo);
+}
+
+.quiz__intro {
+  padding-top: clamp(0rem, 2vw, 1.5rem);
+}
+
+.quiz__intro .section__title {
+  color: var(--on-photo);
+}
+
+.quiz__intro .section__lead {
+  color: rgba(255, 255, 255, 0.88);
+}
+
+.quiz__perks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-2) var(--sp-5);
+  margin-top: var(--sp-5);
+  font-size: var(--fs-sm);
+  font-weight: 700;
+}
+
+.quiz__perks li::before {
+  content: "✓ ";
+  color: var(--faixa);
+}
+
+.quiz__card {
+  padding: clamp(1.25rem, 3vw, 2rem);
+  border-radius: var(--r-lg);
+  background: var(--cream);
+  color: var(--ink-700);
+}
+
+/* ---------------------------------------------------------
+   Diferenciais: título à esquerda, lista à direita
+   --------------------------------------------------------- */
+
+.porque {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+  align-items: start;
+  gap: clamp(2rem, 5vw, 4.5rem);
+}
+
+.porque .section__head {
+  margin-bottom: 0;
+}
 
 /* ---------------------------------------------------------
    Bloco em duas colunas (roteiro em destaque)
@@ -9,7 +236,7 @@
 .split {
   display: grid;
   grid-template-columns: 1.02fr 1fr;
-  align-items: center;
+  align-items: start;
   gap: clamp(2rem, 5vw, 4rem);
 }
 
@@ -17,33 +244,31 @@
   position: relative;
 }
 
+/* Placa amarela com a duração e o preço do roteiro */
 .stamp {
   position: absolute;
-  right: clamp(-0.75rem, -1.5vw, -1.5rem);
-  bottom: clamp(-1.5rem, -2vw, -2rem);
+  left: var(--sp-4);
+  bottom: var(--sp-4);
   display: flex;
   flex-direction: column;
-  gap: 0.15rem;
-  padding: 0.85rem 1.25rem;
-  background: var(--cream);
-  border: 1px solid var(--sand-200);
+  padding: 0.7rem 1rem;
+  border: 2.5px solid var(--asfalto);
   border-radius: var(--r-md);
-  box-shadow: var(--shadow-lg);
-  transform: rotate(-2.5deg);
+  background: var(--faixa);
+  box-shadow: 0 0 0 3px var(--faixa);
+  color: var(--asfalto);
   max-width: 78%;
 }
 
 .stamp strong {
-  font-family: var(--font-display);
   font-size: var(--fs-lg);
-  color: var(--ink-900);
-  line-height: 1.15;
+  font-weight: 900;
+  line-height: 1.1;
 }
 
 .stamp span {
   font-size: var(--fs-xs);
-  font-weight: 600;
-  color: var(--ink-500);
+  font-weight: 700;
 }
 
 .split__actions {
@@ -60,128 +285,50 @@
   display: grid;
   grid-template-columns: 1fr 1.08fr;
   align-items: start;
-  gap: clamp(1.75rem, 4vw, 3.5rem);
-  padding: clamp(1.5rem, 4vw, 3rem);
-  background: var(--cream);
-  border: 1px solid var(--sand-200);
-  border-radius: var(--r-xl);
-  box-shadow: var(--shadow-md);
+  gap: clamp(1.75rem, 4vw, 4rem);
 }
 
 .contact__list {
   display: flex;
   flex-direction: column;
-  gap: var(--sp-4);
+  gap: var(--sp-3);
   margin-top: var(--sp-5);
 }
 
 .contact__list li {
   position: relative;
-  padding-left: 2.1rem;
-  font-size: var(--fs-sm);
-  font-weight: 500;
-  color: var(--ink-700);
+  padding-left: 1.6rem;
+  font-weight: 600;
+  color: var(--ink-800);
 }
 
 .contact__list li::before {
-  content: "";
+  content: "✓";
   position: absolute;
   left: 0;
-  top: 0.1em;
-  width: 1.35rem;
-  height: 1.35rem;
-  border-radius: 50%;
-  background: rgba(107, 122, 75, 0.16);
-}
-
-.contact__list li::after {
-  content: "";
-  position: absolute;
-  left: 0.46rem;
-  top: 0.36em;
-  width: 0.34rem;
-  height: 0.62rem;
-  border-right: 2px solid var(--olive-600);
-  border-bottom: 2px solid var(--olive-600);
-  transform: rotate(38deg);
+  font-weight: 800;
+  color: var(--verde-600);
 }
 
 .contact__form {
   display: flex;
   flex-direction: column;
   gap: var(--sp-4);
-  padding: clamp(1.15rem, 3vw, 1.75rem);
-  background: var(--sand-50);
-  border: 1px solid var(--sand-200);
-  border-radius: var(--r-lg);
-}
-
-/* ---------------------------------------------------------
-   Ajustes do bloco escuro de depoimentos
-   --------------------------------------------------------- */
-
-.section--clay .slider__viewport {
-  box-shadow: 0 30px 60px -30px rgba(41, 31, 24, 0.6);
-}
-
-/* ---------------------------------------------------------
-   Quiz "Qual viagem combina com você?"
-   Painel escuro com cores fixas (fica igual nos temas claro e escuro)
-   --------------------------------------------------------- */
-
-.quiz-section {
-  padding-top: 0;
-}
-
-.quiz {
-  position: relative;
-  display: grid;
-  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
-  align-items: start; /* o texto não "pula" quando o cartão muda de altura entre as perguntas */
-  gap: clamp(1.5rem, 4vw, 3.5rem);
-  padding: clamp(1.5rem, 4vw, 3.25rem);
+  padding: clamp(1.15rem, 3vw, 2rem);
+  background: var(--cream);
+  border: 1px solid var(--base-200);
   border-radius: var(--r-xl);
-  background:
-    radial-gradient(circle at 12% 0%, rgba(224, 161, 129, 0.35), transparent 55%),
-    linear-gradient(150deg, #3a2d24 0%, #5c3a24 55%, #7c3820 100%);
-  color: var(--on-photo);
-  box-shadow: var(--shadow-lg);
 }
 
-.quiz__intro {
-  padding-top: clamp(0rem, 3vw, 2.5rem);
-}
-
-.quiz__intro .section__title {
-  color: var(--on-photo);
-}
-
-.quiz__intro .section__lead {
-  color: rgba(255, 253, 248, 0.82);
-}
-
-.quiz__perks {
+.form-draft-note {
   display: flex;
   flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
   gap: var(--sp-2);
-  margin-top: var(--sp-5);
-  padding: 0;
-  list-style: none;
-}
-
-.quiz__perks li {
-  padding: 0.35rem 0.85rem;
-  border: 1px solid rgba(255, 253, 248, 0.3);
-  border-radius: var(--r-pill);
-  background: rgba(255, 253, 248, 0.08);
-  font-size: var(--fs-xs);
-  font-weight: 600;
-}
-
-.quiz__card {
-  padding: clamp(1.25rem, 3vw, 2rem);
-  border-radius: var(--r-lg);
-  background: var(--cream);
+  padding: 0.6rem 0.8rem;
+  border-radius: var(--r-md);
+  background: var(--base-100);
+  font-size: var(--fs-sm);
   color: var(--ink-700);
-  box-shadow: var(--shadow-lg);
 }

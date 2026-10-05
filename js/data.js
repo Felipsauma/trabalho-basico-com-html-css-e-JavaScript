@@ -703,7 +703,25 @@ var DATA = (function () {
     }
   ];
 
+  // Cidades de partida para o cálculo de distância até cada destino
+  var ORIGENS = [
+    { id: "sao-paulo", nome: "São Paulo", lat: -23.55, lon: -46.63 },
+    { id: "rio-de-janeiro", nome: "Rio de Janeiro", lat: -22.91, lon: -43.2 },
+    { id: "belo-horizonte", nome: "Belo Horizonte", lat: -19.92, lon: -43.94 },
+    { id: "brasilia", nome: "Brasília", lat: -15.79, lon: -47.88 },
+    { id: "salvador", nome: "Salvador", lat: -12.97, lon: -38.5 },
+    { id: "recife", nome: "Recife", lat: -8.05, lon: -34.88 },
+    { id: "fortaleza", nome: "Fortaleza", lat: -3.73, lon: -38.52 },
+    { id: "curitiba", nome: "Curitiba", lat: -25.43, lon: -49.27 },
+    { id: "florianopolis", nome: "Florianópolis", lat: -27.59, lon: -48.55 },
+    { id: "porto-alegre", nome: "Porto Alegre", lat: -30.03, lon: -51.23 },
+    { id: "goiania", nome: "Goiânia", lat: -16.69, lon: -49.26 },
+    { id: "manaus", nome: "Manaus", lat: -3.12, lon: -60.02 },
+    { id: "belem", nome: "Belém", lat: -1.46, lon: -48.5 }
+  ];
+
   return {
+    ORIGENS: ORIGENS,
     DESTINOS: DESTINOS,
     FEATURE_GRID: FEATURE_GRID,
     ROTEIRO_ACCORDION: ROTEIRO_ACCORDION,

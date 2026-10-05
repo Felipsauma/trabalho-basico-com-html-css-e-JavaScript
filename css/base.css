@@ -1,54 +1,70 @@
 /* =========================================================
    base.css — tokens, reset, tipografia e utilitários
-   Identidade: Warm & Earthy (terracota, areia, oliva)
+   Identidade: sinalização rodoviária brasileira
+   (verde de placa indicativa, azul de serviço, marrom turístico,
+   amarelo de faixa e asfalto)
    ========================================================= */
 
 :root {
-  /* --- Cores --- */
-  --sand-50: #fbf7f0;
-  --sand-100: #f5ece0;
-  --sand-200: #eadcc6;
-  --sand-300: #dcc7a8;
+  /* --- Superfícies (concreto claro) --- */
+  --base-50: #f3f5f2;
+  --base-100: #e9ece8;
+  --base-200: #d8ddd8;
+  --base-300: #bdc5bf;
 
-  --clay-300: #e0a181;
-  --clay-400: #d2835c;
-  --clay-500: #c4633f;
-  --clay-600: #a44c2e;
-  --clay-700: #7c3820;
+  /* --- Verde de placa indicativa: cor de destaque --- */
+  --verde-300: #7cc4ac;
+  --verde-400: #2e9273;
+  --verde-500: #0b6b4d;
+  --verde-600: #085840;
+  --verde-700: #06402f;
 
-  --olive-300: #a8b083;
-  --olive-400: #8a9663;
-  --olive-500: #6b7a4b;
-  --olive-600: #4d5a34;
+  /* --- Azul de placa de serviço: informação de apoio --- */
+  --azul-300: #9dbfe6;
+  --azul-400: #4a86c8;
+  --azul-500: #1b5faa;
+  --azul-600: #154c8a;
 
-  --sea-400: #7ba9a1;
-  --sea-500: #5b8b83;
+  --sea-400: #6fa8c4;
+  --sea-500: #3f7f9e;
 
-  --ink-900: #291f18;
-  --ink-800: #3a2d24;
-  --ink-700: #4f4034;
-  --ink-500: #7a6a5c;
-  --ink-300: #a9998a;
+  /* --- Amarelo de faixa: ação principal --- */
+  --faixa: #f6c415;
+  --faixa-600: #d9a900;
 
-  --cream: #fffdf8;
-  --on-photo: #fffdf8; /* texto sobre fotos: não muda no modo escuro */
+  /* --- Marrom de placa turística --- */
+  --turismo: #6b4423;
+
+  /* --- Asfalto: texto --- */
+  --ink-900: #161d21;
+  --ink-800: #232d32;
+  --ink-700: #37444a;
+  --ink-500: #5f6e74;
+  --ink-300: #98a5a9;
+
+  --cream: #ffffff; /* superfície de cards e diálogos (muda no tema escuro) */
+  --on-photo: #ffffff; /* texto sobre foto ou placa: não muda no tema escuro */
+  --asfalto: #161d21; /* fundo escuro fixo: não muda no tema escuro */
   --white: #ffffff;
 
-  --success: #4d7c4a;
-  --danger: #b23c2b;
+  --success: #1f7a4d;
+  --success-bg: #e8f4ee;
+  --danger: #be3228;
+  --danger-bg: #fbeceb;
+  --foco: #161d21;
 
-  /* --- Tipografia --- */
-  --font-display: "Fraunces", "Iowan Old Style", "Palatino Linotype", Georgia, "Times New Roman", serif;
-  --font-body: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  /* --- Tipografia: Overpass deriva da fonte das placas de estrada --- */
+  --font-display: "Overpass", "Highway Gothic", "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-body: "Overpass", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
 
-  --fs-xs: 0.78rem;
-  --fs-sm: 0.875rem;
-  --fs-base: 1rem;
-  --fs-md: 1.125rem;
-  --fs-lg: 1.375rem;
-  --fs-xl: 1.75rem;
-  --fs-2xl: clamp(2rem, 4.2vw, 2.9rem);
-  --fs-3xl: clamp(2.4rem, 6vw, 4.1rem);
+  --fs-xs: 0.8125rem;
+  --fs-sm: 0.9375rem;
+  --fs-base: 1.0625rem;
+  --fs-md: 1.1875rem;
+  --fs-lg: 1.4375rem;
+  --fs-xl: 1.875rem;
+  --fs-2xl: clamp(2rem, 4.4vw, 3.1rem);
+  --fs-3xl: clamp(2.5rem, 6.4vw, 4.6rem);
 
   /* --- Espaçamento --- */
   --sp-1: 0.25rem;
@@ -62,69 +78,76 @@
   --sp-9: 5rem;
   --sp-10: 6.5rem;
 
-  /* --- Raios --- */
-  --r-sm: 8px;
-  --r-md: 14px;
-  --r-lg: 22px;
-  --r-xl: 32px;
+  /* --- Raios: cantos de placa, pouco arredondados --- */
+  --r-sm: 4px;
+  --r-md: 8px;
+  --r-lg: 12px;
+  --r-xl: 16px;
   --r-pill: 999px;
 
-  /* --- Sombras (tingidas de marrom) --- */
-  --shadow-xs: 0 1px 2px rgba(60, 40, 25, 0.08);
-  --shadow-sm: 0 2px 6px rgba(60, 40, 25, 0.08), 0 1px 2px rgba(60, 40, 25, 0.06);
-  --shadow-md: 0 10px 24px -12px rgba(60, 40, 25, 0.28), 0 2px 6px rgba(60, 40, 25, 0.06);
-  --shadow-lg: 0 26px 50px -22px rgba(60, 40, 25, 0.35), 0 4px 12px rgba(60, 40, 25, 0.07);
-  --shadow-ring: 0 0 0 4px rgba(196, 99, 63, 0.22);
+  /* --- Sombras --- */
+  --shadow-xs: 0 1px 2px rgba(16, 24, 28, 0.08);
+  --shadow-sm: 0 1px 3px rgba(16, 24, 28, 0.1);
+  --shadow-md: 0 8px 20px -10px rgba(16, 24, 28, 0.3);
+  --shadow-lg: 0 24px 48px -20px rgba(16, 24, 28, 0.45);
+  --shadow-ring: 0 0 0 3px rgba(246, 196, 21, 0.6);
 
   /* --- Layout --- */
-  --container: 1200px;
+  --container: 1240px;
   --gutter: clamp(1.15rem, 4vw, 2.5rem);
-  --header-h: 76px;
+  --header-h: 72px;
 
   /* --- Movimento --- */
   --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
-  --dur: 0.32s;
+  --dur: 0.22s;
 }
 
 /* =========================================================
-   Tema Escuro (Dark Mode) — Paleta Noturna Terrosa
+   Tema escuro — estrada à noite
    ========================================================= */
 
 [data-theme="dark"] {
-  color-scheme: dark;       /* controles nativos (select, calendário) no tema escuro */
-  --sand-50: #14100c;       /* Fundo primário */
-  --sand-100: #1e1813;      /* Fundo secundário */
-  --sand-200: #2c231b;      /* Bordas sutis */
-  --sand-300: #42352a;      /* Bordas e divisores */
+  color-scheme: dark; /* controles nativos (select, calendário) no tema escuro */
+  --base-50: #11171a; /* Fundo primário */
+  --base-100: #182024; /* Fundo secundário */
+  --base-200: #26323a; /* Bordas sutis */
+  --base-300: #3a4850; /* Bordas e divisores */
 
-  --clay-300: #e09370;
-  --clay-400: #e77c51;
-  --clay-500: #d6643c;
-  --clay-600: #ee7c54;
-  --clay-700: #f69a77;
+  --verde-300: #7cc4ac;
+  --verde-400: #3db58c;
+  --verde-500: #2fa57e;
+  --verde-600: #4cc79c;
+  --verde-700: #7addb9;
 
-  --olive-300: #b8c092;
-  --olive-400: #9da874;
-  --olive-500: #7f8f5c;
-  --olive-600: #5f6e43;
+  --azul-300: #9dbfe6;
+  --azul-400: #5a97da;
+  --azul-500: #3b7fcc;
+  --azul-600: #7fb2ea;
 
-  --sea-400: #8bbbb2;
-  --sea-500: #6b9d94;
+  --sea-400: #7fb6cf;
+  --sea-500: #5d9bb8;
 
-  --ink-900: #faf3ec;       /* Títulos e destaques */
-  --ink-800: #ece0d2;       /* Texto principal */
-  --ink-700: #d8c7b8;       /* Texto de leitura */
-  --ink-500: #a99684;       /* Legendas e rótulos */
-  --ink-300: #6d5d4e;       /* Ícones inativos e bordas */
+  --turismo: #8a5a30;
 
-  --cream: #1a1410;         /* Superfícies de cards e diálogos */
-  --white: #221b16;
+  --ink-900: #f2f5f3; /* Títulos e destaques */
+  --ink-800: #dfe5e2; /* Texto principal */
+  --ink-700: #c3ccc8; /* Texto de leitura */
+  --ink-500: #93a19f; /* Legendas e rótulos */
+  --ink-300: #5c6a6c; /* Ícones inativos e bordas */
+
+  --cream: #1a2327; /* Superfícies de cards e diálogos */
+  --white: #202a2f;
+
+  --success: #4cc79c;
+  --success-bg: rgba(47, 165, 126, 0.16);
+  --danger: #f0776c;
+  --danger-bg: rgba(190, 50, 40, 0.2);
+  --foco: #f6c415;
 
   --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.5);
-  --shadow-sm: 0 2px 6px rgba(0, 0, 0, 0.6);
-  --shadow-md: 0 10px 24px -12px rgba(0, 0, 0, 0.8);
-  --shadow-lg: 0 26px 50px -22px rgba(0, 0, 0, 0.95);
-  --shadow-ring: 0 0 0 4px rgba(214, 100, 60, 0.35);
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.6);
+  --shadow-md: 0 8px 20px -10px rgba(0, 0, 0, 0.8);
+  --shadow-lg: 0 24px 48px -20px rgba(0, 0, 0, 0.95);
 }
 
 /* =========================================================
@@ -168,9 +191,9 @@ html {
 body {
   font-family: var(--font-body);
   font-size: var(--fs-base);
-  line-height: 1.65;
+  line-height: 1.6;
   color: var(--ink-700);
-  background-color: var(--sand-50);
+  background-color: var(--base-50);
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
   overflow-x: hidden;
@@ -180,6 +203,7 @@ body.is-locked,
 html.has-modal body {
   overflow: hidden;
 }
+
 img,
 svg,
 video {
@@ -214,14 +238,14 @@ ol {
 }
 
 a {
-  color: var(--clay-600);
+  color: var(--verde-600);
   text-decoration-thickness: 1px;
   text-underline-offset: 3px;
   transition: color var(--dur) var(--ease);
 }
 
 a:hover {
-  color: var(--clay-700);
+  color: var(--verde-700);
 }
 
 /* =========================================================
@@ -233,11 +257,18 @@ h2,
 h3,
 h4 {
   font-family: var(--font-display);
-  font-weight: 600;
-  line-height: 1.12;
+  font-weight: 800;
+  line-height: 1.08;
   color: var(--ink-900);
-  letter-spacing: -0.015em;
+  letter-spacing: -0.02em;
   text-wrap: balance;
+}
+
+h3,
+h4 {
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
 }
 
 p {
@@ -253,9 +284,18 @@ strong {
    ========================================================= */
 
 :focus-visible {
-  outline: 3px solid var(--clay-500);
-  outline-offset: 3px;
-  border-radius: 4px;
+  outline: 3px solid var(--foco);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* Sobre foto, placa ou asfalto o foco é amarelo de faixa */
+.hero,
+.site-header:not(.is-scrolled),
+.site-footer,
+.section--placa,
+.quiz__intro {
+  --foco: var(--faixa);
 }
 
 /* =========================================================
@@ -274,25 +314,24 @@ strong {
   position: relative;
 }
 
-.section--sand {
-  background-color: var(--sand-100);
-  background-image: radial-gradient(circle at 12% 8%, rgba(255, 255, 255, 0.75), transparent 45%);
+.section--tint {
+  background-color: var(--base-100);
 }
 
-.section--clay {
-  background-color: var(--clay-600);
-  background-image: radial-gradient(circle at 85% 0%, rgba(224, 161, 129, 0.35), transparent 55%);
-  color: var(--sand-100);
+/* Faixa em verde de placa, com texto branco fixo nos dois temas */
+.section--placa {
+  background-color: #0b6b4d;
+  color: rgba(255, 255, 255, 0.86);
 }
 
-.section--clay .section__title,
-.section--clay h2,
-.section--clay h3 {
-  color: var(--cream);
+.section--placa .section__title,
+.section--placa h2,
+.section--placa h3 {
+  color: var(--on-photo);
 }
 
-.section--clay .section__lead {
-  color: rgba(255, 253, 248, 0.82);
+.section--placa .section__lead {
+  color: rgba(255, 255, 255, 0.82);
 }
 
 /* =========================================================
@@ -300,14 +339,8 @@ strong {
    ========================================================= */
 
 .section__head {
-  max-width: 62ch;
+  max-width: 60ch;
   margin-bottom: clamp(1.75rem, 4vw, 3rem);
-}
-
-.section__head--center {
-  max-width: 68ch;
-  margin-inline: auto;
-  text-align: center;
 }
 
 .section__title {
@@ -321,46 +354,19 @@ strong {
   max-width: 58ch;
 }
 
-.section__head--center .section__lead {
-  margin-inline: auto;
-}
-
 /* =========================================================
-   Sobrescrita / etiquetas pequenas
+   Aviso curto acima do título do hero
    ========================================================= */
 
 .eyebrow {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--sp-2);
+  display: inline-block;
+  padding: 0.2rem 0.6rem;
+  border-radius: var(--r-sm);
+  background: var(--faixa);
+  color: var(--asfalto);
   font-size: var(--fs-xs);
   font-weight: 700;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--clay-600);
   margin-bottom: var(--sp-4);
-}
-
-.eyebrow--light {
-  color: var(--sand-200);
-}
-
-.section--clay .eyebrow {
-  color: var(--sand-300);
-}
-
-/* No modo escuro os tons de areia viram fundos; sobre foto/terracota mantemos areia clara */
-[data-theme="dark"] .eyebrow--light,
-[data-theme="dark"] .section--clay .eyebrow {
-  color: #eadcc6;
-}
-
-.eyebrow__dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: currentColor;
-  box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.28);
 }
 
 /* =========================================================
@@ -372,44 +378,31 @@ strong {
   top: -100px;
   left: var(--sp-4);
   z-index: 200;
-  background: var(--ink-900);
-  color: var(--cream);
+  background: var(--faixa);
+  color: var(--asfalto);
   padding: 0.7rem 1.1rem;
   border-radius: var(--r-sm);
-  font-weight: 600;
+  font-weight: 700;
   text-decoration: none;
   transition: top var(--dur) var(--ease);
 }
 
 .skip-link:focus {
   top: var(--sp-4);
-  color: var(--cream);
+  color: var(--asfalto);
 }
 
 .empty-state {
-  text-align: center;
   color: var(--ink-500);
-  background: var(--sand-100);
-  border: 1px dashed var(--sand-300);
+  border: 1.5px dashed var(--base-300);
   border-radius: var(--r-lg);
   padding: var(--sp-6);
   font-size: var(--fs-md);
 }
 
 /* =========================================================
-   Revelação no scroll
+   Movimento reduzido
    ========================================================= */
-
-.reveal {
-  opacity: 0;
-  transform: translateY(22px);
-  transition: opacity 0.7s var(--ease), transform 0.7s var(--ease);
-}
-
-.reveal.is-visible {
-  opacity: 1;
-  transform: none;
-}
 
 @media (prefers-reduced-motion: reduce) {
   html {
@@ -423,24 +416,19 @@ strong {
     animation-iteration-count: 1 !important;
     transition-duration: 0.001ms !important;
   }
-
-  .reveal {
-    opacity: 1;
-    transform: none;
-  }
 }
 
 /* =========================================================
-   Barra de Leitura Superior (Scroll Indicator)
+   Barra de progresso de leitura
    ========================================================= */
 
 .scroll-progress {
   position: fixed;
   top: 0;
   left: 0;
-  height: 3.5px;
+  height: 3px;
   width: 0%;
-  background: linear-gradient(90deg, var(--clay-500), var(--clay-400), #eab56d);
+  background: var(--faixa);
   z-index: 1200;
   pointer-events: none;
   transition: width 0.08s ease-out;
@@ -449,7 +437,6 @@ strong {
 /* Transições suaves ao alternar tema */
 body,
 .site-header,
-.site-footer,
 .card,
 .auth-modal,
 .favs-modal,

@@ -1,19 +1,24 @@
 /* =========================================================
-   footer.css — rodapé
+   footer.css — rodapé (asfalto fixo nos dois temas)
    ========================================================= */
 
 .site-footer {
-  --nav-fg: rgba(255, 253, 248, 0.78);
   --nav-fg-strong: var(--on-photo);
-  --mark-bg: rgba(255, 253, 248, 0.12);
-  --mark-border: rgba(255, 253, 248, 0.32);
 
+  position: relative;
   padding-top: clamp(3rem, 6vw, 4.5rem);
-  /* Cores fixas: o rodapé é escuro nos dois temas (antes ficava claro com texto branco no modo escuro) */
-  background-color: #291f18;
-  background-image: radial-gradient(ellipse at 12% 0%, rgba(124, 56, 32, 0.42), transparent 58%);
-  color: rgba(255, 253, 248, 0.72);
-  font-size: 0.92rem;
+  background-color: var(--asfalto);
+  color: rgba(255, 255, 255, 0.72);
+  font-size: var(--fs-sm);
+}
+
+/* Faixa tracejada de estrada abrindo o rodapé */
+.site-footer::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 6px;
+  background: repeating-linear-gradient(90deg, var(--faixa) 0 44px, transparent 44px 76px);
 }
 
 .site-footer__grid {
@@ -21,7 +26,7 @@
   grid-template-columns: 1.7fr 1fr 1fr 1.3fr;
   gap: clamp(1.75rem, 4vw, 3rem);
   padding-bottom: var(--sp-7);
-  border-bottom: 1px solid rgba(255, 253, 248, 0.14);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.16);
 }
 
 .site-footer__brand p {
@@ -31,16 +36,13 @@
 
 .site-footer__col h3 {
   margin-bottom: var(--sp-4);
-  font-family: var(--font-body);
-  font-size: 0.78rem;
-  font-weight: 700;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
+  font-size: var(--fs-base);
+  font-weight: 800;
   color: var(--on-photo);
 }
 
 .site-footer__col ul li + li {
-  margin-top: 0.55rem;
+  margin-top: 0.5rem;
 }
 
 /* Os ícones sociais ficam lado a lado: sem o espaçamento vertical das listas de links */
@@ -48,18 +50,14 @@
   margin-top: 0;
 }
 
-.site-footer .social a {
-  color: #eadcc6;
-}
-
 .site-footer__col a {
-  color: rgba(255, 253, 248, 0.78);
+  color: rgba(255, 255, 255, 0.8);
   text-decoration: none;
   transition: color var(--dur) var(--ease);
 }
 
 .site-footer__col a:hover {
-  color: var(--on-photo);
+  color: var(--faixa);
   text-decoration: underline;
 }
 
@@ -74,8 +72,8 @@
   justify-content: space-between;
   gap: var(--sp-4);
   padding-block: var(--sp-5);
-  font-size: 0.8rem;
-  color: rgba(255, 253, 248, 0.58);
+  font-size: var(--fs-xs);
+  color: rgba(255, 255, 255, 0.6);
 }
 
 .site-footer__bottom ul {

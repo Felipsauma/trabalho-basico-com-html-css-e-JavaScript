@@ -1,5 +1,5 @@
 /* =========================================================
-   hero.css — capa, barra de busca e indicadores
+   hero.css — capa, painel de distâncias e barra de busca
    ========================================================= */
 
 .hero {
@@ -7,12 +7,21 @@
   display: flex;
   align-items: center;
   min-height: 100svh;
-  padding-top: calc(var(--header-h) + clamp(2rem, 6vw, 3.5rem));
-  padding-bottom: clamp(2.5rem, 6vw, 4rem);
+  padding-top: calc(var(--header-h) + clamp(2rem, 5vw, 3.5rem));
+  padding-bottom: clamp(3rem, 6vw, 4.5rem);
   overflow: hidden;
-  background-color: var(--ink-900);
-  background-image: linear-gradient(165deg, #3a2d24 0%, #5c3a24 55%, #7c3820 100%);
+  background-color: var(--asfalto);
   isolation: isolate;
+}
+
+/* Faixa tracejada de estrada fechando a capa */
+.hero::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0 0;
+  height: 6px;
+  background: repeating-linear-gradient(90deg, var(--faixa) 0 44px, transparent 44px 76px);
+  background-color: var(--asfalto);
 }
 
 /* ---------------------------------------------------------
@@ -36,40 +45,142 @@
   position: absolute;
   inset: 0;
   background:
-    linear-gradient(180deg, rgba(41, 31, 24, 0.82) 0%, rgba(41, 31, 24, 0.45) 34%,
-      rgba(41, 31, 24, 0.62) 72%, rgba(41, 31, 24, 0.94) 100%),
-    radial-gradient(ellipse at 18% 78%, rgba(124, 56, 32, 0.5), transparent 60%);
+    linear-gradient(90deg, rgba(22, 29, 33, 0.9) 0%, rgba(22, 29, 33, 0.72) 42%, rgba(22, 29, 33, 0.35) 100%),
+    linear-gradient(180deg, rgba(22, 29, 33, 0.7) 0%, transparent 30%, rgba(22, 29, 33, 0.75) 100%);
 }
 
 /* ---------------------------------------------------------
-   Conteúdo
+   Conteúdo: texto e busca à esquerda, placa à direita
    --------------------------------------------------------- */
 
 .hero__content {
   position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(0, 0.75fr);
+  align-items: end;
+  gap: clamp(2rem, 5vw, 4.5rem);
   color: var(--on-photo);
 }
 
 .hero__title {
   font-size: var(--fs-3xl);
+  font-weight: 900;
+  line-height: 0.98;
+  letter-spacing: -0.03em;
   color: var(--on-photo);
-  max-width: 22ch;
-  margin-bottom: var(--sp-4);
-  text-shadow: 0 2px 24px rgba(41, 31, 24, 0.35);
-}
-
-.hero__title em {
-  display: block;
-  font-style: italic;
-  font-weight: 500;
-  color: var(--sand-200);
+  max-width: 13ch;
+  margin-bottom: var(--sp-5);
 }
 
 .hero__lead {
   font-size: var(--fs-md);
-  color: rgba(255, 253, 248, 0.86);
-  max-width: 54ch;
-  margin-bottom: clamp(1.75rem, 4vw, 2.75rem);
+  color: rgba(255, 255, 255, 0.86);
+  max-width: 50ch;
+  margin-bottom: clamp(1.5rem, 3vw, 2.25rem);
+}
+
+/* ---------------------------------------------------------
+   Painel de distâncias: vidro escuro sobre a foto, com a mesma
+   paleta do texto ao lado (branco e amarelo de faixa)
+   --------------------------------------------------------- */
+
+.placa {
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: var(--r-xl);
+  background: rgba(22, 29, 33, 0.62);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  color: var(--on-photo);
+}
+
+.placa__inner {
+  padding: clamp(1.1rem, 2vw, 1.6rem);
+}
+
+.placa__origem {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 0.75rem;
+  padding-bottom: var(--sp-4);
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.placa__origem select {
+  flex: 1;
+  min-width: 0;
+  padding: 0.45rem 2rem 0.45rem 0.7rem;
+  border: 1.5px solid rgba(255, 255, 255, 0.4);
+  border-radius: var(--r-md);
+  appearance: none;
+  background-color: transparent;
+  background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23f6c415' stroke-width='3' stroke-linecap='round'%3E%3Cpath d='m6 9.5 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.6rem center;
+  background-size: 16px;
+  color: var(--on-photo);
+  font-size: var(--fs-base);
+  font-weight: 700;
+  cursor: pointer;
+  transition: border-color var(--dur) var(--ease);
+}
+
+.placa__origem select:hover {
+  border-color: var(--on-photo);
+}
+
+.placa__origem select option {
+  color: #161d21;
+  font-weight: 500;
+}
+
+/* Cada destino é uma linha, separada por um fio, como numa tabela de distâncias */
+.placa__row {
+  display: grid;
+  grid-template-columns: 1.6rem minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0.75rem;
+  width: 100%;
+  padding: 0.8rem 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.16);
+  color: var(--on-photo);
+  text-align: left;
+}
+
+.placa__seta {
+  width: 1.6rem;
+  height: 1.6rem;
+  color: var(--faixa);
+}
+
+.placa__nome {
+  font-size: var(--fs-md);
+  font-weight: 700;
+  line-height: 1.15;
+  text-decoration: underline transparent;
+  text-underline-offset: 4px;
+  transition: text-decoration-color var(--dur) var(--ease);
+}
+
+.placa__row:hover .placa__nome {
+  text-decoration-color: var(--faixa);
+}
+
+.placa__km {
+  font-size: var(--fs-md);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  color: rgba(255, 255, 255, 0.86);
+}
+
+.placa__nota {
+  padding-top: var(--sp-3);
+  border-top: 1px solid rgba(255, 255, 255, 0.16);
+  font-size: var(--fs-xs);
+  color: rgba(255, 255, 255, 0.68);
 }
 
 /* ---------------------------------------------------------
@@ -81,34 +192,29 @@
   grid-template-columns: repeat(3, minmax(0, 1fr)) auto;
   align-items: stretch;
   gap: 0;
-  padding: 0.5rem;
-  max-width: 1000px;
-  background: rgba(255, 253, 248, 0.97);
-  border: 1px solid rgba(255, 255, 255, 0.6);
+  padding: 0.4rem;
+  background: #ffffff;
   border-radius: var(--r-lg);
   box-shadow: var(--shadow-lg);
-  backdrop-filter: blur(8px);
 }
 
 .search-bar__field {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  gap: 0.15rem;
-  padding: 0.55rem 1rem;
+  gap: 0.1rem;
+  padding: 0.5rem 0.9rem;
   min-width: 0;
 }
 
 .search-bar__field + .search-bar__field {
-  border-left: 1px solid var(--sand-200);
+  border-left: 1px solid #d8ddd8;
 }
 
 .search-bar__field label {
-  font-size: 0.68rem;
+  font-size: var(--fs-xs);
   font-weight: 700;
-  letter-spacing: 0.13em;
-  text-transform: uppercase;
-  color: var(--ink-500);
+  color: #5f6e74;
 }
 
 .search-bar__field select,
@@ -117,17 +223,18 @@
   min-width: 0;
   padding: 0;
   border: 0;
-  border-radius: 6px;
+  border-radius: var(--r-sm);
   background: transparent;
-  color: var(--ink-900);
-  font-size: 0.95rem;
-  font-weight: 600;
+  color: #161d21;
+  color-scheme: light;
+  font-size: var(--fs-sm);
+  font-weight: 700;
   text-overflow: ellipsis;
 }
 
 .search-bar__field select {
   appearance: none;
-  background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23c4633f' stroke-width='2.4' stroke-linecap='round'%3E%3Cpath d='m6 9.5 6 6 6-6'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23161d21' stroke-width='2.6' stroke-linecap='round'%3E%3Cpath d='m6 9.5 6 6 6-6'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: right 0 center;
   background-size: 15px;
@@ -135,94 +242,53 @@
 }
 
 .search-bar__field select option {
-  color: var(--ink-900);
+  color: #161d21;
   font-weight: 500;
 }
 
 .search-bar__field select:focus,
 .search-bar__field input:focus {
-  outline: 2px solid var(--clay-500);
+  outline: 3px solid #161d21;
   outline-offset: 3px;
 }
 
 .search-bar__submit {
-  margin: 0.35rem 0.35rem 0.35rem 0.5rem;
-  border-radius: var(--r-md);
+  margin: 0;
   white-space: nowrap;
 }
 
 .search-bar__feedback {
   grid-column: 1 / -1;
   padding-inline: 0.6rem;
-  font-size: 0.82rem;
+  font-size: var(--fs-sm);
   font-weight: 600;
-  color: var(--clay-600);
+  color: #085840;
   min-height: 0;
 }
 
 .search-bar__feedback:not(:empty) {
-  padding-top: 0.55rem;
+  padding-top: 0.5rem;
   min-height: 1.6rem;
 }
 
-/* Atalho para o quiz logo abaixo da busca */
-.hero__quiz-link {
+/* Atalho para o quiz e números da agência, em texto corrido */
+.hero__quiz-link,
+.hero__proof {
   margin-top: var(--sp-4);
   font-size: var(--fs-sm);
-  color: rgba(255, 253, 248, 0.86);
+  color: rgba(255, 255, 255, 0.82);
+  max-width: 56ch;
 }
 
 .hero__quiz-link a {
-  color: var(--on-photo);
-  font-weight: 600;
-  text-decoration: underline;
-  text-decoration-color: var(--clay-300);
-  text-underline-offset: 3px;
-}
-
-.hero__quiz-link a::after {
-  content: " →";
+  color: var(--faixa);
+  font-weight: 700;
 }
 
 .hero__quiz-link a:hover {
-  text-decoration-color: var(--on-photo);
-}
-
-/* ---------------------------------------------------------
-   Indicadores
-   --------------------------------------------------------- */
-
-.hero__stats {
-  display: flex;
-  flex-wrap: wrap;
-  gap: clamp(1.5rem, 5vw, 3.75rem);
-  margin-top: clamp(1.5rem, 4vw, 2.25rem);
-  padding-top: var(--sp-5);
-  border-top: 1px solid rgba(255, 253, 248, 0.22);
-  max-width: 1000px;
-}
-
-.hero__stats strong {
-  display: block;
-  font-variant-numeric: tabular-nums; /* números não "pulam" durante a contagem animada */
-  font-family: var(--font-display);
-  font-size: clamp(1.5rem, 3vw, 1.95rem);
-  font-weight: 600;
   color: var(--on-photo);
-  line-height: 1.1;
 }
 
-.hero__stats span {
-  font-size: 0.82rem;
-  color: rgba(255, 253, 248, 0.74);
-}
-
-/* Modo escuro: a barra de busca usa superfície escura para manter o texto legível */
-[data-theme="dark"] .search-bar {
-  background: rgba(26, 20, 16, 0.94);
-  border-color: rgba(255, 253, 248, 0.1);
-}
-
-[data-theme="dark"] .hero__title em {
-  color: #eadcc6;
+.hero__proof {
+  margin-top: var(--sp-2);
 }

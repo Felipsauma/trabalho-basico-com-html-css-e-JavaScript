@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Trabalho Básico de CSS, HTML e JavaScript — Pé na Estrada</title>
   <meta name="description" content="Roteiros autorais, hospedagens selecionadas e suporte humano do começo ao fim. Viaje pelo Brasil com a Pé na Estrada." />
-  <meta name="theme-color" content="#C4633F" />
+  <meta name="theme-color" content="#0B6B4D" />
 
   <!-- Aplica o tema salvo antes da renderização para evitar "piscada" de cores -->
   <script>
@@ -19,7 +19,7 @@
   </script>
 
   <!-- Favicon SVG Nativo da Marca -->
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M16 3.5 27.5 25.5a1 1 0 0 1-.9 1.5H5.4a1 1 0 0 1-.9-1.5L16 3.5Z' fill='%23C4633F'/%3E%3Cpath d='M9.5 21h13' stroke='%23FFFDF8' stroke-width='2.2' stroke-linecap='round'/%3E%3C/svg%3E" />
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M16 3.5 27.5 25.5a1 1 0 0 1-.9 1.5H5.4a1 1 0 0 1-.9-1.5L16 3.5Z' fill='%23F6C415' stroke='%23161D21' stroke-width='1.6' stroke-linejoin='round'/%3E%3Cpath d='M9.5 21h13' stroke='%23161D21' stroke-width='2.2' stroke-linecap='round'/%3E%3C/svg%3E" />
 
   <!-- Metadados de Compartilhamento Social (Open Graph) -->
   <meta property="og:title" content="Trabalho Básico de CSS, HTML e JavaScript — Pé na Estrada" />
@@ -29,7 +29,7 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Overpass:ital,wght@0,400;0,600;0,700;0,800;0,900;1,400&display=swap" rel="stylesheet" />
 
   <link rel="stylesheet" href="css/base.css" />
   <link rel="stylesheet" href="css/components.css" />
@@ -63,6 +63,7 @@
         <nav class="site-nav" aria-label="Navegação principal">
           <ul class="site-nav__list">
             <li><a href="#destinos">Destinos</a></li>
+            <li><a href="#rota">Monte sua rota</a></li>
             <li><a href="#experiencias">Experiências</a></li>
             <li><a href="#roteiros">Roteiros</a></li>
             <li><a href="#depoimentos">Depoimentos</a></li>
@@ -90,7 +91,7 @@
     <div class="nav-drawer__panel">
       <div class="nav-drawer__head">
         <span class="nav-drawer__title">Menu</span>
-        <div style="display: flex; align-items: center; gap: var(--sp-2);">
+        <div class="nav-drawer__head-actions">
           <button class="theme-toggle" id="drawerThemeToggleBtn" type="button" aria-label="Alternar tema">
             <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
             <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
@@ -104,6 +105,7 @@
       <nav aria-label="Navegação mobile">
         <ul class="nav-drawer__list">
           <li><a href="#destinos">Destinos</a></li>
+          <li><a href="#rota">Monte sua rota</a></li>
           <li><a href="#quiz">Descubra seu destino</a></li>
           <li><a href="#experiencias">Experiências</a></li>
           <li><a href="#roteiros">Roteiros</a></li>
@@ -128,14 +130,9 @@
       </div>
 
       <div class="container hero__content">
-        <p class="eyebrow eyebrow--light">
-          <span class="eyebrow__dot" aria-hidden="true"></span>
-          Temporada 2026 aberta
-        </p>
-        <h1 class="hero__title" id="heroTitulo">
-          O Brasil inteiro cabe em
-          <em>uma semana bem planejada</em>
-        </h1>
+        <div class="hero__copy">
+        <p class="eyebrow">Temporada 2026 aberta</p>
+        <h1 class="hero__title" id="heroTitulo">O Brasil inteiro cabe em uma semana bem planejada</h1>
         <p class="hero__lead">
           Roteiros autorais, hospedagens visitadas por nós e consultores que já pisaram em cada destino.
           Sem pacote engessado, sem taxa escondida.
@@ -174,7 +171,7 @@
           </div>
 
           <button class="btn btn--primary search-bar__submit" type="submit">
-            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="11" cy="11" r="6" stroke="currentColor" stroke-width="2"/><path d="m15.5 15.5 4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="11" cy="11" r="6" stroke="currentColor" stroke-width="2" fill="none"/><path d="m15.5 15.5 4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
             Buscar roteiros
           </button>
 
@@ -185,18 +182,28 @@
           Não sabe para onde ir? <a href="#quiz">Faça o quiz de 1 minuto</a>
         </p>
 
-        <ul class="hero__stats">
-          <li><strong data-count="120" data-prefix="+">+120</strong><span>destinos mapeados</span></li>
-          <li><strong data-count="4.9" data-decimals="1">4,9</strong><span>nota média (1.842 avaliações)</span></li>
-          <li><strong data-count="38" data-suffix=" mil">38 mil</strong><span>viajantes desde 2014</span></li>
-        </ul>
+        <p class="hero__proof">
+          Mais de 120 destinos mapeados e 38 mil viajantes desde 2014. Nota média 4,9 em 1.842 avaliações.
+        </p>
+        </div>
+
+        <!-- Painel de distâncias: distâncias reais da cidade de partida até os destinos mais próximos -->
+        <aside class="placa" aria-label="Distância até os destinos">
+          <div class="placa__inner">
+            <div class="placa__origem">
+              <label for="origemHero">Saindo de</label>
+              <select id="origemHero" data-origem-select></select>
+            </div>
+            <ul id="placaLista"></ul>
+            <p class="placa__nota">Distâncias em linha reta. Escolha um destino para ver o roteiro.</p>
+          </div>
+        </aside>
       </div>
     </section>
 
     <section class="section" id="destinos" aria-labelledby="destinosTitulo">
       <div class="container">
         <header class="section__head">
-          <p class="eyebrow">Destinos em destaque</p>
           <h2 class="section__title" id="destinosTitulo">Escolha o cenário, a gente cuida do resto</h2>
           <p class="section__lead">
             Cada roteiro é montado com quem mora no lugar. Filtre por palavra-chave, preço ou mês da viagem, ou explore tudo pelo mapa.
@@ -213,7 +220,7 @@
 
             <div class="filter-price-wrap">
               <div class="filter-price-label">
-                <span>Orçamento Máximo</span>
+                <span>Orçamento</span>
                 <span class="filter-price-badge" id="destinosPriceValue">Até R$ 6.000</span>
               </div>
               <input type="range" class="filter-price-slider" id="destinosPriceSlider" min="2000" max="6000" step="100" value="6000" aria-label="Filtrar por preço máximo por pessoa" />
@@ -239,12 +246,18 @@
             </div>
 
             <div class="filter-sort-wrap">
+              <label class="filter-sort-label" for="origemDestinos">Saindo de</label>
+              <select class="filter-sort-select" id="origemDestinos" data-origem-select></select>
+            </div>
+
+            <div class="filter-sort-wrap">
               <label class="filter-sort-label" for="destinosSortSelect">Ordenar por</label>
               <select class="filter-sort-select" id="destinosSortSelect">
-                <option value="populares">Recomendados (Nota)</option>
-                <option value="preco-asc">Menor Preço</option>
-                <option value="preco-desc">Maior Preço</option>
-                <option value="duracao-asc">Menor Duração (Dias)</option>
+                <option value="populares">Melhor avaliados</option>
+                <option value="distancia-asc">Mais perto de você</option>
+                <option value="preco-asc">Menor preço</option>
+                <option value="preco-desc">Maior preço</option>
+                <option value="duracao-asc">Menos dias</option>
               </select>
             </div>
           </div>
@@ -286,16 +299,50 @@
         <div class="empty-state" id="destinosEmpty" hidden>
           <p style="font-weight: 600; margin-bottom: 0.5rem;">Nenhum roteiro encontrado para esses critérios.</p>
           <p style="font-size: var(--fs-sm); color: var(--ink-500); margin-bottom: var(--sp-4);">Tente aumentar o limite de preço, mudar a categoria ou o mês, ou usar outros termos na busca. Ainda em dúvida? <a href="#quiz">Faça o quiz</a>.</p>
-          <button class="btn btn--primary btn--sm" id="emptyResetBtn" type="button">Ver todos os roteiros</button>
+          <button class="btn btn--dark btn--sm" id="emptyResetBtn" type="button">Ver todos os roteiros</button>
         </div>
       </div>
     </section>
 
-    <section class="section quiz-section" id="quiz" aria-labelledby="quizTitulo">
+    <section class="section section--tint" id="rota" aria-labelledby="rotaTitulo">
+      <div class="container">
+        <header class="section__head">
+          <h2 class="section__title" id="rotaTitulo">Monte sua rota</h2>
+          <p class="section__lead">
+            Junte dois ou mais destinos numa viagem só. A ordem das paradas, as distâncias e o total aparecem na hora.
+          </p>
+        </header>
+
+        <div class="rota__controls">
+          <div class="filter-sort-wrap">
+            <label class="filter-sort-label" for="origemRota">Saindo de</label>
+            <select class="filter-sort-select" id="origemRota" data-origem-select></select>
+          </div>
+          <!-- Botões de parada montados pelo main.js -->
+          <fieldset class="rota__chips" id="rotaChips">
+            <legend>Paradas</legend>
+          </fieldset>
+        </div>
+
+        <div class="rota__estrada" id="rotaEstrada" role="status" aria-live="polite"></div>
+
+        <div class="rota__resumo" id="rotaResumo" hidden>
+          <dl class="rota__totais" id="rotaTotais"></dl>
+          <div class="rota__acoes">
+            <button class="btn btn--ghost" id="rotaLimpar" type="button">Limpar rota</button>
+            <button class="btn btn--primary" id="rotaPedir" type="button">Pedir orçamento desta rota</button>
+          </div>
+        </div>
+        <p class="rota__nota">
+          A rota segue sempre para a parada mais próxima. Distâncias em linha reta e valores por pessoa, sem as passagens.
+        </p>
+      </div>
+    </section>
+
+    <section class="section" id="quiz" aria-labelledby="quizTitulo">
       <div class="container">
         <div class="quiz">
           <div class="quiz__intro">
-            <p class="eyebrow eyebrow--light">Quiz de 1 minuto</p>
             <h2 class="section__title" id="quizTitulo">Qual viagem combina com você?</h2>
             <p class="section__lead">
               Responda 5 perguntas rápidas e descubra quais roteiros têm mais a ver com o seu jeito de viajar.
@@ -313,11 +360,11 @@
       </div>
     </section>
 
-    <section class="section section--sand" id="experiencias" aria-labelledby="expTitulo">
-      <div class="container">
-        <header class="section__head section__head--center">
-          <p class="eyebrow">Por que a Pé na Estrada</p>
+    <section class="section section--tint" id="experiencias" aria-labelledby="expTitulo">
+      <div class="container porque">
+        <header class="section__head">
           <h2 class="section__title" id="expTitulo">Viagem organizada, mas nunca engessada</h2>
+          <p class="section__lead">O que muda quando quem monta o roteiro já fez a viagem.</p>
         </header>
         <ul class="feature-grid" id="featureGrid"></ul>
       </div>
@@ -335,8 +382,7 @@
           </div>
 
           <div class="split__content">
-            <p class="eyebrow">Roteiro da semana</p>
-            <h2 class="section__title" id="roteiroTitulo">Chapada Diamantina, dia por dia</h2>
+            <h2 class="section__title" id="roteiroTitulo">Roteiro da semana: Chapada Diamantina, dia por dia</h2>
             <p class="section__lead">
               Cachoeiras, grutas e trilhas com guias locais. Grupo de até 12 pessoas e hospedagem em pousadas
               familiares de Lençóis.
@@ -353,10 +399,9 @@
       </div>
     </section>
 
-    <section class="section section--clay" id="depoimentos" aria-labelledby="depoTitulo">
+    <section class="section section--placa" id="depoimentos" aria-labelledby="depoTitulo">
       <div class="container">
-        <header class="section__head section__head--center">
-          <p class="eyebrow eyebrow--light">Depoimentos</p>
+        <header class="section__head">
           <h2 class="section__title" id="depoTitulo">Quem voltou, voltou diferente</h2>
         </header>
 
@@ -378,25 +423,20 @@
       </div>
     </section>
 
-    <section class="section section--sand" id="faq" aria-labelledby="faqTitulo">
+    <section class="section" id="faq" aria-labelledby="faqTitulo">
       <div class="container">
-        <header class="section__head section__head--center">
-          <p class="eyebrow">Dúvidas Frequentes</p>
-          <h2 class="section__title" id="faqTitulo">Tudo o que você precisa saber antes de embarcar</h2>
-          <p class="section__lead">
-            Transparência e clareza do primeiro contato ao retorno da sua viagem.
-          </p>
+        <header class="section__head">
+          <h2 class="section__title" id="faqTitulo">O que você precisa saber antes de embarcar</h2>
         </header>
 
         <ul class="faq-list" id="faqList"></ul>
       </div>
     </section>
 
-    <section class="section" id="contato" aria-labelledby="contatoTitulo">
+    <section class="section section--tint" id="contato" aria-labelledby="contatoTitulo">
       <div class="container">
         <div class="contact">
           <div class="contact__copy">
-            <p class="eyebrow">Próximo passo</p>
             <h2 class="section__title" id="contatoTitulo">Receba 3 roteiros sob medida</h2>
             <p class="section__lead">
               Conte como você gosta de viajar e um consultor monta as opções em até 1 dia útil. Sem custo e sem compromisso.
@@ -409,6 +449,10 @@
           </div>
 
           <form class="contact__form" id="leadForm" novalidate>
+            <div class="form-draft-note" id="leadDraftNote" hidden>
+              <span>Recuperamos o que você já tinha preenchido.</span>
+              <button class="btn-reset-filters" id="leadDraftClear" type="button">Limpar formulário</button>
+            </div>
             <div class="field">
               <label for="leadNome">Nome completo</label>
               <input type="text" id="leadNome" name="nome" autocomplete="name" placeholder="Como podemos te chamar" />
@@ -536,7 +580,7 @@
       </div>
 
       <div class="site-footer__bottom">
-        <p>© <span id="anoAtual">2026</span> Pé na Estrada Viagens LTDA · CNPJ 00.000.000/0001-00</p>
+        <p>© <span id="anoAtual">2026</span> Pé na Estrada Viagens LTDA, CNPJ 00.000.000/0001-00</p>
         <ul>
           <li><a href="#contato">Política de privacidade</a></li>
           <li><a href="#contato">Termos de uso</a></li>

@@ -3,10 +3,10 @@
    ========================================================= */
 
 .site-header {
-  --nav-fg: rgba(255, 253, 248, 0.9);
+  --nav-fg: rgba(255, 255, 255, 0.88);
   --nav-fg-strong: var(--on-photo);
-  --mark-bg: rgba(255, 253, 248, 0.16);
-  --mark-border: rgba(255, 253, 248, 0.42);
+  --ctl-bg: rgba(255, 255, 255, 0.12);
+  --ctl-border: rgba(255, 255, 255, 0.4);
   --header-bg: transparent;
   --header-border: transparent;
 
@@ -15,20 +15,16 @@
   z-index: 90;
   background: var(--header-bg);
   border-bottom: 1px solid var(--header-border);
-  transition: background-color var(--dur) var(--ease), border-color var(--dur) var(--ease),
-    box-shadow var(--dur) var(--ease), backdrop-filter var(--dur) var(--ease);
+  transition: background-color var(--dur) var(--ease), border-color var(--dur) var(--ease);
 }
 
 .site-header.is-scrolled {
   --nav-fg: var(--ink-700);
   --nav-fg-strong: var(--ink-900);
-  --mark-bg: rgba(196, 99, 63, 0.12);
-  --mark-border: rgba(196, 99, 63, 0.3);
-  --header-bg: rgba(251, 247, 240, 0.94);
-  --header-border: var(--sand-200);
-
-  backdrop-filter: blur(14px);
-  box-shadow: var(--shadow-sm);
+  --ctl-bg: transparent;
+  --ctl-border: var(--base-300);
+  --header-bg: var(--base-50);
+  --header-border: var(--base-200);
 }
 
 .site-header__inner {
@@ -40,7 +36,7 @@
 }
 
 /* ---------------------------------------------------------
-   Marca
+   Marca: o símbolo é uma plaquinha amarela
    --------------------------------------------------------- */
 
 .brand {
@@ -59,19 +55,18 @@
 .brand__mark {
   display: grid;
   place-items: center;
-  width: 40px;
-  height: 40px;
-  border-radius: 12px;
-  background: var(--mark-bg);
-  border: 1.5px solid var(--mark-border);
-  color: var(--nav-fg-strong);
-  transition: background-color var(--dur) var(--ease), border-color var(--dur) var(--ease),
-    color var(--dur) var(--ease);
+  width: 38px;
+  height: 38px;
+  border-radius: var(--r-md);
+  background: var(--faixa);
+  border: 2px solid var(--asfalto);
+  box-shadow: 0 0 0 2px var(--faixa);
+  color: var(--asfalto);
 }
 
 .brand__mark svg {
-  width: 22px;
-  height: 22px;
+  width: 20px;
+  height: 20px;
 }
 
 .brand__text {
@@ -82,17 +77,15 @@
 
 .brand__text strong {
   font-family: var(--font-display);
-  font-size: 1.06rem;
-  font-weight: 700;
-  letter-spacing: -0.01em;
+  font-size: 1.15rem;
+  font-weight: 800;
+  letter-spacing: -0.015em;
 }
 
 .brand__text small {
-  font-size: 0.62rem;
+  font-size: 0.75rem;
   font-weight: 600;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  opacity: 0.72;
+  opacity: 0.75;
 }
 
 /* ---------------------------------------------------------
@@ -102,45 +95,28 @@
 .site-nav__list {
   display: flex;
   align-items: center;
-  gap: clamp(1rem, 2.2vw, 2rem);
+  gap: clamp(0.9rem, 2vw, 1.75rem);
 }
 
 .site-nav a {
-  position: relative;
   display: inline-block;
-  padding-block: 0.4rem;
-  font-size: 0.94rem;
-  font-weight: 500;
+  white-space: nowrap;
+  padding-block: 0.45rem;
+  font-size: var(--fs-sm);
+  font-weight: 600;
   color: var(--nav-fg);
   text-decoration: none;
-  transition: color var(--dur) var(--ease);
-}
-
-.site-nav a::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  height: 2px;
-  border-radius: 2px;
-  background: currentColor;
-  transform: scaleX(0);
-  transform-origin: left;
-  transition: transform var(--dur) var(--ease);
+  border-bottom: 3px solid transparent;
+  transition: color var(--dur) var(--ease), border-color var(--dur) var(--ease);
 }
 
 .site-nav a:hover {
   color: var(--nav-fg-strong);
 }
 
-.site-nav a:hover::after,
-.site-nav a[aria-current="true"]::after {
-  transform: scaleX(1);
-}
-
 .site-nav a[aria-current="true"] {
   color: var(--nav-fg-strong);
+  border-bottom-color: var(--faixa);
 }
 
 .site-header__actions {
@@ -150,10 +126,6 @@
   flex: none;
 }
 
-.site-header__actions .btn--primary {
-  --btn-fg: var(--cream);
-}
-
 /* ---------------------------------------------------------
    Botão hambúrguer
    --------------------------------------------------------- */
@@ -161,11 +133,11 @@
 .nav-toggle {
   display: none;
   place-items: center;
-  width: 46px;
-  height: 46px;
-  border-radius: 12px;
-  border: 1.5px solid var(--mark-border);
-  background: var(--mark-bg);
+  width: 44px;
+  height: 44px;
+  border-radius: var(--r-md);
+  border: 1.5px solid var(--ctl-border);
+  background: var(--ctl-bg);
   color: var(--nav-fg-strong);
   transition: background-color var(--dur) var(--ease), border-color var(--dur) var(--ease);
 }
@@ -206,7 +178,7 @@
   z-index: 130;
   display: flex;
   visibility: hidden;
-  transition: visibility 0s linear 0.45s;
+  transition: visibility 0s linear 0.35s;
 }
 
 .nav-drawer[data-open="true"] {
@@ -227,7 +199,7 @@
   background: var(--cream);
   box-shadow: var(--shadow-lg);
   transform: translateX(-104%);
-  transition: transform 0.42s var(--ease);
+  transition: transform 0.32s var(--ease);
 }
 
 .nav-drawer[data-open="true"] .nav-drawer__panel {
@@ -240,11 +212,15 @@
   justify-content: space-between;
 }
 
+.nav-drawer__head-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+}
+
 .nav-drawer__title {
-  font-size: var(--fs-xs);
+  font-size: var(--fs-sm);
   font-weight: 700;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
   color: var(--ink-500);
 }
 
@@ -254,22 +230,22 @@
 }
 
 .nav-drawer__list li + li {
-  border-top: 1px solid var(--sand-200);
+  border-top: 1px solid var(--base-200);
 }
 
 .nav-drawer__list a {
   display: block;
   padding: var(--sp-4) 0;
   font-family: var(--font-display);
-  font-size: 1.22rem;
-  font-weight: 600;
+  font-size: 1.25rem;
+  font-weight: 700;
   color: var(--ink-900);
   text-decoration: none;
 }
 
 .nav-drawer__list a:hover,
 .nav-drawer__list a[aria-current="true"] {
-  color: var(--clay-600);
+  color: var(--verde-600);
 }
 
 .nav-drawer__note {
@@ -280,16 +256,11 @@
 
 .nav-drawer__scrim {
   flex: 1;
-  background: rgba(41, 31, 24, 0.52);
+  background: rgba(22, 29, 33, 0.6);
   opacity: 0;
-  transition: opacity 0.42s var(--ease);
+  transition: opacity 0.32s var(--ease);
 }
 
 .nav-drawer[data-open="true"] .nav-drawer__scrim {
   opacity: 1;
-}
-
-/* Modo escuro: fundo do cabeçalho fixo acompanha o tema */
-[data-theme="dark"] .site-header.is-scrolled {
-  --header-bg: rgba(20, 16, 12, 0.9);
 }
